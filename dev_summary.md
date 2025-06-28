@@ -1,10 +1,10 @@
-# Summary Template ✦ (with Built-In Guidelines)
-> Copy everything inside this fenced block when you prepare a **full-design summary**.  
+# Summary Template 
+> Copy everything inside this fenced block when then prepare a **full-design summary** of the code / script / program in this chat history.  
 > **Delete everything above `## What This Design/Feature Does`** before sharing with reviewers.
 
 ---
 
-## ✦ Author Guidelines  *(remove this section before publishing)*
+## ✦ Author Guidelines - must be followed where applicable  *(remove this section before publishing)*
 
 | # | Guideline |
 |---|-----------|
