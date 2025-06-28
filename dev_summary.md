@@ -50,6 +50,8 @@
 %% Put a component or flow diagram here
 ```
 
-## Implementation Notes  *(optional)*
-- First note …  
-- Second note …
+## Implementation Notes
+
+## Yet to be Implemented
+
+## Possible Improvement Suggestion
