@@ -40,18 +40,10 @@
 4. **Threading / Concurrency Model**  *(or “Execution Model” if not threaded)*
 5. **Security / Access Controls**  *(omit if not applicable)*
 
-## Config Layout
-*(Primary operator-edited configuration first; secondary or library file next if relevant.)*
+## Config file structural Layout
+*(insert codeblocks with excepts or any important feature from config files)*
 
-**Primary configuration example**
-```yaml
-# YAML goes here
-```
-
-**Secondary configuration example (if applicable)**
-```yaml
-# YAML goes here
-```
+**configuration example**
 
 ## Diagrams
 ```mermaid
