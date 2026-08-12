@@ -1,9 +1,7 @@
 # Transforms
 
-Store transformation manifests and implementations here.
+Transforms convert one representation into another with explicit fidelity and loss metadata.
 
-Transforms should be declarative where practical. Executable transforms must declare runtime requirements and trust/sandbox expectations.
+Executable implementation: `tooling/blueprint_engine/`.
 
-A transform must declare source, target, fidelity/lossiness, determinism, parameters, preconditions, and dependencies.
-
-See [`docs/transforms.md`](../docs/transforms.md).
+The engine provides built-in canonical exporters plus `DeclarativeMappingEngine`, an XSLT-like object mapping layer. See `docs/transforms.md`.

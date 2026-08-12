@@ -1,26 +1,38 @@
 # Multi-Format Representation Framework
 
-The repository treats a representation language as a capability provider rather than a fixed semantic destination.
+The framework separates meaning from representation and now includes an executable engine.
 
-## Layers
+```text
+Domain data
+  -> Canonical semantic model
+  -> Capability matching
+  -> Representation profile
+  -> Transform
+  -> Target format
+  -> Validator
+  -> Provenance
+  -> Optional semantic equivalence / round trip
+```
 
-1. **Ontology / canonical model** — format-independent meaning.
-2. **Blueprint** — reusable abstract structure or intent.
-3. **Representation profile** — maps domain concepts to target primitives.
-4. **Overlay** — assigns extra semantic dimensions to visual or structural channels.
-5. **Adapter** — reads/writes a concrete format.
-6. **Transform** — converts between semantic/representation layers.
-7. **Validator** — checks schema, syntax, semantics, compatibility and policy.
-8. **Renderer** — turns a representation into a presentation artifact.
-9. **Equivalence checker** — determines whether declared meaning was preserved.
+## Seeded formats
 
-## Seed format families
+- Mermaid
+- UML
+- PlantUML
+- JSON Schema
+- XML / XSLT
+- Markdown
 
-- Mermaid — textual diagrams and generic visual encoding.
-- UML — tool-neutral modeling semantics.
-- PlantUML — textual UML-oriented representation.
-- JSON Schema — formal data shape/validation.
-- XML — hierarchical structured data with schema ecosystems and XSLT.
-- Markdown — human-readable documentation/presentation.
+The engine currently exports the canonical model to all six representative families. UML is represented by a machine-readable class interchange object; Mermaid and PlantUML are text encodings; JSON Schema is an explicitly lossy schema projection; XML is a loss-preserving repository profile for the supported structural model; Markdown is presentation-only.
 
-The set is deliberately heterogeneous so assumptions are tested across diagrams, schemas, structured trees and documents.
+## Why the canonical layer matters
+
+A primitive's conventional meaning is not a hard semantic boundary. Profiles may map the same abstract concept to different target primitives, or use visual channels such as colour, grouping, borders and annotations as additional semantic dimensions.
+
+The canonical model therefore stores semantic relationships before representation choices are applied.
+
+## Operational status
+
+The framework is no longer contract-only. `tooling/blueprint_engine/` implements catalog discovery, capability matching, route selection, transformation, validation, provenance and semantic comparison.
+
+Normative language-specific validators remain separate work streams.

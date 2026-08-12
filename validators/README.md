@@ -1,9 +1,7 @@
 # Validators
 
-Validators live here as versioned first-class artifacts.
+Validator manifests describe authoritative scope, provenance and implementation.
 
-Keep format-wide rules separate from representation-profile semantic rules. A valid target file can still be semantically invalid for a profile.
+Executable core validation lives in `tooling/blueprint_engine/src/blueprint_engine/validators.py`.
 
-The Mermaid validator is intentionally not implemented yet. It should be derived from the Mermaid repository grammar/source/runtime behaviour when that analysis is performed.
-
-See [`docs/validation.md`](../docs/validation.md).
+Current checks range from native meta-schema/parsing checks (JSON Schema, XML) to deliberately limited repository-subset checks (Mermaid, UML, PlantUML). Full Mermaid validation remains pending source-derived implementation.

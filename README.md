@@ -1,52 +1,71 @@
 # GPT Templates / Blueprint Registry
 
-A reusable repository for blueprints, templates, schemas, semantic models, representation profiles, transforms, validators, adapters, renderers, fixtures, benchmarks, packages, and documentation.
+A reusable repository for blueprints, templates, schemas, semantic models, representation profiles, transforms, validators, fixtures, and documentation.
+
+The repository separates **meaning** from **representation** and now includes an executable core:
 
 ```text
 Domain Data
-  -> Canonical Semantic Model
-  -> Blueprint
+  -> Canonical Model
   -> Capability Matching
-  -> Representation Profile + Overlays
-  -> Transformer / Adapter
+  -> Representation Profile
+  -> Transformer
   -> Target Format
   -> Validator
-  -> Renderer
-  -> Semantic Equivalence / Round-Trip Check
+  -> Provenance / Semantic Comparison
 ```
 
-## Seed representation families
+## Executable engine
 
-- Mermaid
-- UML
-- PlantUML
-- JSON Schema
-- XML + XSLT
-- Markdown
+`tooling/blueprint_engine/` implements:
 
-These intentionally cover different representation classes: diagrams, formal models, structured trees, validation schemas, transformation languages and documents.
+- artifact catalog discovery
+- format capability matching
+- conversion-route selection
+- canonical model validation
+- transforms to Mermaid, PlantUML, UML class interchange, JSON Schema, XML and Markdown
+- declarative XSLT-like object mapping
+- target validation
+- deterministic provenance hashes
+- semantic comparison
+- XML and UML-class round-trip checks
+
+See [`docs/engine.md`](docs/engine.md).
 
 ## Core directories
 
-- `blueprints/`, `templates/`, `canonical/`, `semantics/`
-- `formats/`, `profiles/`, `overlays/`
-- `capability-matrix/`, `conversion-graph/`
-- `transforms/`, `adapters/`, `validators/`, `renderers/`
-- `schemas/`, `rules/`, `policies/`, `catalog/`
-- `fixtures/`, `examples/`, `benchmarks/`
-- `provenance/`, `migrations/`, `packages/`, `tooling/`, `docs/`
+- `blueprints/` - reusable domain/system blueprints.
+- `templates/` - target-oriented reusable templates.
+- `canonical/` - canonical/intermediate semantic models.
+- `semantics/` - shared semantic vocabulary and equivalence rules.
+- `formats/` - representation-language capabilities and constraints.
+- `profiles/` - mappings from abstract concepts to format primitives.
+- `overlays/` - composable visual/semantic encodings.
+- `transforms/` - declarative and built-in transformation contracts.
+- `validators/` - validation manifests and scope declarations.
+- `schemas/` - schemas governing repository artifacts.
+- `capability-matrix/` - cross-format expressiveness matrix.
+- `conversion-graph/` - executable conversion routing metadata.
+- `catalog/` and `registry/` - discovery metadata.
+- `adapters/` and `renderers/` - serialization/import and presentation boundaries.
+- `fixtures/` and `examples/` - test and worked examples.
+- `policies/`, `rules/`, `provenance/`, `migrations/`, `packages/`, `benchmarks/` - governance and lifecycle support.
+- `tooling/` - executable framework tooling.
+- `docs/` - architecture and usage documentation.
 
 ## Design principles
 
-1. A primitive is not limited to its conventional meaning.
-2. Semantic overloading is explicit through representation profiles.
-3. Visual channels can carry independent semantic dimensions.
-4. Critical meaning must not rely on colour alone.
-5. Transforms declare fidelity, reversibility, determinism and lossiness.
-6. Validators are first-class artifacts and record rule provenance.
-7. Reusable artifacts have stable IDs independent of path.
-8. Generated artifacts preserve provenance and transform history.
-9. Capability matching selects representations by what they can express.
-10. Round-trip safety is established through semantic-equivalence fixtures, not syntax success.
+1. A format primitive is not limited to its conventional meaning.
+2. Representation profiles make semantic overloading explicit.
+3. Visual channels can carry additional semantic dimensions.
+4. Critical meaning must not depend on colour alone.
+5. Transforms declare fidelity, reversibility and information loss.
+6. Validators are first-class artifacts and must declare their authority/scope.
+7. Stable artifact IDs are independent of file paths.
+8. Generated artifacts preserve provenance.
+9. Round-trip claims require semantic comparison tests.
+10. A syntactically valid output is not automatically semantically equivalent.
 
-Start with [`docs/multi-format-framework.md`](docs/multi-format-framework.md), [`docs/architecture.md`](docs/architecture.md), and [`docs/transformation-routing.md`](docs/transformation-routing.md).
+## Validation boundary
+
+The implemented Mermaid checker validates the engine-generated `classDiagram` subset only. A full Mermaid validator will be derived later from Mermaid grammar/source/runtime behaviour rather than guessed from documentation.

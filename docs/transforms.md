@@ -1,6 +1,23 @@
 # Transformation Model
 
-Transforms are the repository equivalent of an XSLT-like mapping layer: they convert one structured representation into another while keeping the semantic mapping explicit.
+Transforms are the repository equivalent of an XSLT-like mapping layer: they convert one structured representation into another while keeping semantic mapping explicit.
+
+## Implemented engine
+
+The executable implementation is `tooling/blueprint_engine/src/blueprint_engine/`.
+
+Two transformation mechanisms are available:
+
+1. **Built-in format encoders** for targets with syntax or serialization rules.
+2. **Declarative mapping rules** for XSLT-like object-to-object projection.
+
+The declarative engine uses:
+
+```text
+select -> match -> emit
+```
+
+and can map canonical `elements` and `relationships` into arbitrary target collections.
 
 ## Transform categories
 
@@ -12,30 +29,24 @@ Transforms are the repository equivalent of an XSLT-like mapping layer: they con
 - enrichment
 - projection/simplification
 
-## Manifest requirements
+## Runtime guarantees
 
-Each transform should state:
+Every built-in transform returns:
 
-- source model/schema
-- destination model/schema
-- required profile
-- parameters
-- preconditions
-- output guarantees
-- fidelity/lossiness
-- reversibility
-- deterministic behaviour
-- dependency/runtime requirements
+- transform ID
+- target format
+- media type
+- fidelity declaration
+- explicit semantic losses
+- deterministic source hash
+- profile/overlay provenance when supplied
 
-## Transform graph
+Transforms must not silently discard semantics. JSON Schema export, for example, declares relationship loss and lists dropped relationship IDs in the generated schema.
 
-Transforms form a graph rather than a single pipeline. Tooling can calculate a path such as:
+## Routing
 
-```text
-JSON Schema
-  -> canonical.data-model
-  -> profile.mermaid.class.logical-data
-  -> Mermaid classDiagram
-```
+The conversion graph is executable through the engine. Route selection prefers lower-loss paths and adds cost for non-reversible edges.
 
-Round-trip claims should only be made when tested with fixtures.
+## Round trips
+
+XML and the repository UML-class interchange model currently support tested canonical round trips. Mermaid and PlantUML imports are intentionally deferred until their parser/grammar boundaries are defined.

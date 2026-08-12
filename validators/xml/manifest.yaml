@@ -1,10 +1,10 @@
 id: validator.xml
 kind: validator
-version: 0.1.0
-status: experimental
+version: 0.2.0
+status: implemented-core
 title: XML Validator
 target: format.xml
-layers: [well-formedness, schema, semantic, compatibility, lint]
-profiles: [xsd, relax-ng, schematron]
-implementation_status: planned
-severity_levels: [error, warning, compatibility, lint, suggestion]
+implementation: tooling/blueprint_engine/src/blueprint_engine/validators.py
+scope: XML well-formedness plus repository XML model-profile root check
+authority: parser-plus-profile
+layers: [syntax, format-constraint]

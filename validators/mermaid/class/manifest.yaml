@@ -1,30 +1,13 @@
 id: validator.mermaid.class
 kind: validator
-version: 0.1.0
-status: experimental
+version: 0.2.0
+status: implemented-generated-subset
 title: Mermaid classDiagram Validator
-description: Placeholder manifest for a future validator derived from Mermaid grammar, source code and runtime behaviour.
+description: Structural checker for the subset emitted by the repository engine. Not a normative Mermaid parser.
 target: format.mermaid.class
-layers:
-- schema
-- syntax
-- semantic
-- format-constraint
-- compatibility
-- lint
-- runtime-render
-- fixture-regression
-rule_sources:
-- formal-grammar
-- source-code
-- official-documentation
-- runtime-behaviour
-- profile-semantics
-severity_levels:
-- error
-- warning
-- compatibility
-- lint
-- suggestion
-implementation_status: planned
-derivation_policy: Analyse Mermaid repository source and parser/runtime behaviour before adding normative rules.
+implementation: tooling/blueprint_engine/src/blueprint_engine/validators.py
+layers: [syntax, semantic, fixture-regression]
+rule_sources: [repository-generated-subset]
+severity_levels: [error, warning, compatibility, lint, suggestion]
+implementation_status: generated-subset-only
+derivation_policy: Analyse Mermaid repository grammar, parser source, version gates and runtime behaviour before adding normative rules.

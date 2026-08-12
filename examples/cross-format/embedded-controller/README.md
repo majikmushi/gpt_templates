@@ -1,11 +1,16 @@
 # Embedded Controller Cross-Format Example
 
-One small system is represented through several targets.
+`model.yaml` is the canonical source.
 
-- `model.yaml` is the canonical semantic form.
-- `model.mmd` is a Mermaid class-diagram projection.
-- `model.puml` is a PlantUML class-diagram projection.
-- `schema.json` is a JSON Schema projection of configuration structure, not full communication semantics.
-- `model.xml` is a hierarchical structured representation.
+The executable engine generates:
 
-The representations are not automatically semantically identical. The round-trip fixture declares what each path is expected to preserve or lose.
+- `model.mmd` - Mermaid classDiagram
+- `model.puml` - PlantUML
+- `model.uml.json` - repository UML class interchange object
+- `schema.json` - JSON Schema projection
+- `model.xml` - repository XML profile
+- `model.md` - Markdown presentation
+
+The JSON Schema export intentionally drops relationship topology and records that loss in `x-blueprint-projection`.
+
+The XML and UML-class interchange representations are used by round-trip tests because their current engine mappings preserve the supported structural semantics.

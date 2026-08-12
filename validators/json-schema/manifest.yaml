@@ -1,10 +1,10 @@
 id: validator.json-schema
 kind: validator
-version: 0.1.0
-status: experimental
+version: 0.2.0
+status: implemented-core
 title: JSON Schema Validator
 target: format.json-schema
-layers: [syntax, dialect-schema, semantic, compatibility, lint]
-implementation_status: planned
-derivation_policy: bind validation to a declared JSON Schema dialect and conforming engine
-severity_levels: [error, warning, compatibility, lint, suggestion]
+implementation: tooling/blueprint_engine/src/blueprint_engine/validators.py
+scope: JSON Schema Draft 2020-12 meta-schema validation
+authority: native-meta-schema
+layers: [schema, syntax]

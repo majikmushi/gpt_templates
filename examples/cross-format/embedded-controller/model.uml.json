@@ -1,0 +1,68 @@
+{
+  "classes": [
+    {
+      "attributes": {
+        "role": "controller"
+      },
+      "id": "mcu",
+      "name": "MCU",
+      "stereotypes": [
+        "component"
+      ]
+    },
+    {
+      "attributes": {
+        "interface": "I2C"
+      },
+      "id": "sensor",
+      "name": "Temperature Sensor",
+      "stereotypes": [
+        "component"
+      ]
+    },
+    {
+      "attributes": {
+        "interface": "SPI"
+      },
+      "id": "radio",
+      "name": "Radio",
+      "stereotypes": [
+        "component"
+      ]
+    }
+  ],
+  "id": "example.embedded-controller.uml-class",
+  "kind": "uml-class-model",
+  "relationships": [
+    {
+      "annotations": {
+        "protocol": "I2C"
+      },
+      "direction": "bidirectional",
+      "id": "r1",
+      "semantics": [
+        "communication"
+      ],
+      "source": "mcu",
+      "source_cardinality": null,
+      "target": "sensor",
+      "target_cardinality": null,
+      "type": "communication"
+    },
+    {
+      "annotations": {
+        "protocol": "SPI"
+      },
+      "direction": "bidirectional",
+      "id": "r2",
+      "semantics": [
+        "communication"
+      ],
+      "source": "mcu",
+      "source_cardinality": null,
+      "target": "radio",
+      "target_cardinality": null,
+      "type": "communication"
+    }
+  ]
+}

@@ -1,10 +1,11 @@
 id: validator.uml
 kind: validator
-version: 0.1.0
-status: experimental
-title: UML Validator
-target: format.uml
-layers: [schema, semantic, compatibility, lint, tool-runtime]
-implementation_status: planned
-derivation_policy: derive normative rules from an explicitly selected UML specification version and tool-neutral metamodel constraints
-severity_levels: [error, warning, compatibility, lint, suggestion]
+version: 0.2.0
+status: implemented-core-limited
+title: UML Class Interchange Validator
+target: format.uml.class
+implementation: tooling/blueprint_engine/src/blueprint_engine/validators.py
+scope: repository UML class interchange object consistency
+authority: repository-interchange-model
+layers: [schema, semantic]
+future: validate against normative UML metamodel/specification profile

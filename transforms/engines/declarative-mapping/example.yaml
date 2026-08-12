@@ -1,0 +1,23 @@
+id: transform.example.component-graph
+kind: declarative-transform
+version: 0.1.0
+status: experimental
+engine: transform-engine.declarative-mapping
+target:
+  nodes: []
+  edges: []
+rules:
+  - select: elements
+    match: {type: component}
+    emit_to: nodes
+    emit:
+      id: $.id
+      label: $.name
+      kind: $.type
+  - select: relationships
+    match: {type: communication}
+    emit_to: edges
+    emit:
+      id: $.id
+      source: $.source
+      target: $.target

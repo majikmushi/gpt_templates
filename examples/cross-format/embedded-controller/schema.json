@@ -1,11 +1,59 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Embedded Controller Configuration",
-  "type": "object",
-  "properties": {
-    "mcu": {"type": "object", "properties": {"role": {"const": "controller"}}, "required": ["role"]},
-    "sensor": {"type": "object", "properties": {"interface": {"const": "I2C"}}, "required": ["interface"]},
-    "radio": {"type": "object", "properties": {"interface": {"const": "SPI"}}, "required": ["interface"]}
+  "$defs": {
+    "mcu": {
+      "additionalProperties": true,
+      "properties": {
+        "role": {
+          "type": "string"
+        }
+      },
+      "title": "MCU",
+      "type": "object",
+      "x-blueprint-element-type": "component"
+    },
+    "radio": {
+      "additionalProperties": true,
+      "properties": {
+        "interface": {
+          "type": "string"
+        }
+      },
+      "title": "Radio",
+      "type": "object",
+      "x-blueprint-element-type": "component"
+    },
+    "sensor": {
+      "additionalProperties": true,
+      "properties": {
+        "interface": {
+          "type": "string"
+        }
+      },
+      "title": "Temperature Sensor",
+      "type": "object",
+      "x-blueprint-element-type": "component"
+    }
   },
-  "required": ["mcu", "sensor", "radio"]
+  "$id": "example.embedded-controller",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "mcu": {
+      "$ref": "#/$defs/mcu"
+    },
+    "radio": {
+      "$ref": "#/$defs/radio"
+    },
+    "sensor": {
+      "$ref": "#/$defs/sensor"
+    }
+  },
+  "title": "Embedded Controller Cross-Format Example",
+  "type": "object",
+  "x-blueprint-projection": {
+    "dropped_relationship_ids": [
+      "r1",
+      "r2"
+    ],
+    "source_type": "electronics-system"
+  }
 }

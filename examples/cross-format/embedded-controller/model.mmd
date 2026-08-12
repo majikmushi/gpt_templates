@@ -1,12 +1,15 @@
 classDiagram
-    class MCU {
-        +role controller
+    class mcu["MCU"] {
+        <<component>>
+        +role: controller
     }
-    class TemperatureSensor {
-        +interface I2C
+    class sensor["Temperature Sensor"] {
+        <<component>>
+        +interface: I2C
     }
-    class Radio {
-        +interface SPI
+    class radio["Radio"] {
+        <<component>>
+        +interface: SPI
     }
-    MCU <--> TemperatureSensor : I2C
-    MCU <--> Radio : SPI
+    mcu -- sensor : I2C
+    mcu -- radio : SPI

@@ -1,13 +1,13 @@
 @startuml
-class MCU {
-  +role : controller
+class "MCU" as mcu <<component>> {
+  +role: controller
 }
-class TemperatureSensor {
-  +interface : I2C
+class "Temperature Sensor" as sensor <<component>> {
+  +interface: I2C
 }
-class Radio {
-  +interface : SPI
+class "Radio" as radio <<component>> {
+  +interface: SPI
 }
-MCU <--> TemperatureSensor : I2C
-MCU <--> Radio : SPI
+mcu -- sensor : I2C
+mcu -- radio : SPI
 @enduml

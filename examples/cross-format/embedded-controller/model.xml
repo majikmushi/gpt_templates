@@ -1,8 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<system id="example.embedded-controller" type="electronics-system">
-  <component id="mcu" role="controller"/>
-  <component id="sensor" interface="I2C"/>
-  <component id="radio" interface="SPI"/>
-  <connection source="mcu" target="sensor" protocol="I2C" direction="bidirectional"/>
-  <connection source="mcu" target="radio" protocol="SPI" direction="bidirectional"/>
-</system>
+<model id="example.embedded-controller" type="electronics-system"><metadata><entry name="title">Embedded Controller Cross-Format Example</entry></metadata><elements><element id="mcu" type="component" name="MCU"><properties><property name="role" json="&quot;controller&quot;" /></properties><annotations /></element><element id="sensor" type="component" name="Temperature Sensor"><properties><property name="interface" json="&quot;I2C&quot;" /></properties><annotations /></element><element id="radio" type="component" name="Radio"><properties><property name="interface" json="&quot;SPI&quot;" /></properties><annotations /></element></elements><relationships><relationship id="r1" type="communication" source="mcu" target="sensor" direction="bidirectional"><semantic>communication</semantic><annotations><annotation name="protocol" json="&quot;I2C&quot;" /></annotations></relationship><relationship id="r2" type="communication" source="mcu" target="radio" direction="bidirectional"><semantic>communication</semantic><annotations><annotation name="protocol" json="&quot;SPI&quot;" /></annotations></relationship></relationships><containers /></model>
