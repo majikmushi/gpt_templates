@@ -1,0 +1,8 @@
+id: registry.migrations
+kind: migration-registry
+version: 0.1.0
+status: experimental
+title: Schema and Artifact Migrations
+policy: Each breaking schema or manifest change adds a directional migration entry.
+migrations: []
+fields: [id, from, to, applies_to, transform, reversible, notes]

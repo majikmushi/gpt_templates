@@ -1,0 +1,15 @@
+id: tooling.cli-contract
+kind: tool-contract
+version: 0.1.0
+status: contract-only-no-executable-implementation
+title: Future Blueprint Registry CLI
+commands:
+  catalog: {purpose: discover artifacts and capabilities}
+  match: {purpose: select target formats and profiles from required capabilities}
+  transform: {purpose: execute a declared conversion path}
+  validate: {purpose: run layered validators}
+  render: {purpose: invoke a renderer for a generated target}
+  compare: {purpose: evaluate semantic equivalence between artifacts}
+  roundtrip: {purpose: execute and compare a transformation cycle}
+  migrate: {purpose: upgrade artifact and schema versions}
+  lint: {purpose: apply repository and profile rules}
