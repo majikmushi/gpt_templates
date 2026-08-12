@@ -1,68 +1,55 @@
 # Validation Model
 
-Validation is a first-class artifact type. The executable engine separates **authority**
-from **fallback checking** so a weak local checker cannot be mistaken for the target
-language's parser.
+Validation is a first-class artifact type and now covers both representation artifacts and the definitions used to understand representation languages.
 
-## Layers
+## Validation layers
 
-1. Schema validation.
-2. Semantic/reference validation.
-3. Native syntax/parser validation.
-4. Source-derived format constraints.
-5. Compatibility/version checks.
-6. Lint/policy rules.
-7. Runtime/render validation.
-8. Fixture/regression validation.
+1. **Artifact/schema** - required fields, data types, enums and structural constraints.
+2. **Language-definition** - normalized syntax/metamodel/semantics/capability records conform to the NLD schema.
+3. **Source-adapter** - specification-source adapter manifests conform to their schema and status rules.
+4. **Source provenance** - pinned Git commits and evidence blob hashes still match the source checkout.
+5. **Semantic** - unique IDs, valid references, relationship endpoints and container membership.
+6. **Syntax/serialization** - target parser or structural checks.
+7. **Format constraints** - target-specific restrictions.
+8. **Compatibility** - feature/version/renderer support.
+9. **Lint** - valid but undesirable patterns.
+10. **Runtime/render** - parser or renderer behaviour.
+11. **Fixture/regression** - known-valid and known-invalid cases.
 
-## Mermaid authority model
+## Authority model
 
-Mermaid validation is now source-derived and runtime-backed.
-
-The analysed source is `majikmushi/mermaid`, branch `develop`, commit
-`446f6a7701065eb12e024475243434eb727dc172`, package version `11.4.1`.
-Exact evidence-file SHAs are stored in `validators/mermaid/source-provenance.yaml`.
-
-For syntax, Mermaid's own `parse()` is authoritative. Static Python rules are a
-conservative preflight derived from the class-diagram Jison grammar, ClassDB,
-ClassMember types and source tests; they are not a replacement parser.
-
-When the optional Node bridge is installed:
+Validator authority comes from the source evidence recorded in a normalized language definition. Different sources may carry different authority:
 
 ```text
-.mmd
- -> Mermaid parse()
- -> detected diagram type
- -> Mermaid Diagram/ClassDB
- -> normalized AST
- -> canonical adapter
+normative specification / schema
+native authoritative runtime
+formal grammar
+semantic/metamodel implementation
+conformance tests
+supporting documentation
+repository-derived preflight rules
 ```
 
-When it is unavailable, validation reports the degradation explicitly. Use
-`--require-runtime` to make missing native validation an error.
+The exact order is language-specific and should be declared rather than assumed globally.
 
-## Mermaid classDiagram reference implementation
+## Implemented validation
 
-The source-derived class validator records rules for:
+The Python engine implements canonical JSON Schema Draft 2020-12 validation, canonical semantic-reference validation, NLD schema validation, specification-source adapter validation, generic Git-backed source provenance verification, JSON Schema meta-schema validation, XML well-formedness validation, Mermaid runtime/source-derived validation, PlantUML structural validation, UML repository-interchange validation and Markdown structural validation.
 
-- `classDiagram` and `classDiagram-v2` headers;
-- `TB`, `BT`, `RL`, `LR` direction values;
-- aggregation, extension, composition, dependency and lollipop relation markers;
-- solid and dotted relation lines;
-- quoted cardinality/end labels;
-- quoted note text;
-- link target values;
-- member visibility and static/abstract classifiers;
-- generic types;
-- namespaces and annotations;
-- lollipop-to-interface semantic normalization.
+## Mermaid
 
-The AST adapter imports the parsed ClassDB rather than reparsing text in Python.
+Mermaid's own runtime parser is syntax authority when installed. The class validator also uses conservative source-derived preflight rules. The source evidence is pinned in `validators/mermaid/source-provenance.yaml`, and `language-definitions/mermaid/class-diagram.yaml` records the normalized language definition consumed by the validator architecture.
 
-## Other formats
+If Mermaid runtime support is unavailable, default validation degrades with a warning. `--require-runtime` converts that condition to an error.
 
-JSON Schema uses Draft 2020-12 meta-schema checking; XML uses well-formedness plus
-repository-profile checks; UML currently validates the repository interchange model;
-PlantUML and Markdown retain structural validators.
+## UML
 
-UML validation is still not a full OMG metamodel validator.
+Current UML validation checks the repository's UML class-interchange representation, not the normative UML metamodel. `language-definitions/uml/manifest.yaml` is deliberately unpinned; normative UML claims remain blocked until an explicit specification version and evidence set are ingested.
+
+## Generic source checking
+
+```bash
+blueprint-engine --repo . source-check <provenance.yaml> <source-root>
+```
+
+The command checks both the pinned source commit and every evidence file's Git blob ID. This mechanism is format-independent; `mermaid-source-check` is retained as a compatibility alias.
