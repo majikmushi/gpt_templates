@@ -1,0 +1,14 @@
+id: semantics.equivalence
+kind: semantic-equivalence-model
+version: 0.1.0
+status: experimental
+title: Semantic Equivalence and Fidelity Model
+levels:
+  - {id: exact, meaning: same canonical semantics and constraints}
+  - {id: equivalent, meaning: same intended domain meaning with representation differences}
+  - {id: projection, meaning: target intentionally preserves only a declared subset}
+  - {id: approximate, meaning: meaning is represented through weaker or overloaded primitives}
+  - {id: non-equivalent, meaning: material semantic difference or silent loss}
+comparison_dimensions: [element-identity, element-type, properties, relationship-type, direction, cardinality, containment, behavior, constraints, annotations, critical-visual-semantics]
+rule: visual layout differences alone do not imply semantic inequality
+round_trip_requirement: claims of round-trip safety require fixture-backed equivalence at exact or equivalent level

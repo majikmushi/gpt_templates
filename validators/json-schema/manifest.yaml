@@ -1,0 +1,10 @@
+id: validator.json-schema
+kind: validator
+version: 0.1.0
+status: experimental
+title: JSON Schema Validator
+target: format.json-schema
+layers: [syntax, dialect-schema, semantic, compatibility, lint]
+implementation_status: planned
+derivation_policy: bind validation to a declared JSON Schema dialect and conforming engine
+severity_levels: [error, warning, compatibility, lint, suggestion]

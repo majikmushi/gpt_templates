@@ -1,0 +1,15 @@
+id: ontology.core
+kind: ontology
+version: 0.1.0
+status: experimental
+title: Core Representation Ontology
+concepts:
+  model: {children: [element, relationship, container, behavior, annotation, visual-encoding]}
+  element: {properties: [id, type, name, properties, capabilities, annotations]}
+  relationship: {properties: [id, type, source, target, direction, cardinality, semantics, annotations]}
+  container: {properties: [id, type, members, parent, annotations]}
+  behavior: {children: [state, transition, interaction, event, action]}
+  annotation: {properties: [key, value, namespace]}
+  visual-encoding: {properties: [channel, dimension, mapping, fallback, legend-required]}
+relationship_semantics: [association, dependency, containment, composition, aggregation, inheritance, realization, ownership, flow, communication, trace]
+extension_policy: domain ontologies extend this core rather than replacing its IDs

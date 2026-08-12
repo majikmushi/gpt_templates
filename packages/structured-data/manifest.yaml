@@ -1,0 +1,7 @@
+id: package.structured-data
+kind: package
+version: 0.1.0
+status: experimental
+title: Structured Data Pack
+depends_on: [package.core]
+includes: [formats/json-schema, formats/xml, transforms/engines/xslt, adapters/registry.yaml]

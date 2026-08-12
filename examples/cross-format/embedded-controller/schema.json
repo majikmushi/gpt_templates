@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Embedded Controller Configuration",
+  "type": "object",
+  "properties": {
+    "mcu": {"type": "object", "properties": {"role": {"const": "controller"}}, "required": ["role"]},
+    "sensor": {"type": "object", "properties": {"interface": {"const": "I2C"}}, "required": ["interface"]},
+    "radio": {"type": "object", "properties": {"interface": {"const": "SPI"}}, "required": ["interface"]}
+  },
+  "required": ["mcu", "sensor", "radio"]
+}

@@ -1,0 +1,11 @@
+id: format.plantuml
+kind: format-family
+version: 0.1.0
+status: experimental
+title: PlantUML
+semantic_strictness: semi-formal
+role: textual UML-oriented diagram DSL and rendering target
+capabilities_seed: [class, sequence, state, activity, component, deployment, object, use-case, package, notes, styles, stereotypes]
+profile_bindings: [profiles/domain/class-like-models.yaml]
+validator: validator.plantuml
+normative_rule_status: planned-source-and-documentation-derived
