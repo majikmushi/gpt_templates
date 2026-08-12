@@ -1,0 +1,10 @@
+id: registry.renderers
+kind: registry
+version: 0.1.0
+status: experimental
+title: Renderer Registry
+renderers:
+  - {id: renderer.mermaid, target: format.mermaid, output: [svg, png, html], implementation: planned}
+  - {id: renderer.plantuml, target: format.plantuml, output: [svg, png], implementation: planned}
+  - {id: renderer.markdown, target: format.markdown, output: [html, document], implementation: planned}
+  - {id: renderer.uml, target: format.uml, output: [tool-specific], implementation: adapter-dependent}

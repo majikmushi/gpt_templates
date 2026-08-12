@@ -1,0 +1,10 @@
+id: validator.plantuml
+kind: validator
+version: 0.1.0
+status: experimental
+title: PlantUML Validator
+target: format.plantuml
+layers: [syntax, semantic, compatibility, lint, runtime-render]
+implementation_status: planned
+derivation_policy: derive normative behavior from PlantUML source documentation and runtime before marking stable
+severity_levels: [error, warning, compatibility, lint, suggestion]

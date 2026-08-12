@@ -1,0 +1,10 @@
+id: fixture.roundtrip.embedded-controller
+kind: roundtrip-fixture
+version: 0.1.0
+status: experimental
+source: examples/cross-format/embedded-controller/model.yaml
+cases:
+  - {path: [canonical.core, format.mermaid.class, canonical.core], expected_equivalence: equivalent, notes: Requires profile-aware import/export.}
+  - {path: [canonical.core, format.plantuml, canonical.core], expected_equivalence: equivalent, notes: Requires profile-aware import/export.}
+  - {path: [canonical.core, format.json-schema, canonical.core], expected_equivalence: projection, notes: Communication topology is outside the schema projection.}
+  - {path: [canonical.core, format.xml, canonical.core], expected_equivalence: equivalent, notes: Depends on an XML profile preserving IDs relationships and annotations.}

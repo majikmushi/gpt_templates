@@ -1,0 +1,13 @@
+id: policy.repository
+kind: policy-set
+version: 0.1.0
+status: experimental
+title: Repository Governance Policy
+versioning: semantic-versioning
+lifecycle: [experimental, stable, deprecated, superseded, retired]
+naming: {ids: lowercase namespaced dotted identifiers, paths: lowercase kebab-case unless target format requires otherwise}
+provenance: {required_for_generated_artifacts: true, source_hash_recommended: true}
+trust: {normative_rules_require_source: true, generated-content-is-not-normative-by-default: true}
+execution_security: {declarative_preferred: true, executable_transforms_must_declare_runtime: true, untrusted_execution_should_be_sandboxed: true}
+compatibility: {format-version-or-dialect-must-be-explicit-when-material: true}
+migration: {schema-breaking-changes-require-migration-entry: true}

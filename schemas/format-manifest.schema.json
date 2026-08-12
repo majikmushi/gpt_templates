@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Format Manifest",
+  "type": "object",
+  "required": ["id", "kind", "version", "status", "title"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^format\\."},
+    "kind": {"enum": ["format", "format-family"]},
+    "version": {"type": "string"},
+    "status": {"enum": ["experimental", "stable", "deprecated", "superseded", "retired"]},
+    "title": {"type": "string"},
+    "semantic_strictness": {"type": "string"},
+    "role": {"type": "string"}
+  },
+  "additionalProperties": true
+}

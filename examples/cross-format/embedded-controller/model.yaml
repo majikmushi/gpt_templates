@@ -1,0 +1,12 @@
+id: example.embedded-controller
+type: electronics-system
+metadata: {title: Embedded Controller Cross-Format Example}
+elements:
+  - {id: mcu, type: component, name: MCU, properties: {role: controller}}
+  - {id: sensor, type: component, name: Temperature Sensor, properties: {interface: I2C}}
+  - {id: radio, type: component, name: Radio, properties: {interface: SPI}}
+relationships:
+  - {id: r1, type: communication, source: mcu, target: sensor, direction: bidirectional, semantics: [communication], annotations: {protocol: I2C}}
+  - {id: r2, type: communication, source: mcu, target: radio, direction: bidirectional, semantics: [communication], annotations: {protocol: SPI}}
+containers: []
+visual_encodings: []
