@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema://gpt-templates/validator-manifest",
+  "title": "Validator Manifest",
+  "allOf": [
+    {
+      "$ref": "artifact-manifest.schema.json"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "id",
+    "kind",
+    "version",
+    "status",
+    "title",
+    "target",
+    "layers"
+  ],
+  "properties": {
+    "kind": {
+      "const": "validator"
+    },
+    "target": {
+      "type": "string"
+    },
+    "layers": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "schema",
+          "syntax",
+          "semantic",
+          "format-constraint",
+          "compatibility",
+          "lint",
+          "runtime-render",
+          "fixture-regression"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "rule_sources": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "formal-grammar",
+          "source-code",
+          "official-documentation",
+          "runtime-behaviour",
+          "repository-policy",
+          "profile-semantics"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "severity_levels": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "error",
+          "warning",
+          "compatibility",
+          "lint",
+          "suggestion"
+        ]
+      },
+      "uniqueItems": true
+    }
+  }
+}

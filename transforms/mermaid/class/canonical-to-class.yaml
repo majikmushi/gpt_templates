@@ -1,0 +1,21 @@
+id: transform.canonical-to-mermaid-class
+kind: transform
+version: 0.1.0
+status: experimental
+title: Canonical Model to Mermaid classDiagram
+description: Transformation contract placeholder. Concrete mappings are supplied by representation profiles.
+source: canonical.*
+target: format.mermaid.class
+profile: profile.mermaid.class.*
+parameters:
+  profile:
+    required: true
+  overlays:
+    required: false
+    multiple: true
+preconditions:
+- source validates against its canonical schema
+- selected profile targets format.mermaid.class
+fidelity: presentation_only
+deterministic: true
+implementation_status: planned

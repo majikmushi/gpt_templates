@@ -1,0 +1,30 @@
+id: validator.mermaid.class
+kind: validator
+version: 0.1.0
+status: experimental
+title: Mermaid classDiagram Validator
+description: Placeholder manifest for a future validator derived from Mermaid grammar, source code and runtime behaviour.
+target: format.mermaid.class
+layers:
+- schema
+- syntax
+- semantic
+- format-constraint
+- compatibility
+- lint
+- runtime-render
+- fixture-regression
+rule_sources:
+- formal-grammar
+- source-code
+- official-documentation
+- runtime-behaviour
+- profile-semantics
+severity_levels:
+- error
+- warning
+- compatibility
+- lint
+- suggestion
+implementation_status: planned
+derivation_policy: Analyse Mermaid repository source and parser/runtime behaviour before adding normative rules.

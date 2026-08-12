@@ -1,0 +1,63 @@
+id: registry.capabilities
+kind: registry
+version: 1.0.0
+status: experimental
+title: Representation Capability Registry
+capabilities:
+  entity:
+  - named
+  - typed
+  - annotated
+  - styled
+  - iconified
+  properties:
+  - named
+  - typed
+  - visibility
+  - keys
+  - comments
+  relationships:
+  - directed
+  - bidirectional
+  - labelled
+  - typed
+  - cardinality
+  - identifying
+  - dependency
+  structure:
+  - hierarchy
+  - containment
+  - grouping
+  - namespace
+  - subgraph
+  - layering
+  behavior:
+  - operations
+  - transitions
+  - sequence
+  - parallelism
+  - state
+  semantics:
+  - inheritance
+  - composition
+  - aggregation
+  - realization
+  - ownership
+  - dependency
+  presentation:
+  - shape
+  - fill-colour
+  - stroke-colour
+  - border-pattern
+  - edge-style
+  - arrow-type
+  - icon
+  - label
+  - annotation
+  - spatial-grouping
+  - direction
+  quality:
+  - legend
+  - accessibility-fallback
+  - deterministic-layout-hint
+  - version-compatibility

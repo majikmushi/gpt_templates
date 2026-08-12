@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema://gpt-templates/transform-manifest",
+  "title": "Transform Manifest",
+  "allOf": [
+    {
+      "$ref": "artifact-manifest.schema.json"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "id",
+    "kind",
+    "version",
+    "status",
+    "title",
+    "source",
+    "target",
+    "fidelity"
+  ],
+  "properties": {
+    "kind": {
+      "const": "transform"
+    },
+    "source": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string"
+    },
+    "profile": {
+      "type": "string"
+    },
+    "parameters": {
+      "type": "object"
+    },
+    "preconditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "fidelity": {
+      "type": "string",
+      "enum": [
+        "lossless",
+        "lossy",
+        "presentation_only",
+        "reversible",
+        "round_trip_safe"
+      ]
+    },
+    "deterministic": {
+      "type": "boolean"
+    }
+  }
+}

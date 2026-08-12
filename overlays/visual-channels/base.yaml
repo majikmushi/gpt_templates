@@ -1,0 +1,44 @@
+id: overlay.visual-channels.base
+kind: overlay
+version: 1.0.0
+status: experimental
+title: Base Visual Encoding Channels
+channels:
+  shape:
+    cardinality: single
+    accessibility_fallback: label-or-annotation
+  fill_colour:
+    cardinality: single
+    accessibility_fallback: label-or-annotation
+  stroke_colour:
+    cardinality: single
+    accessibility_fallback: label-or-annotation
+  border_pattern:
+    cardinality: single
+    accessibility_fallback: annotation
+  edge_style:
+    cardinality: single
+    accessibility_fallback: edge-label
+  arrow_type:
+    cardinality: single
+    accessibility_fallback: edge-label
+  icon:
+    cardinality: single
+    accessibility_fallback: label
+  label:
+    cardinality: multiple
+  annotation:
+    cardinality: multiple
+  grouping:
+    cardinality: multiple
+    mechanisms:
+    - subgraph
+    - namespace
+    - container
+    - spatial-group
+collision_policy:
+- remap-channel
+- compose-if-unambiguous
+- fallback-to-text
+- fail-if-ambiguous
+legend_required_when: encoding is not self-evident
