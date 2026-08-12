@@ -1,0 +1,9 @@
+id: catalog.artifacts
+kind: catalog
+version: 0.1.0
+status: experimental
+title: Artifact Catalog Seed
+format_families: [format.mermaid, format.uml, format.plantuml, format.json-schema, format.xml, format.markdown]
+semantic_models: [ontology.core, semantics.equivalence, canonical.core]
+registries: [registry.capabilities, registry.domain.class-like-models, matrix.format-capabilities, graph.conversions]
+note: Intended to become generated from manifests rather than hand-maintained.

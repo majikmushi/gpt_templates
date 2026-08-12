@@ -1,0 +1,20 @@
+id: graph.conversions
+kind: conversion-graph
+version: 0.1.0
+status: experimental
+title: Representation Conversion Graph
+routing_policy:
+  prefer: [lossless, reversible, deterministic, validated]
+  reject: [silent-semantic-loss, undeclared-profile-overload]
+edges:
+  - {from: canonical.core, to: format.uml.class, transform: transform.canonical-to-uml-class, fidelity: lossless-for-structural-subset, reversible: conditional}
+  - {from: canonical.core, to: format.mermaid.class, transform: transform.canonical-to-mermaid-class, fidelity: profile-dependent, reversible: conditional}
+  - {from: canonical.core, to: format.plantuml, transform: transform.canonical-to-plantuml, fidelity: profile-dependent, reversible: conditional}
+  - {from: format.json-schema, to: canonical.core, transform: adapter.json-schema.import, fidelity: lossless-for-schema-subset, reversible: conditional}
+  - {from: canonical.core, to: format.json-schema, transform: adapter.json-schema.export, fidelity: projection, reversible: conditional}
+  - {from: format.xml, to: canonical.core, transform: adapter.xml.import, fidelity: profile-dependent, reversible: conditional}
+  - {from: canonical.core, to: format.xml, transform: adapter.xml.export, fidelity: profile-dependent, reversible: conditional}
+  - {from: canonical.core, to: format.markdown, transform: adapter.markdown.export, fidelity: presentation-only, reversible: false}
+  - {from: format.uml.class, to: format.mermaid.class, transform: transform.uml-class-to-mermaid-class, fidelity: partial, reversible: conditional}
+  - {from: format.uml.class, to: format.plantuml, transform: transform.uml-class-to-plantuml, fidelity: high, reversible: conditional}
+  - {from: format.xml, to: format.xml, transform: transform-engine.xslt, fidelity: stylesheet-defined, reversible: stylesheet-defined}

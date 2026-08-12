@@ -1,0 +1,14 @@
+id: format.json-schema
+kind: format
+version: 0.1.0
+status: experimental
+title: JSON Schema
+semantic_strictness: formal
+role: machine-readable data-shape and validation representation
+capabilities:
+  structure: [object, array, property, required, reference]
+  typing: [primitive-types, enum, const, union]
+  composition: [allOf, anyOf, oneOf, not]
+  constraints: [numeric, string, array, object, conditional]
+validator: validator.json-schema
+adapter: adapter.json-schema

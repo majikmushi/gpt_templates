@@ -1,0 +1,15 @@
+id: rules.core
+kind: rule-set
+version: 0.1.0
+status: experimental
+title: Core Representation Rules
+rules:
+  - {id: stable-artifact-id, severity: error, rule: Reusable artifacts have stable namespaced IDs independent of file paths.}
+  - {id: explicit-semantic-overload, severity: error, rule: Non-native primitive meanings require an explicit representation profile.}
+  - {id: no-silent-semantic-loss, severity: error, rule: Transforms must declare dropped or weakened semantics.}
+  - {id: colour-redundancy, severity: warning, rule: Critical meaning encoded by colour requires textual or structural fallback.}
+  - {id: overlay-channel-collision, severity: error, rule: Conflicting single-use visual channels must be remapped composed unambiguously or rejected.}
+  - {id: legend-for-nonobvious-encoding, severity: warning, rule: Non-self-evident visual encodings require a legend.}
+  - {id: deterministic-generation, severity: warning, rule: Transforms should be deterministic for fixed source versions profile and parameters.}
+  - {id: validator-provenance, severity: error, rule: Validator rules identify their normative or empirical source.}
+  - {id: roundtrip-claims-tested, severity: error, rule: Round-trip-safe claims require fixture-backed semantic equivalence tests.}

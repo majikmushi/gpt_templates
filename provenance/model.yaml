@@ -1,0 +1,7 @@
+id: provenance.model
+kind: provenance-model
+version: 0.1.0
+status: experimental
+title: Generated Artifact Provenance
+fields: [source_ids, source_versions, source_hashes, canonical_model, blueprint, profile, overlays, transform_path, transform_versions, validator_set, validator_versions, renderer, generated_at, parameters]
+requirements: {preserve-transform-chain: true, record-lossiness: true, record-validation-result: true}
