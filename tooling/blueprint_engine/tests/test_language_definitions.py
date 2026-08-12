@@ -20,13 +20,28 @@ def test_language_definition_registry_and_schema():
 
 def test_specification_source_adapter_schemas():
     engine = BlueprintEngine(REPO)
-    for relative in (
-        "adapters/specification/mermaid.yaml",
-        "adapters/specification/uml.yaml",
-    ):
+    registry = yaml.safe_load(
+        (REPO / "adapters/specification/registry.yaml").read_text(encoding="utf-8")
+    )
+    for relative in registry["adapters"]:
         value = yaml.safe_load((REPO / relative).read_text(encoding="utf-8"))
         result = engine.validate_specification_source_adapter(value)
         assert result.ok, (relative, result.as_dict())
+
+
+def test_language_definition_sources_resolve_to_adapter_ids():
+    engine = BlueprintEngine(REPO)
+    registry = yaml.safe_load(
+        (REPO / "adapters/specification/registry.yaml").read_text(encoding="utf-8")
+    )
+    adapter_ids = {
+        yaml.safe_load((REPO / relative).read_text(encoding="utf-8"))["id"]
+        for relative in registry["adapters"]
+    }
+    for definition_id in ("language.mermaid.class-diagram", "language.uml"):
+        definition = engine.language_definition(definition_id)
+        for source in definition["sources"]:
+            assert source["adapter_id"] in adapter_ids
 
 
 def test_git_blob_sha_is_deterministic():

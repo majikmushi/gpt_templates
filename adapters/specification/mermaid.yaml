@@ -1,8 +1,8 @@
-id: specification.mermaid.class
+id: specification.mermaid.class.grammar
 kind: specification-source-adapter
-version: 0.1.0
+version: 0.2.0
 status: implemented
-title: Mermaid classDiagram Specification Ingestion
+title: Mermaid classDiagram Grammar Ingestion
 source_kind: grammar-source
 authority: authoritative
 input:
@@ -17,14 +17,9 @@ extractor:
   deterministic: true
 output:
   normalized_language_definition: language-definitions/mermaid/class-diagram.yaml
-  sections: [syntax, metamodel, semantics, constraints, capabilities, runtime, conformance, provenance]
+  sections: [syntax, constraints, capabilities]
 versioning:
   source_commit_change: revalidate-dependent-sections
   evidence_blob_change: revalidate-dependent-rules
 notes:
-  - Runtime acceptance remains authoritative for syntax; the normalized definition is a source-derived representation of known rules and capabilities.
-extensions:
-  contributing_sources:
-    runtime: specification.mermaid.class.runtime
-    semantic_db: specification.mermaid.class.semantic-db
-    tests: specification.mermaid.class.tests
+  - Runtime parser acceptance remains authoritative for actual syntax validation.

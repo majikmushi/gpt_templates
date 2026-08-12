@@ -1,6 +1,6 @@
 id: registry.specification-source-adapters
 kind: registry
-version: 0.1.0
+version: 0.2.0
 status: active
 title: Specification Source Adapter Registry
 source_kinds:
@@ -14,4 +14,10 @@ source_kinds:
   - constraint-source
 adapters:
   - adapters/specification/mermaid.yaml
+  - adapters/specification/mermaid-runtime.yaml
+  - adapters/specification/mermaid-semantic-db.yaml
+  - adapters/specification/mermaid-tests.yaml
   - adapters/specification/uml.yaml
+  - adapters/specification/uml-constraints.yaml
+  - adapters/specification/uml-serialization.yaml
+  - adapters/specification/uml-documentation.yaml

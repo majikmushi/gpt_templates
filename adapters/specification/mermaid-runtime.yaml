@@ -1,0 +1,24 @@
+id: specification.mermaid.class.runtime
+kind: specification-source-adapter
+version: 0.1.0
+status: implemented
+title: Mermaid Runtime Parser Ingestion
+source_kind: runtime-source
+authority: authoritative-runtime
+input:
+  provider: majikmushi/mermaid
+  locator: packages/mermaid/src/mermaidAPI.ts
+  version: 11.4.1
+  commit: 446f6a7701065eb12e024475243434eb727dc172
+  evidence_ref: provenance.mermaid.source.class
+extractor:
+  mode: runtime
+  implementation: tooling/blueprint_engine/node/mermaid_bridge.mjs
+  deterministic: true
+output:
+  normalized_language_definition: language-definitions/mermaid/class-diagram.yaml
+  sections: [runtime, conformance]
+versioning:
+  source_commit_change: re-run-runtime-fixtures
+notes:
+  - This adapter supplies authoritative runtime acceptance and AST access, not a replacement grammar.

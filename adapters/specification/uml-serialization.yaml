@@ -1,0 +1,20 @@
+id: specification.uml.serialization
+kind: specification-source-adapter
+version: 0.1.0
+status: planned
+title: UML Serialization Ingestion
+source_kind: serialization-source
+authority: planned
+input:
+  provider: uml-serialization-specification
+  locator: to-be-pinned
+extractor:
+  mode: planned
+  deterministic: true
+output:
+  normalized_language_definition: language-definitions/uml/manifest.yaml
+  sections: [serializations, conformance]
+versioning:
+  specification_version_change: regenerate-and-revalidate
+notes:
+  - XMI or other interchange/version support must be pinned separately from the UML semantic metamodel.

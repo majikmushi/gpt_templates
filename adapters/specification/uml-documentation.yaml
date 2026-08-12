@@ -1,0 +1,20 @@
+id: specification.uml.documentation
+kind: specification-source-adapter
+version: 0.1.0
+status: planned
+title: UML Supporting Documentation Ingestion
+source_kind: documentation-source
+authority: planned
+input:
+  provider: uml-specification-documentation
+  locator: to-be-pinned
+extractor:
+  mode: planned
+  deterministic: true
+output:
+  normalized_language_definition: language-definitions/uml/manifest.yaml
+  sections: [semantics, views, extensions]
+versioning:
+  specification_version_change: review-derived-guidance
+notes:
+  - Documentation is supporting evidence and must not override pinned normative metamodel or constraint sources.

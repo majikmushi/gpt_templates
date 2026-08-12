@@ -1,0 +1,20 @@
+id: specification.uml.constraints
+kind: specification-source-adapter
+version: 0.1.0
+status: planned
+title: UML Constraint Ingestion
+source_kind: constraint-source
+authority: planned
+input:
+  provider: uml-specification
+  locator: to-be-pinned
+extractor:
+  mode: planned
+  deterministic: true
+output:
+  normalized_language_definition: language-definitions/uml/manifest.yaml
+  sections: [constraints, semantics, conformance]
+versioning:
+  specification_version_change: regenerate-and-revalidate
+notes:
+  - No normative constraint source is pinned yet.
