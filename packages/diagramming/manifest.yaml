@@ -1,0 +1,7 @@
+id: package.diagramming
+kind: package
+version: 0.1.0
+status: experimental
+title: Diagram Representation Pack
+depends_on: [package.core]
+includes: [formats/mermaid, formats/uml, formats/plantuml, profiles/domain/class-like-models.yaml, renderers/registry.yaml]

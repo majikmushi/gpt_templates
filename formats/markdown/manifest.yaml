@@ -1,0 +1,11 @@
+id: format.markdown
+kind: format
+version: 0.1.0
+status: experimental
+title: Markdown
+semantic_strictness: conventional
+role: human-readable documentation and lightweight structured presentation
+capabilities: [headings, paragraphs, lists, tables, links, code-blocks, blockquotes, embedded-content]
+extensions: [yaml-frontmatter, embedded-mermaid]
+validator: validator.markdown
+adapter: adapter.markdown

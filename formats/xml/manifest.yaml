@@ -1,0 +1,12 @@
+id: format.xml
+kind: format
+version: 0.1.0
+status: experimental
+title: XML
+semantic_strictness: structural
+role: hierarchical structured data and document representation
+capabilities: [elements, attributes, namespaces, ordered-children, mixed-content, processing-instructions]
+validation_profiles: [well-formedness, xsd, relax-ng, schematron]
+transform_engines: [transform-engine.xslt]
+validator: validator.xml
+adapter: adapter.xml

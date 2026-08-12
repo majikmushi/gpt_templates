@@ -1,0 +1,10 @@
+id: validator.markdown
+kind: validator
+version: 0.1.0
+status: experimental
+title: Markdown Validator
+target: format.markdown
+layers: [dialect-syntax, structure-profile, links, lint]
+implementation_status: planned
+derivation_policy: bind syntax rules to a declared Markdown dialect and keep repository structure rules separate
+severity_levels: [error, warning, compatibility, lint, suggestion]
