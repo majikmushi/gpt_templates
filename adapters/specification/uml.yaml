@@ -1,0 +1,26 @@
+id: specification.uml.metamodel
+kind: specification-source-adapter
+version: 0.1.0
+status: planned
+title: UML Metamodel Specification Ingestion
+source_kind: metamodel-source
+authority: planned
+input:
+  provider: uml-specification
+  locator: to-be-pinned
+extractor:
+  mode: planned
+  deterministic: true
+output:
+  normalized_language_definition: language-definitions/uml/manifest.yaml
+  sections: [metamodel, semantics, constraints, capabilities, serializations, views, conformance, provenance]
+versioning:
+  specification_version_change: regenerate-and-revalidate
+notes:
+  - This adapter is deliberately unpinned until an explicit UML specification version and source package are selected.
+  - XMI or other concrete interchange formats should be separate serialization-source adapters feeding the same UML language definition.
+extensions:
+  planned_contributors:
+    constraints: specification.uml.constraints
+    serialization: specification.uml.serialization
+    documentation: specification.uml.documentation

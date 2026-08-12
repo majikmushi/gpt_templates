@@ -1,6 +1,6 @@
 id: tooling.cli-contract
 kind: tool-contract
-version: 0.3.0
+version: 0.4.0
 status: core-implemented
 title: Blueprint Registry CLI
 implementation: tooling/blueprint_engine/src/blueprint_engine/cli.py
@@ -8,11 +8,15 @@ commands:
   catalog: {purpose: discover artifacts and capabilities, status: implemented}
   match: {purpose: select target formats from required capabilities, status: implemented}
   route: {purpose: select a conversion path, status: implemented}
+  language-definition: {purpose: resolve a normalized language definition by stable ID, status: implemented}
+  language-definition-validate: {purpose: validate a normalized language definition against the generic NLD schema, status: implemented}
+  source-adapter-validate: {purpose: validate a specification source adapter manifest, status: implemented}
+  source-check: {purpose: verify a Git-backed specification source against pinned commit and blob evidence, status: implemented}
   transform: {purpose: execute a built-in canonical conversion, status: implemented}
   validate: {purpose: run canonical or target validators; Mermaid supports --require-runtime, status: implemented}
   mermaid-ast: {purpose: parse Mermaid through native runtime and emit normalized AST, status: implemented}
   mermaid-import: {purpose: import a Mermaid classDiagram through native ClassDB into canonical form, status: implemented}
-  mermaid-source-check: {purpose: verify a local Mermaid checkout against pinned source commit and blob SHAs, status: implemented}
+  mermaid-source-check: {purpose: backward-compatible alias for Mermaid pinned-source verification, status: implemented}
   compare: {purpose: evaluate canonical semantic equivalence, status: implemented}
   roundtrip: {purpose: execute and compare a supported transformation cycle, status: implemented}
   render: {purpose: invoke external/native renderer, status: planned}

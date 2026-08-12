@@ -1,0 +1,17 @@
+id: registry.specification-source-adapters
+kind: registry
+version: 0.1.0
+status: active
+title: Specification Source Adapter Registry
+source_kinds:
+  - grammar-source
+  - metamodel-source
+  - schema-source
+  - runtime-source
+  - test-source
+  - documentation-source
+  - serialization-source
+  - constraint-source
+adapters:
+  - adapters/specification/mermaid.yaml
+  - adapters/specification/uml.yaml

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.specification-source-adapter",
+  "title": "Specification Source Adapter",
+  "type": "object",
+  "required": ["id", "kind", "version", "status", "source_kind", "authority", "input", "output"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "kind": {"const": "specification-source-adapter"},
+    "version": {"type": "string"},
+    "status": {"type": "string"},
+    "title": {"type": "string"},
+    "description": {"type": "string"},
+    "source_kind": {
+      "enum": ["grammar-source", "metamodel-source", "schema-source", "runtime-source", "test-source", "documentation-source", "serialization-source", "constraint-source"]
+    },
+    "authority": {
+      "enum": ["authoritative", "authoritative-runtime", "normative-specification", "normative-schema", "conformance-evidence", "supporting", "derived", "planned"]
+    },
+    "input": {
+      "type": "object",
+      "required": ["provider", "locator"],
+      "properties": {
+        "provider": {"type": "string"},
+        "locator": {"type": "string"},
+        "version": {"type": "string"},
+        "commit": {"type": "string"},
+        "evidence_ref": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "extractor": {
+      "type": "object",
+      "properties": {
+        "mode": {"enum": ["manual", "generated", "runtime", "hybrid", "planned"]},
+        "implementation": {"type": "string"},
+        "deterministic": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "output": {
+      "type": "object",
+      "required": ["normalized_language_definition"],
+      "properties": {
+        "normalized_language_definition": {"type": "string"},
+        "sections": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "versioning": {"type": "object", "additionalProperties": true},
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "extensions": {"type": "object", "additionalProperties": true}
+  },
+  "additionalProperties": false
+}

@@ -42,6 +42,19 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("source")
     r.add_argument("target")
 
+    ld = sub.add_parser("language-definition")
+    ld.add_argument("definition_id")
+
+    ldv = sub.add_parser("language-definition-validate")
+    ldv.add_argument("path")
+
+    sav = sub.add_parser("source-adapter-validate")
+    sav.add_argument("path")
+
+    sc = sub.add_parser("source-check")
+    sc.add_argument("provenance", help="Repository-relative or absolute provenance manifest")
+    sc.add_argument("source_root", help="Local checkout/source root")
+
     t = sub.add_parser("transform")
     t.add_argument("source")
     t.add_argument("target_format", choices=sorted(FORMAT_EXT))
@@ -49,20 +62,12 @@ def main(argv: list[str] | None = None) -> int:
     t.add_argument("--profile")
     t.add_argument("--overlay", action="append", default=[])
     t.add_argument("--no-validate", action="store_true")
-    t.add_argument(
-        "--require-runtime",
-        action="store_true",
-        help="For Mermaid, require native Mermaid parser validation",
-    )
+    t.add_argument("--require-runtime", action="store_true")
 
     v = sub.add_parser("validate")
     v.add_argument("target_format", choices=["canonical.core", "format.mermaid", *sorted(FORMAT_EXT)])
     v.add_argument("path")
-    v.add_argument(
-        "--require-runtime",
-        action="store_true",
-        help="For Mermaid, fail if the native Mermaid runtime is unavailable",
-    )
+    v.add_argument("--require-runtime", action="store_true")
 
     c = sub.add_parser("compare")
     c.add_argument("left")
@@ -92,19 +97,26 @@ def main(argv: list[str] | None = None) -> int:
         _print(engine.catalog())
         return 0
     if args.command == "match":
-        _print(
-            [
-                match.__dict__
-                for match in engine.match(
-                    args.capabilities,
-                    allow_partial=args.allow_partial,
-                )
-            ]
-        )
+        _print([match.__dict__ for match in engine.match(args.capabilities, allow_partial=args.allow_partial)])
         return 0
     if args.command == "route":
         _print(engine.route(args.source, args.target))
         return 0
+    if args.command == "language-definition":
+        _print(engine.language_definition(args.definition_id))
+        return 0
+    if args.command == "language-definition-validate":
+        result = engine.validate_language_definition(load_data(args.path))
+        _print(result.as_dict())
+        return 0 if result.ok else 2
+    if args.command == "source-adapter-validate":
+        result = engine.validate_specification_source_adapter(load_data(args.path))
+        _print(result.as_dict())
+        return 0 if result.ok else 2
+    if args.command == "source-check":
+        result = engine.check_source_provenance(args.source_root, args.provenance)
+        _print(result)
+        return 0 if result["ok"] else 4
     if args.command == "transform":
         model = load_data(args.source)
         result, validation = engine.transform(
@@ -156,11 +168,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "mermaid-import":
         text = Path(args.path).read_text(encoding="utf-8")
-        model = engine.mermaid_class_to_canonical(
-            text,
-            model_id=args.model_id,
-            profile_id=args.profile,
-        )
+        model = engine.mermaid_class_to_canonical(text, model_id=args.model_id, profile_id=args.profile)
         rendered = dump_data(model, "yaml")
         if args.output:
             Path(args.output).write_text(rendered, encoding="utf-8")
@@ -171,18 +179,14 @@ def main(argv: list[str] | None = None) -> int:
         provenance_file = _repo(args) / "validators/mermaid/source-provenance.yaml"
         result = check_mermaid_source(args.mermaid_root, provenance_file)
         _print(result)
-        return 0 if result["ok"] and result["commit_matches"] else 4
+        return 0 if result["ok"] else 4
     if args.command == "compare":
         result = engine.compare(load_data(args.left), load_data(args.right))
         _print(result.__dict__)
         return 0 if result.equivalent else 3
     if args.command == "roundtrip":
         model = load_data(args.source)
-        result = (
-            engine.roundtrip_xml(model)
-            if args.target_format == "format.xml"
-            else engine.roundtrip_uml_class(model)
-        )
+        result = engine.roundtrip_xml(model) if args.target_format == "format.xml" else engine.roundtrip_uml_class(model)
         _print(result.__dict__)
         return 0 if result.equivalent else 3
     return 1

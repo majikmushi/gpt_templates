@@ -1,0 +1,16 @@
+id: registry.language-definitions
+kind: registry
+version: 0.1.0
+status: active
+title: Normalized Language Definition Registry
+definitions:
+  - id: language.mermaid.class-diagram
+    path: language-definitions/mermaid/class-diagram.yaml
+    status: source-derived-runtime-backed
+  - id: language.uml
+    path: language-definitions/uml/manifest.yaml
+    status: scaffold-unpinned
+policy:
+  purpose: normalize syntax, metamodel, semantics, constraints, capabilities, serializations and runtime evidence behind a common interface
+  authority_is_per_source: true
+  allow_partial_definitions: true

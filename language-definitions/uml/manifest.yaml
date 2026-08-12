@@ -1,0 +1,59 @@
+id: language.uml
+kind: normalized-language-definition
+version: 0.1.0
+status: scaffold-unpinned
+title: UML Normalized Language Definition
+description: Format-neutral ingestion target for future UML metamodel, constraint and serialization evidence. It intentionally makes no normative version claim yet.
+language:
+  id: uml
+  name: Unified Modeling Language
+  family: modeling-language
+definition_scope: language-family
+sources:
+  - adapter_id: specification.uml.metamodel
+    source_kind: metamodel-source
+    authority: planned
+    status: planned
+  - adapter_id: specification.uml.constraints
+    source_kind: constraint-source
+    authority: planned
+    status: planned
+  - adapter_id: specification.uml.serialization
+    source_kind: serialization-source
+    authority: planned
+    status: planned
+  - adapter_id: specification.uml.documentation
+    source_kind: documentation-source
+    authority: planned
+    status: planned
+syntax:
+  status: not-applicable-at-family-level
+  note: UML is modeled as a semantic/metamodel family; concrete textual or interchange syntaxes are separate serializations/adapters.
+metamodel:
+  status: pending-explicit-specification-ingestion
+  model_kind: metamodel
+semantics:
+  status: pending-explicit-specification-ingestion
+constraints:
+  - id: uml.normative-version-required
+    rule: normative validation must not be claimed until an explicit UML specification version and evidence set are pinned
+capabilities:
+  typed_entities: planned
+  relationships: planned
+  hierarchy: planned
+  behavior: planned
+  machine_validation: planned
+serializations:
+  - id: uml.serialization.xmi
+    status: planned
+    note: Concrete XMI/version support belongs to a serialization-source adapter and must be version-pinned before normative claims are made.
+views:
+  - id: uml.class-diagram
+    status: seeded-representation-view
+    format_ref: format.uml.class
+runtime:
+  status: adapter-dependent
+conformance:
+  status: planned
+provenance:
+  status: unpinned

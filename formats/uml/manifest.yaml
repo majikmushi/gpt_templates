@@ -1,15 +1,17 @@
 id: format.uml
 kind: format-family
-version: 0.1.0
+version: 0.2.0
 status: experimental
 title: Unified Modeling Language (UML)
 semantic_strictness: formal
-role: tool-neutral semantic modeling standard
+role: tool-neutral semantic modeling family
+language_definition: language-definitions/uml/manifest.yaml
 native_domains: [software, systems, architecture, behavior]
 diagram_catalog: formats/uml/diagram-types.yaml
 notes:
   - UML is modeled as a representation family, not a single text serialization.
-  - Normative validation remains planned until an explicit UML specification version is analysed.
+  - Concrete serializations and tools are adapters over the UML semantic/metamodel layer.
+  - Normative validation must wait for an explicit UML specification version and pinned evidence.
 bindings:
   - target: format.uml.class
     profiles: profiles/domain/class-like-models.yaml
@@ -17,3 +19,7 @@ bindings:
     relationship: textual realization candidate
   - target: format.mermaid
     relationship: partial visualization target
+specification_ingestion:
+  normalized_definition: language.uml
+  adapter_registry: adapters/specification/uml.yaml
+  planned_source_kinds: [metamodel-source, constraint-source, serialization-source, documentation-source]

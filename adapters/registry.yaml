@@ -1,12 +1,16 @@
 id: registry.adapters
 kind: registry
-version: 0.1.0
+version: 0.2.0
 status: experimental
-title: Format Adapter Registry
-adapters:
-  - {id: adapter.mermaid, format: format.mermaid, directions: [export, import-planned]}
-  - {id: adapter.uml, format: format.uml, directions: [abstract-import, abstract-export], note: Concrete serialization is tool-dependent.}
-  - {id: adapter.plantuml, format: format.plantuml, directions: [export, import-planned]}
-  - {id: adapter.json-schema, format: format.json-schema, directions: [import, export]}
-  - {id: adapter.xml, format: format.xml, directions: [import, export, xslt]}
-  - {id: adapter.markdown, format: format.markdown, directions: [export, structured-import-planned]}
+title: Adapter Registry
+adapter_groups:
+  format_adapters:
+    - {id: adapter.mermaid, format: format.mermaid, directions: [export, import-partial]}
+    - {id: adapter.uml, format: format.uml, directions: [abstract-import, abstract-export], note: Concrete serialization is tool-dependent.}
+    - {id: adapter.plantuml, format: format.plantuml, directions: [export, import-planned]}
+    - {id: adapter.json-schema, format: format.json-schema, directions: [import, export]}
+    - {id: adapter.xml, format: format.xml, directions: [import, export, xslt]}
+    - {id: adapter.markdown, format: format.markdown, directions: [export, structured-import-planned]}
+  specification_source_adapters:
+    registry: adapters/specification/registry.yaml
+    purpose: ingest grammar, metamodel, schema, runtime, tests, documentation, serialization and constraint evidence into normalized language definitions

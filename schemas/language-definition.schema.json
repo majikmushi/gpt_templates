@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.language-definition",
+  "title": "Normalized Language Definition",
+  "type": "object",
+  "required": ["id", "kind", "version", "status", "language", "definition_scope", "sources"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "kind": {"const": "normalized-language-definition"},
+    "version": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "minLength": 1},
+    "title": {"type": "string"},
+    "description": {"type": "string"},
+    "language": {
+      "type": "object",
+      "required": ["id", "name", "family"],
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "family": {"type": "string"},
+        "version": {"type": "string"},
+        "specification_version": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "definition_scope": {
+      "enum": ["language-family", "diagram-family", "serialization", "profile", "metamodel-subset"]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["adapter_id", "source_kind", "authority", "status"],
+        "properties": {
+          "adapter_id": {"type": "string"},
+          "source_kind": {
+            "enum": ["grammar-source", "metamodel-source", "schema-source", "runtime-source", "test-source", "documentation-source", "serialization-source", "constraint-source"]
+          },
+          "authority": {"type": "string"},
+          "status": {"type": "string"},
+          "evidence_ref": {"type": "string"},
+          "notes": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "syntax": {"type": "object", "additionalProperties": true},
+    "metamodel": {"type": "object", "additionalProperties": true},
+    "semantics": {"type": "object", "additionalProperties": true},
+    "constraints": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": {"enum": ["native", "derived", "profiled", "partial", "none", "unknown", "planned"]}
+    },
+    "serializations": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "runtime": {"type": "object", "additionalProperties": true},
+    "views": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "conformance": {"type": "object", "additionalProperties": true},
+    "provenance": {"type": "object", "additionalProperties": true},
+    "extensions": {"type": "object", "additionalProperties": true}
+  },
+  "additionalProperties": false
+}

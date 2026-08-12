@@ -1,0 +1,30 @@
+id: specification.mermaid.class
+kind: specification-source-adapter
+version: 0.1.0
+status: implemented
+title: Mermaid classDiagram Specification Ingestion
+source_kind: grammar-source
+authority: authoritative
+input:
+  provider: majikmushi/mermaid
+  locator: packages/mermaid/src/diagrams/class/parser/classDiagram.jison
+  version: 11.4.1
+  commit: 446f6a7701065eb12e024475243434eb727dc172
+  evidence_ref: provenance.mermaid.source.class
+extractor:
+  mode: hybrid
+  implementation: tooling/blueprint_engine/src/blueprint_engine/mermaid_source.py
+  deterministic: true
+output:
+  normalized_language_definition: language-definitions/mermaid/class-diagram.yaml
+  sections: [syntax, metamodel, semantics, constraints, capabilities, runtime, conformance, provenance]
+versioning:
+  source_commit_change: revalidate-dependent-sections
+  evidence_blob_change: revalidate-dependent-rules
+notes:
+  - Runtime acceptance remains authoritative for syntax; the normalized definition is a source-derived representation of known rules and capabilities.
+extensions:
+  contributing_sources:
+    runtime: specification.mermaid.class.runtime
+    semantic_db: specification.mermaid.class.semantic-db
+    tests: specification.mermaid.class.tests

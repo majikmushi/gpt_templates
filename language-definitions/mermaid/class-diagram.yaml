@@ -1,0 +1,86 @@
+id: language.mermaid.class-diagram
+kind: normalized-language-definition
+version: 0.1.0
+status: source-derived-runtime-backed
+title: Mermaid classDiagram Normalized Language Definition
+description: Normalized definition derived from the pinned Mermaid class parser, semantic DB, runtime API and tests.
+language:
+  id: mermaid
+  name: Mermaid
+  family: textual-diagram-language
+  version: 11.4.1
+definition_scope: diagram-family
+sources:
+  - adapter_id: specification.mermaid.class.grammar
+    source_kind: grammar-source
+    authority: authoritative
+    status: pinned
+    evidence_ref: provenance.mermaid.source.class
+  - adapter_id: specification.mermaid.class.runtime
+    source_kind: runtime-source
+    authority: authoritative-runtime
+    status: implemented
+    evidence_ref: provenance.mermaid.source.class
+  - adapter_id: specification.mermaid.class.semantic-db
+    source_kind: metamodel-source
+    authority: derived
+    status: pinned
+    evidence_ref: provenance.mermaid.source.class
+  - adapter_id: specification.mermaid.class.tests
+    source_kind: test-source
+    authority: conformance-evidence
+    status: pinned
+    evidence_ref: provenance.mermaid.source.class
+syntax:
+  headers: [classDiagram, classDiagram-v2]
+  directions: [TB, BT, RL, LR]
+  line_types: [solid, dotted]
+  relation_end_markers: [aggregation, extension, composition, dependency, lollipop, none]
+  member_visibility: [public, private, protected, package, unspecified]
+  member_classifiers: [abstract, static, none]
+  supports:
+    - class-labels
+    - generics
+    - namespaces
+    - annotations
+    - notes
+    - links
+    - style-classes
+    - accessibility-metadata
+metamodel:
+  source_model: Mermaid ClassDB
+  element_types: [class, namespace, note, synthetic-interface]
+  relationship_types: [association, inheritance, composition, aggregation, dependency, interface]
+  normalized_ast_schema: validators/mermaid/class/ast.schema.json
+semantics:
+  parser_authority: Mermaid runtime parser
+  semantic_store: ClassDB
+  implicit_class_creation_from_relationships: true
+  lollipop_normalization: synthetic-interface-node
+constraints:
+  - id: mermaid.class.direction-values
+    rule: direction must be one of TB, BT, RL or LR
+  - id: mermaid.class.note-quoting
+    rule: note text is grammar-constrained quoted text
+capabilities:
+  typed_entities: native
+  relationships: native
+  cardinality: native
+  hierarchy: profiled
+  visual_overlays: native
+  machine_validation: native
+serializations:
+  - id: mermaid.class.text
+    media_type: text/plain
+    status: native
+runtime:
+  validator: validator.mermaid.runtime
+  parser_api: mermaid.parse
+  ast_api: mermaidAPI.getDiagramFromText
+  semantic_db: ClassDB
+conformance:
+  rules: validators/mermaid/class/rules.yaml
+  fixtures: tooling/blueprint_engine/tests/test_mermaid_source.py
+provenance:
+  source: validators/mermaid/source-provenance.yaml
+  source_commit: 446f6a7701065eb12e024475243434eb727dc172

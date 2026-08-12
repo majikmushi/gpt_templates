@@ -1,10 +1,11 @@
 id: validator.mermaid.class
 kind: validator
-version: 0.3.0
+version: 0.4.0
 status: source-derived-runtime-backed
 title: Mermaid classDiagram Validator
 description: Source-derived classDiagram validation profile backed by Mermaid's own runtime parser when available.
 target: format.mermaid.class
+language_definition: language-definitions/mermaid/class-diagram.yaml
 implementation:
   preflight: tooling/blueprint_engine/src/blueprint_engine/mermaid_source.py
   runtime: tooling/blueprint_engine/src/blueprint_engine/mermaid_runtime.py
@@ -13,6 +14,7 @@ layers: [source-derived-preflight, authoritative-runtime-syntax, semantic-ast, f
 rule_sources:
   - provenance.mermaid.source.class
   - rules.mermaid.class.source-derived
+  - language.mermaid.class-diagram
 runtime_validator: validator.mermaid.runtime
 source_commit: 446f6a7701065eb12e024475243434eb727dc172
 mermaid_version: 11.4.1

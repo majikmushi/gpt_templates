@@ -7,10 +7,16 @@ from .capabilities import match_formats
 from .catalog import scan_artifacts
 from .compare import compare_canonical
 from .imports import uml_class_to_canonical, xml_to_canonical
+from .language_definitions import (
+    load_language_definition,
+    validate_language_definition,
+    validate_specification_source_adapter,
+)
 from .mermaid_runtime import MermaidRuntimeBridge, MermaidRuntimeError, MermaidRuntimeUnavailable
 from .mermaid_source import mermaid_class_ast_to_canonical
 from .models import CompareResult, MatchResult, TransformResult, ValidationResult
 from .routing import find_route
+from .source_provenance import check_git_source
 from .transforms import transform_canonical
 from .validators import validate_canonical, validate_target
 
@@ -31,6 +37,33 @@ class BlueprintEngine:
 
     def route(self, source: str, target: str) -> list[dict[str, Any]]:
         return find_route(self.root / "conversion-graph/graph.yaml", source, target)
+
+    def language_definition(self, definition_id: str) -> dict[str, Any]:
+        return load_language_definition(self.root, definition_id)
+
+    def validate_language_definition(self, value: dict[str, Any]) -> ValidationResult:
+        return validate_language_definition(
+            value,
+            self.root / "schemas/language-definition.schema.json",
+        )
+
+    def validate_specification_source_adapter(self, value: dict[str, Any]) -> ValidationResult:
+        return validate_specification_source_adapter(
+            value,
+            self.root / "schemas/specification-source-adapter.schema.json",
+        )
+
+    def check_source_provenance(
+        self,
+        source_root: str | Path,
+        provenance: str | Path | dict[str, Any],
+    ) -> dict[str, Any]:
+        if not isinstance(provenance, dict):
+            path = Path(provenance)
+            if not path.is_absolute():
+                path = self.root / path
+            provenance = path
+        return check_git_source(source_root, provenance)
 
     def validate_canonical(self, model: dict[str, Any]) -> ValidationResult:
         return validate_canonical(model, self.root / "canonical/core/model.schema.json")
