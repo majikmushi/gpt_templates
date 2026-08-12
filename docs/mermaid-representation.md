@@ -1,49 +1,68 @@
 # Mermaid as an Abstract Representation Target
 
-Mermaid diagram families should be treated as collections of representational primitives and constraints, not only as their conventional diagram names.
+Mermaid diagram families are treated as collections of representational primitives,
+not as fixed semantic meanings.
 
-## Class diagram
+## Source authority
 
-Useful primitives include:
+The Mermaid integration is pinned to `majikmushi/mermaid` `develop` commit
+`446f6a7701065eb12e024475243434eb727dc172` (Mermaid package `11.4.1`).
 
-- class/entity nodes
-- attributes
-- operations
-- namespaces
-- inheritance
-- composition
-- aggregation
-- association
-- dependency
-- realization
-- interface/lollipop notation
-- multiplicity
-- annotations
-- notes
-- style classes
+`validators/mermaid/source-provenance.yaml` records the exact source-file SHAs used
+to derive the class-diagram rules. `validators/mermaid/registry.yaml` records the
+diagram families registered by Mermaid's diagram orchestration source.
 
-These can model software classes, but also system components, electronics, resources, ownership, roles, capabilities, schemas, taxonomies, physical assemblies, and other typed relational structures.
+## Native parser and AST bridge
 
-## Flowchart
+The engine delegates authoritative syntax acceptance to Mermaid itself:
 
-Flowcharts provide a broad primitive set including many shapes, subgraphs, edge styles, direction, classes/styles, icons, and labels. They are particularly useful as a generic visual encoding substrate.
+```text
+source text
+ -> mermaid.parse()
+ -> mermaidAPI.getDiagramFromText()
+ -> diagram-specific DB
+ -> normalized repository AST
+ -> representation profile
+ -> canonical semantic model
+```
 
-## Representation profiles
+For `classDiagram`, the adapter reads Mermaid's `ClassDB`: classes, members,
+methods, annotations, namespaces, relations, notes, direction, links, styles and
+accessibility metadata.
 
-The repository stores explicit profiles describing how a target diagram is repurposed. This avoids hidden conventions and supports validation and transformation.
+This is deliberately different from maintaining a second Mermaid grammar in Python.
 
-## Initial class-diagram profile registry
+## Semantic repurposing
 
-The seeded registry contains 44 profiles spanning:
+The native class primitives can represent software classes, components, electronics,
+resources, roles, capabilities, schemas, taxonomies, physical assemblies and other
+typed relational structures. Representation profiles make those meanings explicit.
 
-- software and interface models
-- data and schema models
-- architecture models
-- hardware and physical systems
-- security and ownership models
-- organisational models
-- taxonomy/ontology models
-- product and feature models
-- metamodel and blueprint models
+Visual channels such as styling, annotations, namespaces and relation labels can carry
+additional semantic dimensions. Overlay collision/accessibility policies remain
+separate from Mermaid syntax validity.
 
-See `profiles/mermaid/class/registry.yaml`.
+## Class source-derived constraints
+
+The reference validator currently records:
+
+- two accepted class-diagram headers (`classDiagram`, `classDiagram-v2`);
+- four direction values (`TB`, `BT`, `RL`, `LR`);
+- relation endpoint markers and solid/dotted line types;
+- cardinality/end labels;
+- namespace membership;
+- quoted notes;
+- link targets;
+- generic syntax;
+- visibility/static/abstract member semantics;
+- annotation/stereotype syntax;
+- lollipop interface normalization.
+
+See `validators/mermaid/class/rules.yaml`.
+
+## Expansion
+
+The same native runtime validation path works for all Mermaid diagram families.
+Source-level semantic profiles are currently deepest for class diagrams; other families
+are registered as `runtime-validation-available / source-profile-pending` until their
+grammar/DB/test sources are analysed.

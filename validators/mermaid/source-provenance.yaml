@@ -1,0 +1,54 @@
+id: provenance.mermaid.source.class
+kind: source-provenance
+version: 0.1.0
+status: pinned
+title: Mermaid classDiagram source evidence
+source:
+  repository: majikmushi/mermaid
+  branch: develop
+  commit: 446f6a7701065eb12e024475243434eb727dc172
+  mermaid_version: 11.4.1
+authority_order:
+  - runtime-parser
+  - parser-grammar
+  - semantic-database
+  - source-tests
+  - documentation
+files:
+  - path: packages/mermaid/src/diagrams/class/parser/classDiagram.jison
+    sha: 83d9bd48ed08d07a4be9d83e7ed52122a8dcab18
+    role: lexical-and-syntax-grammar
+  - path: packages/mermaid/src/diagrams/class/classDb.ts
+    sha: b2c3c944ce05caba2ad13c3edb410e98969ba332
+    role: semantic-database-and-normalization
+  - path: packages/mermaid/src/diagrams/class/classTypes.ts
+    sha: 9d0d47569c75c10e061ff696da3d0d0284ae2002
+    role: class-member-and-ast-types
+  - path: packages/mermaid/src/diagrams/class/classDetector-V2.ts
+    sha: 1823ad002e7789e7d672deddd29b147924e12023
+    role: diagram-detection-and-renderer-gating
+  - path: packages/mermaid/src/diagrams/class/classDiagram.spec.ts
+    sha: 35a37f9036d14cd39b9f33ec0f920203bee01a0e
+    role: parser-and-semantic-regression-evidence
+  - path: packages/mermaid/src/diagrams/class/parser/class.spec.js
+    sha: fe0077a29d96169e205fe857dfc10304b7510372
+    role: parser-regression-evidence
+  - path: packages/mermaid/src/mermaidAPI.ts
+    sha: 8fa02679bb3f77fbd94dab323c609ea4724538ee
+    role: public-runtime-parse-authority
+  - path: packages/mermaid/src/Diagram.ts
+    sha: fb423b9b0d193dda498865afabd1ba8cc3491c70
+    role: parse-to-diagram-database-pipeline
+  - path: packages/mermaid/src/mermaid.ts
+    sha: e9fc9196aa79b9f8617dea098643d58622e50d80
+    role: exported-runtime-api
+  - path: packages/mermaid/src/diagram-api/diagram-orchestration.ts
+    sha: 5b8cfc3fe92a674c130bf57245332cba3b4498b1
+    role: diagram-family-registration
+  - path: packages/mermaid/package.json
+    sha: 58b39b1cc10ce0145b8b136afc941178e006f1c1
+    role: package-version
+staleness_policy:
+  source_commit_change: revalidate-all-rules
+  evidence_file_sha_change: revalidate-dependent-rules
+  package_version_change: re-run-runtime-fixtures

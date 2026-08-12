@@ -1,13 +1,27 @@
 id: validator.mermaid.class
 kind: validator
-version: 0.2.0
-status: implemented-generated-subset
+version: 0.3.0
+status: source-derived-runtime-backed
 title: Mermaid classDiagram Validator
-description: Structural checker for the subset emitted by the repository engine. Not a normative Mermaid parser.
+description: Source-derived classDiagram validation profile backed by Mermaid's own runtime parser when available.
 target: format.mermaid.class
-implementation: tooling/blueprint_engine/src/blueprint_engine/validators.py
-layers: [syntax, semantic, fixture-regression]
-rule_sources: [repository-generated-subset]
+implementation:
+  preflight: tooling/blueprint_engine/src/blueprint_engine/mermaid_source.py
+  runtime: tooling/blueprint_engine/src/blueprint_engine/mermaid_runtime.py
+  ast_adapter: tooling/blueprint_engine/src/blueprint_engine/mermaid_source.py
+layers: [source-derived-preflight, authoritative-runtime-syntax, semantic-ast, fixture-regression]
+rule_sources:
+  - provenance.mermaid.source.class
+  - rules.mermaid.class.source-derived
+runtime_validator: validator.mermaid.runtime
+source_commit: 446f6a7701065eb12e024475243434eb727dc172
+mermaid_version: 11.4.1
 severity_levels: [error, warning, compatibility, lint, suggestion]
-implementation_status: generated-subset-only
-derivation_policy: Analyse Mermaid repository grammar, parser source, version gates and runtime behaviour before adding normative rules.
+authority_policy:
+  syntax: Mermaid runtime parser
+  static_preflight: conservative source-derived checks
+  semantic_import: Mermaid parsed ClassDB
+  documentation: supporting-not-authoritative
+degradation_policy:
+  runtime_missing_default: warning
+  runtime_missing_when_required: error

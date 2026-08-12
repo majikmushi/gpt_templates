@@ -1,0 +1,97 @@
+id: rules.mermaid.class.source-derived
+kind: validation-rules
+version: 0.1.0
+status: source-derived
+title: Mermaid classDiagram source-derived rules
+target: format.mermaid.class
+source_provenance: provenance.mermaid.source.class
+rules:
+  - id: mermaid.class.header
+    severity: error
+    assertion: header-in
+    values: [classDiagram, classDiagram-v2]
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/parser/classDiagram.jison, sha: 83d9bd48ed08d07a4be9d83e7ed52122a8dcab18, symbol: CLASS_DIAGRAM lexer token}
+  - id: mermaid.class.direction
+    severity: error
+    assertion: enum
+    values: [TB, BT, RL, LR]
+    default: TB
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/parser/classDiagram.jison, sha: 83d9bd48ed08d07a4be9d83e7ed52122a8dcab18, symbol: direction grammar}
+      - {path: packages/mermaid/src/diagrams/class/classDb.ts, sha: b2c3c944ce05caba2ad13c3edb410e98969ba332, symbol: ClassDB.direction}
+  - id: mermaid.class.relation-end-types
+    severity: error
+    assertion: enum
+    values: [aggregation, extension, composition, dependency, lollipop, none]
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/parser/classDiagram.jison, sha: 83d9bd48ed08d07a4be9d83e7ed52122a8dcab18, symbol: relationType}
+      - {path: packages/mermaid/src/diagrams/class/classDb.ts, sha: b2c3c944ce05caba2ad13c3edb410e98969ba332, symbol: relationType}
+  - id: mermaid.class.line-types
+    severity: error
+    assertion: enum
+    values: [solid, dotted]
+    tokens: ["--", ".."]
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/parser/classDiagram.jison, sha: 83d9bd48ed08d07a4be9d83e7ed52122a8dcab18, symbol: lineType}
+  - id: mermaid.class.cardinality
+    severity: error
+    assertion: quoted-end-label
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/parser/classDiagram.jison, sha: 83d9bd48ed08d07a4be9d83e7ed52122a8dcab18, symbol: relationStatement STR forms}
+      - {path: packages/mermaid/src/diagrams/class/classDiagram.spec.ts, sha: 35a37f9036d14cd39b9f33ec0f920203bee01a0e, test: should handle cardinality and labels}
+  - id: mermaid.class.note-text
+    severity: error
+    assertion: double-quoted
+    applies_to: [note, note-for]
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/parser/classDiagram.jison, sha: 83d9bd48ed08d07a4be9d83e7ed52122a8dcab18, symbol: noteText STR}
+      - {path: packages/mermaid/src/diagrams/class/classDiagram.spec.ts, sha: 35a37f9036d14cd39b9f33ec0f920203bee01a0e, test: unquoted NOTE payload errors}
+  - id: mermaid.class.link-target
+    severity: error
+    assertion: enum
+    values: [_self, _blank, _parent, _top]
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/parser/classDiagram.jison, sha: 83d9bd48ed08d07a4be9d83e7ed52122a8dcab18, symbol: LINK_TARGET lexer tokens}
+  - id: mermaid.class.member-visibility
+    severity: error
+    assertion: enum
+    values: ["#", "+", "~", "-", ""]
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/classTypes.ts, sha: 9d0d47569c75c10e061ff696da3d0d0284ae2002, symbol: visibilityValues}
+  - id: mermaid.class.member-classifier
+    severity: suggestion
+    assertion: mapping
+    mappings: {"*": abstract, "$": static}
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/classTypes.ts, sha: 9d0d47569c75c10e061ff696da3d0d0284ae2002, symbol: ClassMember.parseClassifier}
+  - id: mermaid.class.generics
+    severity: suggestion
+    assertion: tilde-delimited
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/parser/classDiagram.jison, sha: 83d9bd48ed08d07a4be9d83e7ed52122a8dcab18, symbol: GENERICTYPE}
+      - {path: packages/mermaid/src/diagrams/class/classDb.ts, sha: b2c3c944ce05caba2ad13c3edb410e98969ba332, symbol: splitClassNameAndType}
+  - id: mermaid.class.namespace-membership
+    severity: suggestion
+    assertion: classes-only-in-namespace-grammar
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/parser/classDiagram.jison, sha: 83d9bd48ed08d07a4be9d83e7ed52122a8dcab18, symbol: namespaceStatement/classStatements}
+  - id: mermaid.class.annotation
+    severity: suggestion
+    assertion: stereotype-delimiters
+    delimiters: ["<<", ">>"]
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/parser/classDiagram.jison, sha: 83d9bd48ed08d07a4be9d83e7ed52122a8dcab18, symbol: annotationStatement}
+  - id: mermaid.class.lollipop-interface
+    severity: suggestion
+    assertion: one-sided-special-case
+    description: A one-sided lollipop marker is converted into a synthetic interface node only when the opposite relation end is not another special relation marker.
+    evidence:
+      - {path: packages/mermaid/src/diagrams/class/classDb.ts, sha: b2c3c944ce05caba2ad13c3edb410e98969ba332, symbol: ClassDB.addRelation}
+  - id: mermaid.class.runtime-authority
+    severity: warning
+    assertion: parser-acceptance
+    description: Mermaid runtime parser acceptance is authoritative for syntax; static rules are preflight/lint and must not claim complete grammar equivalence.
+    evidence:
+      - {path: packages/mermaid/src/mermaidAPI.ts, sha: 8fa02679bb3f77fbd94dab323c609ea4724538ee, symbol: parse}
+      - {path: packages/mermaid/src/Diagram.ts, sha: fb423b9b0d193dda498865afabd1ba8cc3491c70, symbol: Diagram.fromText}

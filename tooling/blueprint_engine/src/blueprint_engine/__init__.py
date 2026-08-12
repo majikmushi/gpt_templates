@@ -1,8 +1,10 @@
 """Blueprint/template representation engine."""
-__version__ = "0.1.0"
+
+__version__ = "0.2.0"
 
 from .engine import BlueprintEngine
-from .models import ValidationIssue, ValidationResult, TransformResult, MatchResult, CompareResult
+from .mermaid_runtime import MermaidRuntimeBridge, MermaidRuntimeError, MermaidRuntimeUnavailable
+from .models import CompareResult, MatchResult, TransformResult, ValidationIssue, ValidationResult
 
 __all__ = [
     "BlueprintEngine",
@@ -11,4 +13,7 @@ __all__ = [
     "TransformResult",
     "MatchResult",
     "CompareResult",
+    "MermaidRuntimeBridge",
+    "MermaidRuntimeError",
+    "MermaidRuntimeUnavailable",
 ]

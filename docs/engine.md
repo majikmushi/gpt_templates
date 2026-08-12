@@ -1,9 +1,5 @@
 # Executable Representation Engine
 
-## Purpose
-
-The repository now contains an executable Python engine under `tooling/blueprint_engine/`. It turns the framework manifests into an operational pipeline instead of leaving them as design contracts only.
-
 ## Runtime pipeline
 
 ```text
@@ -17,84 +13,82 @@ Canonical source
   -> optional semantic/round-trip comparison
 ```
 
-## Built-in target transforms
+The Python package lives under `tooling/blueprint_engine/`.
 
-| Target | Output | Fidelity policy |
-|---|---|---|
-| Mermaid classDiagram | `.mmd` text | profile-dependent |
-| PlantUML | `.puml` text | profile-dependent |
-| UML class interchange | JSON object | lossless for supported structural subset |
-| JSON Schema | JSON Schema 2020-12 | explicit projection |
-| XML | repository XML model profile | profile-dependent, round-trip capable |
-| Markdown | documentation view | presentation-only |
+## Mermaid native integration
 
-Transform results always carry a transform ID, target format, declared fidelity, explicit loss list, and deterministic source hash.
+Version 0.2 adds an optional Node bridge that uses Mermaid itself for syntax validation
+and AST extraction. This avoids duplicating Mermaid's parser.
 
-## Declarative mapping engine
-
-`DeclarativeMappingEngine` provides the XSLT-like generic layer.
-
-A mapping spec selects a canonical collection, matches objects, and emits target objects:
-
-```yaml
-target:
-  nodes: []
-  edges: []
-
-rules:
-  - select: elements
-    match:
-      type: component
-    emit_to: nodes
-    emit:
-      id: $.id
-      label: $.name
-      kind: $.type
+```text
+Mermaid source
+ -> native mermaid.parse()
+ -> native getDiagramFromText()
+ -> diagram DB
+ -> normalized AST
+ -> canonical adapter
 ```
 
-This engine is intentionally data-oriented. Syntax-specific encoders remain separate so format grammar concerns do not contaminate semantic mapping rules.
+For class diagrams the native `ClassDB` is adapted into canonical elements,
+relationships, containers and annotations.
+
+Install the bridge:
+
+```bash
+cd tooling/blueprint_engine/node
+npm install
+```
+
+Require authoritative native validation with:
+
+```bash
+blueprint-engine --repo . validate format.mermaid.class model.mmd --require-runtime
+```
+
+Extract/import:
+
+```bash
+blueprint-engine --repo . mermaid-ast model.mmd
+blueprint-engine --repo . mermaid-import model.mmd -o model.yaml
+```
+
+Without the Node runtime/package the engine retains source-derived preflight checks and
+emits a warning; it never silently claims native parser validation occurred.
+
+## Built-in target transforms
+
+| Target | Output | Fidelity |
+|---|---|---|
+| Mermaid classDiagram | `.mmd` | profile-dependent |
+| PlantUML | `.puml` | profile-dependent |
+| UML class interchange | JSON | structural-subset lossless |
+| JSON Schema | JSON Schema 2020-12 | explicit projection |
+| XML | repository XML profile | round-trip capable subset |
+| Markdown | documentation | presentation-only |
+
+## Declarative mapping
+
+`DeclarativeMappingEngine` provides the XSLT-like data transformation layer using
+`select -> match -> emit`. Syntax-specific encoders stay separate from semantic mapping.
 
 ## Validation
 
-Validation is layered:
+- canonical JSON Schema + reference checks;
+- Mermaid native parser plus source-derived preflight when runtime is installed;
+- JSON Schema meta-schema validation;
+- XML well-formedness;
+- UML repository-interchange consistency;
+- PlantUML/Markdown structural checks.
 
-1. canonical JSON Schema validation;
-2. canonical semantic checks such as unique IDs and valid endpoints;
-3. target-specific validation;
-4. explicit scope warnings where validation is not normative.
+## Provenance
 
-Current target validation:
+Mermaid source rules have their own provenance manifest containing source repository,
+branch, commit, package version and individual Git blob SHAs. A local Mermaid checkout
+can be checked against that manifest with `check_mermaid_source()`.
 
-- JSON Schema: Draft 2020-12 meta-schema checking;
-- XML: well-formedness plus repository-profile root checks;
-- Mermaid: engine-generated classDiagram subset only;
-- PlantUML: wrapper and structural balance checks;
-- UML: repository interchange model consistency, not the normative UML metamodel;
-- Markdown: basic document structure.
+## Round trips
 
-## Semantic comparison
-
-Canonical models are compared independently of ordering and non-semantic metadata.
-
-Classifications:
-
-- `exact`
-- `equivalent`
-- `projection`
-- `non-equivalent`
-
-Round-trip claims only pass when the recovered canonical model compares as `exact` or `equivalent`.
-
-## Extension points
-
-Add a format by implementing:
-
-1. a format manifest;
-2. capability entries;
-3. a transform/export handler;
-4. an optional import handler;
-5. a validator;
-6. fixtures and tests;
-7. conversion-graph edges.
-
-Full Mermaid validation remains a separate task and should be derived from the Mermaid grammar/source/runtime rather than inferred from documentation.
+XML and UML-class interchange have tested canonical round trips. Mermaid class import is
+implemented through the native runtime; semantic equivalence remains profile-dependent
+because a representation profile may intentionally overload or project Mermaid
+primitives.

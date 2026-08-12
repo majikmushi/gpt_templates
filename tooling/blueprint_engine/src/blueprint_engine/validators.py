@@ -1,10 +1,15 @@
 from __future__ import annotations
+
 import json
 from pathlib import Path
 from typing import Any
-from xml.etree.ElementTree import fromstring, ParseError
+from xml.etree.ElementTree import ParseError, fromstring
+
 from jsonschema import Draft202012Validator
+
+from .mermaid_source import validate_mermaid_class, validate_mermaid_runtime
 from .models import ValidationResult
+
 
 def validate_canonical(model: dict[str, Any], schema_path: str | Path) -> ValidationResult:
     result = ValidationResult("canonical.core")
@@ -22,40 +27,22 @@ def validate_canonical(model: dict[str, Any], schema_path: str | Path) -> Valida
     for rel in model.get("relationships", []):
         for end in ("source", "target"):
             if rel.get(end) not in ids:
-                result.add("error", "canonical.relationship-endpoint", f"{rel.get('id')}: unknown {end} {rel.get(end)!r}", f"relationships.{rel.get('id')}.{end}")
+                result.add(
+                    "error",
+                    "canonical.relationship-endpoint",
+                    f"{rel.get('id')}: unknown {end} {rel.get(end)!r}",
+                    f"relationships.{rel.get('id')}.{end}",
+                )
     for container in model.get("containers", []):
         for member in container.get("members", []):
             if member not in ids:
-                result.add("error", "canonical.container-member", f"{container.get('id')}: unknown member {member!r}")
+                result.add(
+                    "error",
+                    "canonical.container-member",
+                    f"{container.get('id')}: unknown member {member!r}",
+                )
     return result
 
-def validate_mermaid_class(text: str) -> ValidationResult:
-    """Validate only the engine-owned Mermaid classDiagram subset.
-
-    This is intentionally not a normative Mermaid parser. The future Mermaid
-    source-derived validator remains the authority for full language validation.
-    """
-    result = ValidationResult("format.mermaid.class")
-    stripped = [ln.strip() for ln in text.splitlines() if ln.strip() and not ln.lstrip().startswith("%%")]
-    if not stripped or stripped[0] != "classDiagram":
-        result.add("error", "mermaid.subset.header", "Expected classDiagram header")
-        return result
-    balance = 0
-    declared: set[str] = set()
-    for i, line in enumerate(stripped[1:], start=2):
-        if line.startswith("class "):
-            ident = line.split()[1].split("[", 1)[0].split("{", 1)[0]
-            declared.add(ident)
-        balance += line.count("{") - line.count("}")
-        if balance < 0:
-            result.add("error", "mermaid.subset.braces", "Closing brace without opening brace", f"line:{i}")
-            balance = 0
-    if balance:
-        result.add("error", "mermaid.subset.braces", "Unbalanced class body braces")
-    if not declared:
-        result.add("warning", "mermaid.subset.no-classes", "No class declarations found")
-    result.add("warning", "mermaid.validation-scope", "Validated engine-generated subset only; full Mermaid validation is pending source-derived rules")
-    return result
 
 def validate_plantuml(text: str) -> ValidationResult:
     result = ValidationResult("format.plantuml")
@@ -68,6 +55,7 @@ def validate_plantuml(text: str) -> ValidationResult:
         result.add("error", "plantuml.braces", "Unbalanced braces")
     return result
 
+
 def validate_json_schema(schema: dict[str, Any]) -> ValidationResult:
     result = ValidationResult("format.json-schema")
     try:
@@ -75,6 +63,7 @@ def validate_json_schema(schema: dict[str, Any]) -> ValidationResult:
     except Exception as exc:
         result.add("error", "json-schema.meta-schema", str(exc))
     return result
+
 
 def validate_xml(text: str) -> ValidationResult:
     result = ValidationResult("format.xml")
@@ -84,8 +73,13 @@ def validate_xml(text: str) -> ValidationResult:
         result.add("error", "xml.well-formed", str(exc))
         return result
     if root.tag != "model":
-        result.add("warning", "xml.profile-root", f"Expected repository model profile root <model>, got <{root.tag}>")
+        result.add(
+            "warning",
+            "xml.profile-root",
+            f"Expected repository model profile root <model>, got <{root.tag}>",
+        )
     return result
+
 
 def validate_markdown(text: str) -> ValidationResult:
     result = ValidationResult("format.markdown")
@@ -94,6 +88,7 @@ def validate_markdown(text: str) -> ValidationResult:
     elif not any(line.startswith("# ") for line in text.splitlines()):
         result.add("warning", "markdown.heading", "No level-1 heading found")
     return result
+
 
 def validate_uml_class(value: dict[str, Any]) -> ValidationResult:
     result = ValidationResult("format.uml.class")
@@ -106,13 +101,38 @@ def validate_uml_class(value: dict[str, Any]) -> ValidationResult:
     idset = set(ids)
     for rel in value.get("relationships", []):
         if rel.get("source") not in idset or rel.get("target") not in idset:
-            result.add("error", "uml.class.endpoint", f"Unknown relationship endpoint in {rel.get('id')}")
-    result.add("warning", "uml.validation-scope", "Validated repository UML class interchange model, not the normative UML metamodel")
+            result.add(
+                "error",
+                "uml.class.endpoint",
+                f"Unknown relationship endpoint in {rel.get('id')}",
+            )
+    result.add(
+        "warning",
+        "uml.validation-scope",
+        "Validated repository UML class interchange model, not the normative UML metamodel",
+    )
     return result
 
-def validate_target(target_format: str, content: Any) -> ValidationResult:
+
+def validate_target(
+    target_format: str,
+    content: Any,
+    *,
+    repository_root: str | Path | None = None,
+    require_runtime: bool = False,
+) -> ValidationResult:
+    if target_format == "format.mermaid":
+        return validate_mermaid_runtime(
+            content,
+            repository_root=repository_root,
+            require_runtime=require_runtime,
+        )
     if target_format == "format.mermaid.class":
-        return validate_mermaid_class(content)
+        return validate_mermaid_class(
+            content,
+            repository_root=repository_root,
+            require_runtime=require_runtime,
+        )
     if target_format == "format.plantuml":
         return validate_plantuml(content)
     if target_format == "format.json-schema":

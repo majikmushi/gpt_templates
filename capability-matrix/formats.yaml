@@ -1,12 +1,12 @@
 id: matrix.format-capabilities
 kind: capability-matrix
-version: 0.1.0
+version: 0.2.0
 status: experimental
 title: Representative Format Capability Matrix
-legend: {native: direct semantic support, profiled: explicit profile or convention, partial: incomplete or lossy, none: unsuitable native carrier}
+legend: {native: direct semantic support, profiled: explicit profile or convention, partial: incomplete or lossy, none: unsuitable native carrier, native-runtime: validated by native runtime}
 formats:
   format.uml.class: {typed_entities: native, relationships: native, cardinality: native, behavior: partial, hierarchy: native, visual_overlays: profiled, machine_validation: profiled, round_trip: profiled}
-  format.mermaid.class: {typed_entities: native, relationships: native, cardinality: native, behavior: partial, hierarchy: profiled, visual_overlays: native, machine_validation: profiled, round_trip: profiled}
+  format.mermaid.class: {typed_entities: native, relationships: native, cardinality: native, behavior: partial, hierarchy: profiled, visual_overlays: native, machine_validation: native-runtime, round_trip: profiled}
   format.plantuml: {typed_entities: native, relationships: native, cardinality: native, behavior: native, hierarchy: native, visual_overlays: native, machine_validation: profiled, round_trip: profiled}
   format.json-schema: {typed_entities: profiled, relationships: partial, cardinality: profiled, behavior: none, hierarchy: native, visual_overlays: none, machine_validation: native, round_trip: profiled}
   format.xml: {typed_entities: profiled, relationships: partial, cardinality: partial, behavior: none, hierarchy: native, visual_overlays: none, machine_validation: native, round_trip: profiled}

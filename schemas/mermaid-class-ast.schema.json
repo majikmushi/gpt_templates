@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.mermaid.class.ast",
+  "title": "Mermaid classDiagram AST bridge",
+  "type": "object",
+  "required": [
+    "kind",
+    "diagramType",
+    "classes",
+    "relations",
+    "namespaces",
+    "notes",
+    "accessibility"
+  ],
+  "properties": {
+    "kind": {
+      "const": "mermaid-class-ast"
+    },
+    "diagramType": {
+      "type": "string",
+      "pattern": "^classDiagram"
+    },
+    "direction": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "TB",
+        "BT",
+        "RL",
+        "LR",
+        null
+      ]
+    },
+    "classes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "members": {
+            "type": "array"
+          },
+          "methods": {
+            "type": "array"
+          },
+          "annotations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cssClasses": {
+            "type": "string"
+          },
+          "styles": {
+            "type": "array"
+          },
+          "parent": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "link": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "linkTarget": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tooltip": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "namespaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "classIds"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "classIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "childIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "accessibility": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "diagramTitle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "interfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "default": []
+    }
+  },
+  "additionalProperties": false
+}

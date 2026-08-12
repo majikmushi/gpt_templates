@@ -1,0 +1,9 @@
+{
+  "name": "blueprint-engine-mermaid-runtime",
+  "private": true,
+  "type": "module",
+  "description": "Optional authoritative Mermaid parser/AST bridge for blueprint-engine.",
+  "dependencies": {
+    "mermaid": "11.4.1"
+  }
+}

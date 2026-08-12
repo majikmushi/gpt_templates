@@ -1,9 +1,12 @@
 from __future__ import annotations
+
 import argparse
 import json
 from pathlib import Path
+
 from .engine import BlueprintEngine
 from .io import dump_data, load_data
+from .mermaid_provenance import check_mermaid_source
 from .validators import validate_target
 
 FORMAT_EXT = {
@@ -15,11 +18,14 @@ FORMAT_EXT = {
     "format.markdown": "md",
 }
 
+
 def _repo(args: argparse.Namespace) -> Path:
     return Path(args.repo).resolve()
 
+
 def _print(value) -> None:
     print(json.dumps(value, indent=2, sort_keys=True, default=str))
+
 
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="blueprint-engine")
@@ -43,10 +49,20 @@ def main(argv: list[str] | None = None) -> int:
     t.add_argument("--profile")
     t.add_argument("--overlay", action="append", default=[])
     t.add_argument("--no-validate", action="store_true")
+    t.add_argument(
+        "--require-runtime",
+        action="store_true",
+        help="For Mermaid, require native Mermaid parser validation",
+    )
 
     v = sub.add_parser("validate")
-    v.add_argument("target_format", choices=["canonical.core", *sorted(FORMAT_EXT)])
+    v.add_argument("target_format", choices=["canonical.core", "format.mermaid", *sorted(FORMAT_EXT)])
     v.add_argument("path")
+    v.add_argument(
+        "--require-runtime",
+        action="store_true",
+        help="For Mermaid, fail if the native Mermaid runtime is unavailable",
+    )
 
     c = sub.add_parser("compare")
     c.add_argument("left")
@@ -56,6 +72,19 @@ def main(argv: list[str] | None = None) -> int:
     rt.add_argument("source")
     rt.add_argument("target_format", choices=["format.xml", "format.uml.class"])
 
+    ma = sub.add_parser("mermaid-ast")
+    ma.add_argument("path")
+    ma.add_argument("-o", "--output")
+
+    mi = sub.add_parser("mermaid-import")
+    mi.add_argument("path")
+    mi.add_argument("-o", "--output")
+    mi.add_argument("--model-id", default="imported.mermaid.class")
+    mi.add_argument("--profile")
+
+    msc = sub.add_parser("mermaid-source-check")
+    msc.add_argument("mermaid_root", help="Local checkout of majikmushi/mermaid")
+
     args = p.parse_args(argv)
     engine = BlueprintEngine(_repo(args))
 
@@ -63,7 +92,15 @@ def main(argv: list[str] | None = None) -> int:
         _print(engine.catalog())
         return 0
     if args.command == "match":
-        _print([m.__dict__ for m in engine.match(args.capabilities, allow_partial=args.allow_partial)])
+        _print(
+            [
+                match.__dict__
+                for match in engine.match(
+                    args.capabilities,
+                    allow_partial=args.allow_partial,
+                )
+            ]
+        )
         return 0
     if args.command == "route":
         _print(engine.route(args.source, args.target))
@@ -71,8 +108,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "transform":
         model = load_data(args.source)
         result, validation = engine.transform(
-            model, args.target_format, profile_id=args.profile, overlays=args.overlay,
+            model,
+            args.target_format,
+            profile_id=args.profile,
+            overlays=args.overlay,
             validate=not args.no_validate,
+            require_runtime=args.require_runtime,
         )
         content = result.content
         fmt = "json" if isinstance(content, (dict, list)) else "text"
@@ -96,19 +137,56 @@ def main(argv: list[str] | None = None) -> int:
         if args.target_format == "canonical.core":
             result = engine.validate_canonical(value)
         else:
-            result = validate_target(args.target_format, value)
+            result = validate_target(
+                args.target_format,
+                value,
+                repository_root=_repo(args),
+                require_runtime=args.require_runtime,
+            )
         _print(result.as_dict())
         return 0 if result.ok else 2
+    if args.command == "mermaid-ast":
+        text = Path(args.path).read_text(encoding="utf-8")
+        ast = engine.mermaid_ast(text)
+        rendered = json.dumps(ast, indent=2, sort_keys=True) + "\n"
+        if args.output:
+            Path(args.output).write_text(rendered, encoding="utf-8")
+        else:
+            print(rendered, end="")
+        return 0
+    if args.command == "mermaid-import":
+        text = Path(args.path).read_text(encoding="utf-8")
+        model = engine.mermaid_class_to_canonical(
+            text,
+            model_id=args.model_id,
+            profile_id=args.profile,
+        )
+        rendered = dump_data(model, "yaml")
+        if args.output:
+            Path(args.output).write_text(rendered, encoding="utf-8")
+        else:
+            print(rendered, end="")
+        return 0
+    if args.command == "mermaid-source-check":
+        provenance_file = _repo(args) / "validators/mermaid/source-provenance.yaml"
+        result = check_mermaid_source(args.mermaid_root, provenance_file)
+        _print(result)
+        return 0 if result["ok"] and result["commit_matches"] else 4
     if args.command == "compare":
         result = engine.compare(load_data(args.left), load_data(args.right))
         _print(result.__dict__)
         return 0 if result.equivalent else 3
     if args.command == "roundtrip":
         model = load_data(args.source)
-        result = engine.roundtrip_xml(model) if args.target_format == "format.xml" else engine.roundtrip_uml_class(model)
+        result = (
+            engine.roundtrip_xml(model)
+            if args.target_format == "format.xml"
+            else engine.roundtrip_uml_class(model)
+        )
         _print(result.__dict__)
         return 0 if result.equivalent else 3
     return 1
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -1,0 +1,20 @@
+id: validator.mermaid.runtime
+kind: validator
+version: 0.1.0
+status: implemented
+title: Mermaid Runtime Parser Validator
+target: format.mermaid
+implementation:
+  python: tooling/blueprint_engine/src/blueprint_engine/mermaid_runtime.py
+  node_bridge: tooling/blueprint_engine/node/mermaid_bridge.mjs
+authority: authoritative-syntax-when-runtime-available
+runtime:
+  package: mermaid
+  pinned_version: 11.4.1
+  source_repository: majikmushi/mermaid
+  source_commit: 446f6a7701065eb12e024475243434eb727dc172
+modes: [validate, ast]
+fallback:
+  policy: explicit-degradation
+  default: warning
+  require_runtime: error

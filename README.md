@@ -1,15 +1,14 @@
 # GPT Templates / Blueprint Registry
 
-A reusable repository for blueprints, templates, schemas, semantic models, representation profiles, transforms, validators, fixtures, and documentation.
-
-The repository separates **meaning** from **representation** and now includes an executable core:
+A reusable repository for blueprints, templates, schemas, semantic models, representation
+profiles, transforms, validators, fixtures, and documentation.
 
 ```text
 Domain Data
   -> Canonical Model
   -> Capability Matching
   -> Representation Profile
-  -> Transformer
+  -> Transformer / Adapter
   -> Target Format
   -> Validator
   -> Provenance / Semantic Comparison
@@ -17,41 +16,31 @@ Domain Data
 
 ## Executable engine
 
-`tooling/blueprint_engine/` implements:
+`tooling/blueprint_engine/` implements catalog discovery, capability matching, conversion
+routing, canonical validation, multi-format transforms, declarative XSLT-like mappings,
+provenance, semantic comparison and round-trip checks.
 
-- artifact catalog discovery
-- format capability matching
-- conversion-route selection
-- canonical model validation
-- transforms to Mermaid, PlantUML, UML class interchange, JSON Schema, XML and Markdown
-- declarative XSLT-like object mapping
-- target validation
-- deterministic provenance hashes
-- semantic comparison
-- XML and UML-class round-trip checks
+Mermaid integration now also includes:
 
-See [`docs/engine.md`](docs/engine.md).
+- source-derived validation metadata pinned to `majikmushi/mermaid`;
+- Mermaid's own runtime parser as the authoritative syntax checker;
+- generic Mermaid AST extraction through `getDiagramFromText()`;
+- a classDiagram `ClassDB` -> canonical semantic adapter;
+- source-provenance verification down to individual Git blob SHAs.
+
+See [`docs/engine.md`](docs/engine.md),
+[`docs/validation.md`](docs/validation.md), and
+[`docs/mermaid-source-validation.md`](docs/mermaid-source-validation.md).
 
 ## Core directories
 
-- `blueprints/` - reusable domain/system blueprints.
-- `templates/` - target-oriented reusable templates.
-- `canonical/` - canonical/intermediate semantic models.
-- `semantics/` - shared semantic vocabulary and equivalence rules.
-- `formats/` - representation-language capabilities and constraints.
-- `profiles/` - mappings from abstract concepts to format primitives.
-- `overlays/` - composable visual/semantic encodings.
-- `transforms/` - declarative and built-in transformation contracts.
-- `validators/` - validation manifests and scope declarations.
-- `schemas/` - schemas governing repository artifacts.
-- `capability-matrix/` - cross-format expressiveness matrix.
-- `conversion-graph/` - executable conversion routing metadata.
-- `catalog/` and `registry/` - discovery metadata.
-- `adapters/` and `renderers/` - serialization/import and presentation boundaries.
-- `fixtures/` and `examples/` - test and worked examples.
-- `policies/`, `rules/`, `provenance/`, `migrations/`, `packages/`, `benchmarks/` - governance and lifecycle support.
-- `tooling/` - executable framework tooling.
-- `docs/` - architecture and usage documentation.
+- `blueprints/`, `templates/`, `canonical/`, `semantics/`
+- `formats/`, `profiles/`, `overlays/`
+- `transforms/`, `adapters/`, `validators/`, `renderers/`
+- `schemas/`, `capability-matrix/`, `conversion-graph/`
+- `catalog/`, `registry/`, `fixtures/`, `examples/`
+- `policies/`, `rules/`, `provenance/`, `migrations/`, `packages/`, `benchmarks/`
+- `tooling/`, `docs/`
 
 ## Design principles
 
@@ -60,12 +49,16 @@ See [`docs/engine.md`](docs/engine.md).
 3. Visual channels can carry additional semantic dimensions.
 4. Critical meaning must not depend on colour alone.
 5. Transforms declare fidelity, reversibility and information loss.
-6. Validators are first-class artifacts and must declare their authority/scope.
+6. Validators declare their authority, evidence and degradation mode.
 7. Stable artifact IDs are independent of file paths.
 8. Generated artifacts preserve provenance.
 9. Round-trip claims require semantic comparison tests.
-10. A syntactically valid output is not automatically semantically equivalent.
+10. Syntax validity does not imply semantic equivalence.
 
-## Validation boundary
+## Mermaid validation authority
 
-The implemented Mermaid checker validates the engine-generated `classDiagram` subset only. A full Mermaid validator will be derived later from Mermaid grammar/source/runtime behaviour rather than guessed from documentation.
+The reference Mermaid source is pinned in
+`validators/mermaid/source-provenance.yaml`. Static checks are conservative,
+source-derived preflight rules; when the optional Node bridge is installed, Mermaid's
+own `parse()` is the syntax authority. `--require-runtime` prevents degraded validation
+from being mistaken for native parser acceptance.

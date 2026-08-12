@@ -1,0 +1,40 @@
+id: registry.mermaid.validators
+kind: validator-registry
+version: 0.1.0
+status: source-indexed
+title: Mermaid validator family
+source:
+  repository: majikmushi/mermaid
+  branch: develop
+  commit: 446f6a7701065eb12e024475243434eb727dc172
+  evidence:
+    path: packages/mermaid/src/diagram-api/diagram-orchestration.ts
+    sha: 5b8cfc3fe92a674c130bf57245332cba3b4498b1
+runtime:
+  parser_authority: mermaid.parse
+  ast_entrypoint: mermaid.mermaidAPI.getDiagramFromText
+diagram_families:
+  - {id: c4, status: runtime-validation-available, source-profile: pending}
+  - {id: kanban, status: runtime-validation-available, source-profile: pending}
+  - {id: classDiagram, status: source-derived-reference-implemented, ast: class-db-adapter}
+  - {id: er, status: runtime-validation-available, source-profile: pending}
+  - {id: gantt, status: runtime-validation-available, source-profile: pending}
+  - {id: info, status: runtime-validation-available, source-profile: pending}
+  - {id: pie, status: runtime-validation-available, source-profile: pending}
+  - {id: requirement, status: runtime-validation-available, source-profile: pending}
+  - {id: sequence, status: runtime-validation-available, source-profile: pending}
+  - {id: flowchart, status: runtime-validation-available, source-profile: pending}
+  - {id: mindmap, status: runtime-validation-available, source-profile: pending}
+  - {id: timeline, status: runtime-validation-available, source-profile: pending}
+  - {id: git, status: runtime-validation-available, source-profile: pending}
+  - {id: state, status: runtime-validation-available, source-profile: pending}
+  - {id: user-journey, status: runtime-validation-available, source-profile: pending}
+  - {id: quadrant-chart, status: runtime-validation-available, source-profile: pending}
+  - {id: sankey, status: runtime-validation-available, source-profile: pending}
+  - {id: packet, status: runtime-validation-available, source-profile: pending}
+  - {id: xychart, status: runtime-validation-available, source-profile: pending}
+  - {id: block, status: runtime-validation-available, source-profile: pending}
+  - {id: architecture, status: runtime-validation-available, source-profile: pending}
+notes:
+  - Detector ordering is significant; the first matching detector wins.
+  - ClassDiagram has legacy and V2 detector paths.
