@@ -1,0 +1,15 @@
+id: format.uml.class
+kind: format
+version: 0.1.0
+status: experimental
+title: UML Class Diagram
+family: format.uml
+semantic_strictness: formal
+capabilities:
+  elements: [class, interface, enumeration, datatype, package, association-class, stereotype]
+  members: [attribute, operation, visibility, static, abstract, generic-type]
+  relationships: [association, dependency, generalization, realization, aggregation, composition, multiplicity]
+  extension: [stereotype, tagged-value, constraint, note]
+profile_catalog: profiles/domain/class-like-models.yaml
+validator: validator.uml
+serialization: tool-dependent

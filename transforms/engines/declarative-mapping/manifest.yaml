@@ -1,0 +1,9 @@
+id: transform-engine.declarative-mapping
+kind: transform-engine
+version: 0.1.0
+status: experimental
+title: Repository Declarative Mapping Engine Contract
+inspired_by: [XSLT, schema-mapping, compiler-IR-lowering]
+phases: [match, select, map, enrich, encode, validate]
+rule_fields: [match, when, emit, map-properties, map-relationships, visual-encoding, fallback, loss-policy]
+requirements: [deterministic-by-default, explicit-lossiness, profile-aware, validator-hook, provenance-output]

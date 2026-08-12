@@ -1,0 +1,11 @@
+id: format.mermaid
+kind: format-family
+version: 0.1.0
+status: experimental
+title: Mermaid
+semantic_strictness: mixed
+role: textual diagram DSL and rendering target
+known_diagram_types: [flowchart, classDiagram, sequenceDiagram, stateDiagram-v2, erDiagram, requirementDiagram, mindmap, architecture-beta]
+capability_source_policy: derive normative constraints from Mermaid source/parser/runtime
+validators: [validator.mermaid.class]
+documentation: [docs/mermaid-representation.md]

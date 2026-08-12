@@ -1,0 +1,12 @@
+id: transform-engine.xslt
+kind: transform-engine
+version: 0.1.0
+status: experimental
+title: XSLT Transformation Engine
+source_family: format.xml
+target_families: [format.xml, text, html, other-serializer-output]
+model: declarative template/rule transformation
+analogy: reference model for repository declarative transformers
+features: [template-matching, selection, construction, parameters, named-templates, modes, composition]
+security: [disable-untrusted-extension-functions, control-document-network-access, sandbox-untrusted-stylesheets]
+adapter: adapter.xml

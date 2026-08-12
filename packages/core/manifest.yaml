@@ -1,0 +1,6 @@
+id: package.core
+kind: package
+version: 0.1.0
+status: experimental
+title: Core Semantic Framework
+includes: [semantics/core-ontology.yaml, semantics/equivalence.yaml, canonical/core/model.schema.json, rules/core.yaml, policies/repository.yaml, provenance/model.yaml]

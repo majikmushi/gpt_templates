@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Round-Trip Fixture Manifest",
+  "type": "object",
+  "required": ["id", "kind", "version", "status", "source", "cases"],
+  "properties": {
+    "id": {"type": "string"},
+    "kind": {"const": "roundtrip-fixture"},
+    "version": {"type": "string"},
+    "status": {"type": "string"},
+    "source": {"type": "string"},
+    "cases": {"type": "array", "items": {"type": "object", "required": ["path", "expected_equivalence"], "properties": {"path": {"type": "array", "minItems": 2, "items": {"type": "string"}}, "expected_equivalence": {"enum": ["exact", "equivalent", "projection", "approximate", "non-equivalent"]}, "notes": {"type": "string"}}, "additionalProperties": false}}
+  },
+  "additionalProperties": false
+}

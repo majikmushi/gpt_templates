@@ -1,0 +1,10 @@
+id: validator.xml
+kind: validator
+version: 0.1.0
+status: experimental
+title: XML Validator
+target: format.xml
+layers: [well-formedness, schema, semantic, compatibility, lint]
+profiles: [xsd, relax-ng, schematron]
+implementation_status: planned
+severity_levels: [error, warning, compatibility, lint, suggestion]

@@ -1,0 +1,12 @@
+classDiagram
+    class MCU {
+        +role controller
+    }
+    class TemperatureSensor {
+        +interface I2C
+    }
+    class Radio {
+        +interface SPI
+    }
+    MCU <--> TemperatureSensor : I2C
+    MCU <--> Radio : SPI

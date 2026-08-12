@@ -1,0 +1,7 @@
+id: benchmarks.metrics
+kind: benchmark-definition
+version: 0.1.0
+status: experimental
+title: Representation Benchmark Metrics
+metrics: [semantic-fidelity, information-loss, round-trip-equivalence, validation-coverage, determinism, artifact-size, node-count, edge-count, visual-density, transform-runtime]
+policy: Benchmarks distinguish measured results from estimates and record tool version and profile.

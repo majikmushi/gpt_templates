@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system id="example.embedded-controller" type="electronics-system">
+  <component id="mcu" role="controller"/>
+  <component id="sensor" interface="I2C"/>
+  <component id="radio" interface="SPI"/>
+  <connection source="mcu" target="sensor" protocol="I2C" direction="bidirectional"/>
+  <connection source="mcu" target="radio" protocol="SPI" direction="bidirectional"/>
+</system>

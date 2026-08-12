@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Canonical Semantic Model",
+  "type": "object",
+  "required": ["id", "elements", "relationships"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "type": {"type": "string", "default": "model"},
+    "metadata": {"type": "object", "additionalProperties": true},
+    "elements": {"type": "array", "items": {"$ref": "#/$defs/element"}},
+    "relationships": {"type": "array", "items": {"$ref": "#/$defs/relationship"}},
+    "containers": {"type": "array", "items": {"$ref": "#/$defs/container"}, "default": []},
+    "behavior": {"type": "object", "additionalProperties": true},
+    "visual_encodings": {"type": "array", "items": {"$ref": "#/$defs/visualEncoding"}, "default": []},
+    "provenance": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {
+    "element": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": {"type": "string"}, "type": {"type": "string"}, "name": {"type": "string"},
+        "properties": {"type": "object", "additionalProperties": true},
+        "capabilities": {"type": "array", "items": {"type": "string"}},
+        "annotations": {"type": "object", "additionalProperties": true}
+      },
+      "additionalProperties": false
+    },
+    "relationship": {
+      "type": "object",
+      "required": ["id", "type", "source", "target"],
+      "properties": {
+        "id": {"type": "string"}, "type": {"type": "string"}, "source": {"type": "string"}, "target": {"type": "string"},
+        "direction": {"enum": ["directed", "undirected", "bidirectional"]},
+        "source_cardinality": {"type": "string"}, "target_cardinality": {"type": "string"},
+        "semantics": {"type": "array", "items": {"type": "string"}},
+        "annotations": {"type": "object", "additionalProperties": true}
+      },
+      "additionalProperties": false
+    },
+    "container": {
+      "type": "object",
+      "required": ["id", "type", "members"],
+      "properties": {"id": {"type": "string"}, "type": {"type": "string"}, "members": {"type": "array", "items": {"type": "string"}}, "parent": {"type": "string"}, "annotations": {"type": "object", "additionalProperties": true}},
+      "additionalProperties": false
+    },
+    "visualEncoding": {
+      "type": "object",
+      "required": ["dimension", "channel"],
+      "properties": {"dimension": {"type": "string"}, "channel": {"type": "string"}, "mapping": {"type": "object", "additionalProperties": true}, "fallback": {"type": "string"}, "legend_required": {"type": "boolean"}},
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

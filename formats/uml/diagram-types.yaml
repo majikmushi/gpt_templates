@@ -1,0 +1,22 @@
+id: registry.uml.diagram-types
+kind: registry
+version: 0.1.0
+status: experimental
+title: UML Diagram Type Registry
+structural:
+  - {id: class, title: Class Diagram, capabilities: [typed-entity, properties, operations, inheritance, association, aggregation, composition, dependency, realization, multiplicity, packages, stereotypes]}
+  - {id: object, title: Object Diagram, capabilities: [instances, slots, links, snapshot]}
+  - {id: component, title: Component Diagram, capabilities: [components, interfaces, ports, dependencies, realization]}
+  - {id: composite-structure, title: Composite Structure Diagram, capabilities: [parts, ports, connectors, collaboration]}
+  - {id: package, title: Package Diagram, capabilities: [grouping, namespace, dependency, imports]}
+  - {id: deployment, title: Deployment Diagram, capabilities: [nodes, artifacts, communication-paths, deployment]}
+  - {id: profile, title: Profile Diagram, capabilities: [stereotypes, tagged-values, metamodel-extension]}
+behavioral:
+  - {id: use-case, title: Use Case Diagram, capabilities: [actors, use-cases, associations, include, extend, generalization]}
+  - {id: activity, title: Activity Diagram, capabilities: [actions, control-flow, object-flow, decision, fork, join, partitions]}
+  - {id: state-machine, title: State Machine Diagram, capabilities: [states, transitions, guards, events, composite-states, regions]}
+  - {id: sequence, title: Sequence Diagram, capabilities: [lifelines, messages, ordering, activation, fragments, timing-order]}
+  - {id: communication, title: Communication Diagram, capabilities: [objects, links, numbered-messages, interaction-topology]}
+  - {id: interaction-overview, title: Interaction Overview Diagram, capabilities: [interaction-nodes, control-flow, fragments]}
+  - {id: timing, title: Timing Diagram, capabilities: [lifelines, state-value-over-time, duration, timing-constraints]}
+validation_status: seeded-non-normative
