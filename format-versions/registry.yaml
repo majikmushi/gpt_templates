@@ -1,0 +1,41 @@
+id: registry.format-versions
+kind: registry
+version: 1.0.0
+status: active
+title: Format Version Registry
+description: Registered format releases and the evidence used to describe them. Format selection and version selection are separate decisions.
+resolution_policy:
+  omitted_version: pinned-default-only
+  version_constraint: highest-compatible-registered
+  resolved_plan_pins_exact_version: true
+formats:
+  - format: format.mermaid.class
+    version_scheme: pep440
+    default_release: format-version.mermaid.class.11.4.1
+    releases:
+      - {id: format-version.mermaid.class.11.4.1, version: '11.4.1', path: format-versions/mermaid-class-11.4.1.yaml, status: source-pinned}
+  - format: format.uml.class
+    version_scheme: opaque
+    default_release: null
+    releases: []
+    status: unpinned
+  - format: format.plantuml
+    version_scheme: opaque
+    default_release: null
+    releases: []
+    status: unpinned
+  - format: format.json-schema
+    version_scheme: opaque
+    default_release: null
+    releases: []
+    status: unpinned
+  - format: format.xml
+    version_scheme: opaque
+    default_release: null
+    releases: []
+    status: unpinned
+  - format: format.markdown
+    version_scheme: opaque
+    default_release: null
+    releases: []
+    status: unpinned

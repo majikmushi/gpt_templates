@@ -1,83 +1,85 @@
 # GPT Templates / Representation Framework
 
-A reusable, format-neutral framework for semantic models, abstract representation models, representation formats, bindings, styles, transforms, validators, fixtures and provenance.
+A reusable, format-neutral framework for semantic models, abstract representation models, representation formats, bindings, styles, transforms, validators, renderer compatibility, fixtures and provenance.
 
 ## Core idea
 
-Describe meaning once, choose the abstract model you want, choose the representation format you want, then let explicit bindings map the model into that format.
+Describe meaning once, choose the abstract model, choose the representation format, then use explicit bindings to express that model through the chosen format.
 
 ```text
 Canonical / source semantics
         -> Abstract representation model
         -> Chosen format
+        -> Exact format release resolution
         -> Representation binding
         -> Semantic overlays
         -> Style profile
         -> Format style binding
+        -> Optional chosen renderer + compatibility contract
         -> Transform / adapter
         -> Concrete artifact
         -> Validation / provenance / equivalence
 ```
 
-A format is **chosen**, not silently selected. `binding: auto` only resolves a compatible binding within that chosen format.
+A format is **chosen**, not silently selected. A renderer is also chosen when rendering is requested. `binding: auto` only resolves a compatible binding inside the already chosen format.
 
-For example, `model.interface-driven-class` can currently resolve to bindings for Mermaid classDiagram, UML class view, or PlantUML while remaining the same abstract model.
+## First-class layers
 
-## First-class framework layers
-
-- `canonical/` and `semantics/` - format-independent meaning.
-- `abstract-models/` - reusable model types such as interface-driven class, service, electronics, security and RBAC models.
-- `language-definitions/` and `formats/` - representation-system capabilities, syntax/metamodel and constraints.
-- `representation-bindings/` - model -> chosen-format mappings.
+- `canonical/`, `semantics/` - format-independent meaning.
+- `abstract-models/` - reusable model types.
+- `language-definitions/`, `formats/` - representation-system syntax/metamodel/capabilities.
+- `format-versions/` - exact registered releases of formats.
+- `representation-bindings/` - abstract-model -> chosen-format mappings.
 - `overlays/` - additional semantic dimensions.
 - `styles/` - format-neutral presentation intent.
-- `style-bindings/` - translation of style intent into target-specific styling mechanisms.
-- `transforms/` and `adapters/` - execution.
+- `style-bindings/` - format-specific realization of style intent.
+- `renderers/` - versioned renderer implementations.
+- `renderer-compatibility/` - explicit renderer-release <-> format-release support contracts.
+- `transforms/`, `adapters/` - execution.
 - `validators/`, `provenance/`, `fixtures/` - assurance and evidence.
-- `capability-matrix/` and `conversion-graph/` - support/fidelity and conversion routing.
+- `capability-matrix/`, `conversion-graph/` - support/fidelity and conversion routing.
 
-The original 44 class-like domain profiles have been promoted into `registry.abstract-models`. Legacy `profile.domain.*` IDs are retained as aliases rather than being the preferred model identity.
+The framework contains 44 first-class abstract model types. Model identity is `model.*`; format-specific mappings are `binding.*`. The former profile-based model layer has been removed.
 
-## Representation-system ingestion
+## Versions and renderers
 
-External specification evidence is normalized separately from domain modelling:
+A format family, a format release, a renderer and a renderer release are separate concepts. A renderer limitation must not be recorded as a limitation of the format itself.
 
-```text
-External language/specification evidence
-        -> Specification Source Adapters
-        -> Normalized Language Definition
-        -> Capabilities / validators / bindings
-```
+For the source-backed Mermaid class implementation, the current pinned pair is:
 
-Mermaid currently has source-derived/runtime-backed evidence pinned to `majikmushi/mermaid`. UML is intentionally scaffolded as a metamodel/constraint/serialization-driven language family until a normative version is pinned.
+- format release: `format-version.mermaid.class.11.4.1`
+- renderer: `renderer.mermaid-js`
+- renderer release: `11.4.1`
+- compatibility contract: `compatibility.renderer.mermaid-js.mermaid-class.11.4.1`
+
+UML and PlantUML are deliberately left version-`unpinned` until source/specification evidence is added. The framework does not invent compatibility ranges.
+
+See [`docs/version-and-renderer-compatibility.md`](docs/version-and-renderer-compatibility.md).
 
 ## Executable engine
-
-`tooling/blueprint_engine/` implements catalog discovery, capability matching, conversion routing, canonical validation, language-definition/source-provenance support, abstract-model/binding/style resolution, transforms, semantic comparison and round-trip checks.
-
-New framework commands include:
 
 ```bash
 blueprint-engine --repo . abstract-model model.interface-driven-class
 blueprint-engine --repo . resolve-binding model.interface-driven-class format.mermaid.class
-blueprint-engine --repo . style style.technical-dark
-blueprint-engine --repo . resolve-style-binding format.mermaid.class
+blueprint-engine --repo . format-release format.mermaid.class --version 11.4.1
+blueprint-engine --repo . renderer-release renderer.mermaid-js --version 11.4.1
+blueprint-engine --repo . renderer-compatibility renderer.mermaid-js 11.4.1 format.mermaid.class 11.4.1
 blueprint-engine --repo . generation-plan examples/generation/interface-driven-mermaid.yaml
 ```
 
-See [`docs/framework-architecture.md`](docs/framework-architecture.md) first for future development. Supporting documentation includes [`docs/specification-ingestion.md`](docs/specification-ingestion.md), [`docs/validation.md`](docs/validation.md), [`docs/visual-encoding.md`](docs/visual-encoding.md), and [`docs/mermaid-source-validation.md`](docs/mermaid-source-validation.md).
+For future development, read [`docs/framework-architecture.md`](docs/framework-architecture.md) first, then [`docs/version-and-renderer-compatibility.md`](docs/version-and-renderer-compatibility.md), [`docs/specification-ingestion.md`](docs/specification-ingestion.md), and [`docs/validation.md`](docs/validation.md).
 
 ## Design invariants
 
 1. Abstract models do not choose representation formats.
-2. Representation formats do not own domain-model semantics.
+2. Formats do not own domain-model semantics.
 3. Bindings map one abstract model to one chosen format and declare fidelity/loss.
-4. Semantic overlays add meaning; style profiles do not.
-5. Critical meaning must not depend on colour alone.
-6. Styles are portable intent; style bindings perform target-specific realization.
-7. Format primitives may be semantically overloaded only through explicit bindings/profiles.
-8. Validators declare authority, evidence and degradation mode.
-9. Syntax validity does not imply semantic equivalence.
-10. Round-trip claims require semantic comparison tests.
-11. Language/specification evidence is normalized before being treated as validator/binding authority.
-12. Stable artifact IDs are independent of file paths.
+4. Format family and exact format release are distinct.
+5. Renderer identity/version and format identity/version are distinct.
+6. Renderer compatibility requires an explicit evidence-backed contract when claimed.
+7. Semantic overlays add meaning; styles do not.
+8. Critical meaning must not depend on colour alone.
+9. Syntax validity does not imply semantic equivalence or renderer compatibility.
+10. Unknown compatibility remains `unpinned`/`unverified`; it is never guessed.
+11. Resolved generation plans and provenance pin exact versions.
+12. Round-trip claims are tested, not inferred.

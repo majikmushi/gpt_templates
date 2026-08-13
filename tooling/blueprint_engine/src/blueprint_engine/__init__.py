@@ -1,6 +1,6 @@
-"""Blueprint/template representation engine."""
+"""Format-neutral representation framework engine."""
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 from .engine import BlueprintEngine
 from .mermaid_runtime import MermaidRuntimeBridge, MermaidRuntimeError, MermaidRuntimeUnavailable

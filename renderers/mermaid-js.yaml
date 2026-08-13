@@ -1,0 +1,20 @@
+id: renderer.mermaid-js
+kind: renderer
+version: 1.0.0
+status: source-pinned
+title: Mermaid JavaScript Renderer
+runtime: node
+implementation:
+  package: mermaid
+  bridge: tooling/blueprint_engine/node/mermaid_bridge.mjs
+source:
+  repository: majikmushi/mermaid
+releases:
+  - version: '11.4.1'
+    version_scheme: pep440
+    status: source-pinned
+    source_commit: 446f6a7701065eb12e024475243434eb727dc172
+    package_version: '11.4.1'
+outputs: [svg]
+notes:
+  - Parser/runtime and renderer release are currently sourced from the same Mermaid package, but remain separate framework concepts.

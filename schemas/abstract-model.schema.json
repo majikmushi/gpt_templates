@@ -15,8 +15,7 @@
     "relationships": {"type": "array", "items": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string"}}, "additionalProperties": true}},
     "features": {"type": "array", "items": {"type": "string"}},
     "constraints": {"type": "array", "items": {"type": "string"}},
-    "representation_policy": {"type": "object"},
-    "legacy_aliases": {"type": "array", "items": {"type": "string"}}
+    "representation_policy": {"type": "object"}
   },
-  "additionalProperties": true
+  "additionalProperties": false
 }

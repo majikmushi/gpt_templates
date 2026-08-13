@@ -2,69 +2,59 @@
 
 ## Reference source
 
-This integration was derived from `majikmushi/mermaid` branch `develop`, commit `446f6a7701065eb12e024475243434eb727dc172`, Mermaid package version `11.4.1`.
+The current integration is derived from `majikmushi/mermaid`:
 
-The exact evidence files and Git blob SHAs are recorded in `validators/mermaid/source-provenance.yaml`.
+- branch: `develop`
+- commit: `446f6a7701065eb12e024475243434eb727dc172`
+- package version: `11.4.1`
 
-## Generic specification-ingestion layer
+Exact evidence paths and Git blob SHAs are recorded in `validators/mermaid/source-provenance.yaml`.
 
-Mermaid now participates in the same source-ingestion architecture intended for UML and other languages:
+## Authority
+
+Mermaid runtime parsing is the authoritative syntax path for the pinned runtime release. Static Python checks are source-derived preflight only.
 
 ```text
-Mermaid grammar/runtime/DB/tests
-    |
-    v
-Specification Source Adapters
-    |
-    v
-language.mermaid.class-diagram
-    |
-    +--> static source-derived rules
-    +--> native runtime validator
-    +--> ClassDB AST adapter
-    +--> canonical semantic model
+Mermaid source
+    -> mermaid.parse()
+    -> parser result
+    -> mermaidAPI.getDiagramFromText()
+    -> diagram DB
+    -> normalized AST
+    -> optional representation binding
+    -> canonical semantic model
 ```
 
-`language-definitions/mermaid/class-diagram.yaml` is the normalized language definition. `adapters/specification/mermaid.yaml` describes how pinned Mermaid evidence contributes to it.
+For classDiagram the AST adapter handles classes, members, methods, annotations, namespaces, relations, notes, direction, links, styles and accessibility metadata.
 
-## Why the runtime is authoritative
+## Version scope
 
-Mermaid's `mermaidAPI.parse()` parses diagram text and validates syntax. `Diagram.fromText()` performs type detection, lazy-loads the selected diagram implementation, attaches a diagram-specific DB to Jison parsers, clears the DB and executes the parser.
+The source evidence creates an exact registered format release: `format-version.mermaid.class.11.4.1`.
 
-The framework therefore does not maintain a second complete Mermaid grammar.
+Validation of this release does not imply that an arbitrary older/newer Mermaid version behaves identically. New versions require new evidence/release records and regression checks.
 
-## Validation modes
+## Renderer scope
 
-`validator.mermaid.runtime` invokes Mermaid through `tooling/blueprint_engine/node/mermaid_bridge.mjs`. This path supports every diagram family registered by Mermaid's diagram orchestration.
+Parser/runtime validation and rendering compatibility are independent framework claims. `renderer.mermaid-js` release `11.4.1` currently has an exact compatibility contract with Mermaid classDiagram `11.4.1`. Other renderers or versions require separate contracts.
 
-`format.mermaid.class` also runs conservative static checks taken from the class Jison grammar, ClassDB, ClassMember types and source tests. They are preflight checks, not grammar-complete replacements.
+## Source verification
 
-If Node/Mermaid is unavailable, normal validation returns a warning. With `--require-runtime`, it returns an error.
-
-## Class diagram semantic adapter
-
-The class reference adapter obtains Mermaid's parsed ClassDB and normalizes classes and labels, attributes and methods, visibility, generic type, static/abstract classifiers, annotations, CSS classes and styles, namespaces, relationships, cardinalities, notes, direction, links and accessibility metadata.
-
-Lollipop relations are represented using the synthetic interface nodes exposed by ClassDB's normalized render data.
-
-## Source checkout verification
-
-Generic command:
+Use the generic provenance checker:
 
 ```bash
 blueprint-engine --repo . source-check validators/mermaid/source-provenance.yaml /path/to/mermaid
 ```
 
-Compatibility alias:
+It verifies the pinned source commit and each evidence file's Git blob hash.
 
-```bash
-blueprint-engine --repo . mermaid-source-check /path/to/mermaid
-```
+## Extending another Mermaid family/release
 
-Both compare the checkout HEAD and each evidence file's Git blob hash with the pinned provenance manifest.
-
-## Extending to another Mermaid diagram family
-
-For each family, pin grammar/parser/DB/detector/test evidence, add or generate an NLD, use the shared native runtime parser for syntax, add a diagram-specific DB/AST adapter where semantic round trips matter, add conformance fixtures, and only establish round-trip claims after semantic comparison passes.
-
-The generic specification-ingestion architecture is described in `docs/specification-ingestion.md`.
+1. pin parser/grammar/DB/detector/test evidence;
+2. update or create its normalized language definition;
+3. create an exact `format-version` artifact;
+4. enumerate release capabilities from evidence;
+5. add/update representation and style bindings with explicit version ranges;
+6. use the shared native runtime for syntax validation;
+7. add a diagram-specific semantic AST adapter where needed;
+8. add renderer compatibility contracts only for tested renderer/release combinations;
+9. establish semantic round-trip claims through comparison tests.

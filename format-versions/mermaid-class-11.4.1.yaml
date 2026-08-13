@@ -1,0 +1,29 @@
+id: format-version.mermaid.class.11.4.1
+kind: format-version
+version: 11.4.1
+status: source-pinned
+title: Mermaid classDiagram 11.4.1
+format: format.mermaid.class
+version_scheme: pep440
+language_definition: language.mermaid.class-diagram
+source:
+  repository: majikmushi/mermaid
+  commit: 446f6a7701065eb12e024475243434eb727dc172
+  package_version: 11.4.1
+  provenance: validators/mermaid/source-provenance.yaml
+capabilities:
+  - class
+  - attribute
+  - operation
+  - namespace
+  - relationship
+  - cardinality
+  - annotation
+  - note
+  - direction
+  - class-style
+  - class-definition
+compatibility_policy:
+  backward_compatibility_assumed: false
+  forward_compatibility_assumed: false
+  exact_release_is_authoritative_scope: true

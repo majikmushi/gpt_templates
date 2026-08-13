@@ -1,6 +1,6 @@
 id: catalog.artifacts
 kind: catalog
-version: 0.3.0
+version: 0.4.0
 status: experimental
 title: Artifact Catalog Seed
 format_families: [format.mermaid, format.uml, format.plantuml, format.json-schema, format.xml, format.markdown]
@@ -11,10 +11,14 @@ registries:
   - registry.semantic-overlays
   - registry.styles
   - registry.style-bindings
+  - registry.format-versions
+  - registry.renderers
+  - registry.renderer-compatibility
   - registry.language-definitions
   - registry.specification-source-adapters
   - registry.capabilities
   - matrix.format-capabilities
   - graph.conversions
 architecture_document: docs/framework-architecture.md
+compatibility_document: docs/version-and-renderer-compatibility.md
 note: Intended to become generated from manifests rather than hand-maintained.

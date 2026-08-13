@@ -1,0 +1,7 @@
+id: registry.renderer-compatibility
+kind: registry
+version: 1.0.0
+status: active
+title: Renderer Compatibility Registry
+contracts:
+  - {id: compatibility.renderer.mermaid-js.mermaid-class.11.4.1, renderer: renderer.mermaid-js, format: format.mermaid.class, path: renderer-compatibility/mermaid-js-mermaid-class-11.4.1.yaml, support: native}

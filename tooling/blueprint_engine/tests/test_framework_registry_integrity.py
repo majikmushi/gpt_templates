@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 import yaml
 
 from blueprint_engine.engine import BlueprintEngine
@@ -40,10 +41,20 @@ def test_all_style_bindings_validate_and_match_registry_format():
         assert value["format"] == entry["format"]
 
 
-def test_legacy_domain_profile_aliases_are_one_to_one():
-    new_registry = _load("abstract-models/registry.yaml")
-    legacy_registry = _load("profiles/domain/class-like-models.yaml")
-    aliases = {entry["legacy_alias"]: entry["id"] for entry in new_registry["models"]}
-    assert len(aliases) == 44
-    for entry in legacy_registry["profiles"]:
-        assert aliases[entry["id"]] == entry["abstract_model"]
+def test_format_renderer_and_compatibility_artifacts_validate():
+    engine = BlueprintEngine(REPO)
+    release = _load("format-versions/mermaid-class-11.4.1.yaml")
+    renderer = _load("renderers/mermaid-js.yaml")
+    compatibility = _load("renderer-compatibility/mermaid-js-mermaid-class-11.4.1.yaml")
+    assert engine.validate_framework_artifact(release, "format-version").ok
+    assert engine.validate_framework_artifact(renderer, "renderer").ok
+    assert engine.validate_framework_artifact(compatibility, "renderer-compatibility").ok
+
+
+def test_removed_profile_layer_is_not_resolvable_or_present():
+    engine = BlueprintEngine(REPO)
+    with pytest.raises(KeyError):
+        engine.abstract_model("profile.domain.interface-driven-model")
+    assert not (REPO / "profiles/domain/class-like-models.yaml").exists()
+    assert not (REPO / "profiles/mermaid/class/registry.yaml").exists()
+    assert not (REPO / "schemas/representation-profile.schema.json").exists()

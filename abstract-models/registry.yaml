@@ -1,6 +1,6 @@
 id: registry.abstract-models
 kind: registry
-version: 1.0.0
+version: 2.0.0
 status: active
 title: Abstract Representation Model Registry
 description: Format-independent model types. These define what is represented, not how any target syntax renders it.
@@ -9,47 +9,47 @@ selection_policy:
   automatic_format_selection: false
   binding_may_be_auto_resolved: true
 models:
-  - {id: model.interface-driven-class, title: Interface-Driven Class Model, family: software, detail: abstract-models/interface-driven-class.yaml, legacy_alias: profile.domain.interface-driven-model}
-  - {id: model.object-oriented-class, title: Object-Oriented Class Model, family: software, legacy_alias: profile.domain.object-oriented-class-model}
-  - {id: model.domain, title: Domain Model, family: knowledge, legacy_alias: profile.domain.domain-model}
-  - {id: model.entity-data, title: Entity / Data Model, family: data, legacy_alias: profile.domain.entity-data-model}
-  - {id: model.conceptual-data, title: Conceptual Data Model, family: data, legacy_alias: profile.domain.conceptual-data-model}
-  - {id: model.logical-data, title: Logical Data Model, family: data, legacy_alias: profile.domain.logical-data-model}
-  - {id: model.component, title: Component Model, family: software, legacy_alias: profile.domain.component-model}
-  - {id: model.service, title: Service Model, family: software, legacy_alias: profile.domain.service-model}
-  - {id: model.layered-architecture, title: Layered Architecture Model, family: architecture, legacy_alias: profile.domain.layered-architecture-model}
-  - {id: model.hexagonal-ports-adapters, title: Hexagonal / Ports-and-Adapters Model, family: architecture, legacy_alias: profile.domain.hexagonal-ports-adapters-model}
-  - {id: model.clean-architecture, title: Clean Architecture Model, family: architecture, legacy_alias: profile.domain.clean-architecture-model}
-  - {id: model.plugin-architecture, title: Plugin Architecture Model, family: software, legacy_alias: profile.domain.plugin-architecture-model}
-  - {id: model.driver-hardware-abstraction, title: Driver / Hardware Abstraction Model, family: systems, legacy_alias: profile.domain.driver-hardware-abstraction-model}
-  - {id: model.protocol-stack, title: Protocol Stack Model, family: communications, legacy_alias: profile.domain.protocol-stack-model}
-  - {id: model.api, title: API Model, family: software, legacy_alias: profile.domain.api-model}
-  - {id: model.repository-persistence, title: Repository / Persistence Model, family: data, legacy_alias: profile.domain.repository-persistence-model}
-  - {id: model.dependency, title: Dependency Model, family: architecture, legacy_alias: profile.domain.dependency-model}
-  - {id: model.module, title: Module Model, family: software, legacy_alias: profile.domain.module-model}
-  - {id: model.package-namespace, title: Package / Namespace Model, family: software, legacy_alias: profile.domain.package-namespace-model}
-  - {id: model.type, title: Type Model, family: software, legacy_alias: profile.domain.type-model}
-  - {id: model.taxonomy-classification, title: Taxonomy / Classification Model, family: knowledge, legacy_alias: profile.domain.taxonomy-classification-model}
-  - {id: model.ontology-concept, title: Ontology / Concept Model, family: knowledge, legacy_alias: profile.domain.ontology-concept-model}
-  - {id: model.organizational, title: Organizational Model, family: organization, legacy_alias: profile.domain.organizational-model}
-  - {id: model.role-responsibility, title: Role / Responsibility Model, family: organization, legacy_alias: profile.domain.role-responsibility-model}
-  - {id: model.capability, title: Capability Model, family: organization, legacy_alias: profile.domain.capability-model}
-  - {id: model.resource, title: Resource Model, family: systems, legacy_alias: profile.domain.resource-model}
-  - {id: model.configuration, title: Configuration Model, family: systems, legacy_alias: profile.domain.configuration-model}
-  - {id: model.product-product-line, title: Product / Product-Line Model, family: product, legacy_alias: profile.domain.product-product-line-model}
-  - {id: model.feature, title: Feature Model, family: product, legacy_alias: profile.domain.feature-model}
-  - {id: model.physical-system, title: Physical System Model, family: systems, legacy_alias: profile.domain.physical-system-model}
-  - {id: model.electronics-system, title: Electronics System Model, family: systems, legacy_alias: profile.domain.electronics-system-model}
-  - {id: model.communication-interface, title: Communication Interface Model, family: communications, legacy_alias: profile.domain.communication-interface-model}
-  - {id: model.control-system, title: Control-System Model, family: systems, legacy_alias: profile.domain.control-system-model}
-  - {id: model.iot-device, title: IoT Device Model, family: systems, legacy_alias: profile.domain.iot-device-model}
-  - {id: model.infrastructure, title: Infrastructure Model, family: architecture, legacy_alias: profile.domain.infrastructure-model}
-  - {id: model.deployment-abstraction, title: Deployment Abstraction Model, family: architecture, legacy_alias: profile.domain.deployment-abstraction-model}
-  - {id: model.security, title: Security Model, family: security, legacy_alias: profile.domain.security-model}
-  - {id: model.permission-rbac, title: Permission / RBAC Model, family: security, legacy_alias: profile.domain.permission-rbac-model}
-  - {id: model.ownership, title: Ownership Model, family: organization, legacy_alias: profile.domain.ownership-model}
-  - {id: model.composition-assembly, title: Composition / Assembly Model, family: systems, legacy_alias: profile.domain.composition-assembly-model}
-  - {id: model.design-pattern, title: Design-Pattern Model, family: software, legacy_alias: profile.domain.design-pattern-model}
-  - {id: model.metamodel, title: Metamodel, family: knowledge, legacy_alias: profile.domain.metamodel}
-  - {id: model.schema, title: Schema Model, family: data, legacy_alias: profile.domain.schema-model}
-  - {id: model.blueprint-template, title: Blueprint / Template Model, family: knowledge, legacy_alias: profile.domain.blueprint-template-model}
+  - {id: model.interface-driven-class, title: Interface-Driven Class Model, family: software, detail: abstract-models/interface-driven-class.yaml}
+  - {id: model.object-oriented-class, title: Object-Oriented Class Model, family: software}
+  - {id: model.domain, title: Domain Model, family: knowledge}
+  - {id: model.entity-data, title: Entity / Data Model, family: data}
+  - {id: model.conceptual-data, title: Conceptual Data Model, family: data}
+  - {id: model.logical-data, title: Logical Data Model, family: data}
+  - {id: model.component, title: Component Model, family: software}
+  - {id: model.service, title: Service Model, family: software}
+  - {id: model.layered-architecture, title: Layered Architecture Model, family: architecture}
+  - {id: model.hexagonal-ports-adapters, title: Hexagonal / Ports-and-Adapters Model, family: architecture}
+  - {id: model.clean-architecture, title: Clean Architecture Model, family: architecture}
+  - {id: model.plugin-architecture, title: Plugin Architecture Model, family: software}
+  - {id: model.driver-hardware-abstraction, title: Driver / Hardware Abstraction Model, family: systems}
+  - {id: model.protocol-stack, title: Protocol Stack Model, family: communications}
+  - {id: model.api, title: API Model, family: software}
+  - {id: model.repository-persistence, title: Repository / Persistence Model, family: data}
+  - {id: model.dependency, title: Dependency Model, family: architecture}
+  - {id: model.module, title: Module Model, family: software}
+  - {id: model.package-namespace, title: Package / Namespace Model, family: software}
+  - {id: model.type, title: Type Model, family: software}
+  - {id: model.taxonomy-classification, title: Taxonomy / Classification Model, family: knowledge}
+  - {id: model.ontology-concept, title: Ontology / Concept Model, family: knowledge}
+  - {id: model.organizational, title: Organizational Model, family: organization}
+  - {id: model.role-responsibility, title: Role / Responsibility Model, family: organization}
+  - {id: model.capability, title: Capability Model, family: organization}
+  - {id: model.resource, title: Resource Model, family: systems}
+  - {id: model.configuration, title: Configuration Model, family: systems}
+  - {id: model.product-product-line, title: Product / Product-Line Model, family: product}
+  - {id: model.feature, title: Feature Model, family: product}
+  - {id: model.physical-system, title: Physical System Model, family: systems}
+  - {id: model.electronics-system, title: Electronics System Model, family: systems}
+  - {id: model.communication-interface, title: Communication Interface Model, family: communications}
+  - {id: model.control-system, title: Control-System Model, family: systems}
+  - {id: model.iot-device, title: IoT Device Model, family: systems}
+  - {id: model.infrastructure, title: Infrastructure Model, family: architecture}
+  - {id: model.deployment-abstraction, title: Deployment Abstraction Model, family: architecture}
+  - {id: model.security, title: Security Model, family: security}
+  - {id: model.permission-rbac, title: Permission / RBAC Model, family: security}
+  - {id: model.ownership, title: Ownership Model, family: organization}
+  - {id: model.composition-assembly, title: Composition / Assembly Model, family: systems}
+  - {id: model.design-pattern, title: Design-Pattern Model, family: software}
+  - {id: model.metamodel, title: Metamodel, family: knowledge}
+  - {id: model.schema, title: Schema Model, family: data}
+  - {id: model.blueprint-template, title: Blueprint / Template Model, family: knowledge}

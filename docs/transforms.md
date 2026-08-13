@@ -1,52 +1,48 @@
 # Transformation Model
 
-Transforms are the repository equivalent of an XSLT-like mapping layer: they convert one structured representation into another while keeping semantic mapping explicit.
+Transforms execute mappings after model, format, version and binding choices have been resolved.
 
-## Implemented engine
+## Responsibilities
 
-The executable implementation is `tooling/blueprint_engine/src/blueprint_engine/`.
+Transforms may perform:
 
-Two transformation mechanisms are available:
+- source -> canonical import;
+- canonical -> target export;
+- target -> canonical import;
+- target -> target conversion;
+- normalization;
+- enrichment;
+- projection/simplification.
 
-1. **Built-in format encoders** for targets with syntax or serialization rules.
-2. **Declarative mapping rules** for XSLT-like object-to-object projection.
+A transform must not choose a different representation format merely because it is easier to encode.
 
-The declarative engine uses:
+## Transformation mechanisms
 
-```text
-select -> match -> emit
-```
+1. Built-in format encoders for syntax/serialization targets.
+2. Declarative `select -> match -> emit` mappings for structured projections.
 
-and can map canonical `elements` and `relationships` into arbitrary target collections.
+Representation bindings define model-to-format semantics. Transforms implement those resolved mappings; they are not a substitute for the binding layer.
 
-## Transform categories
+## Runtime result
 
-- source -> canonical
-- canonical -> target
-- target -> canonical
-- target -> target
-- normalization
-- enrichment
-- projection/simplification
+A built-in transform returns:
 
-## Runtime guarantees
+- transform ID;
+- target format;
+- media type;
+- fidelity;
+- explicit losses;
+- deterministic source hash;
+- representation-binding provenance when supplied;
+- exact target-format version when supplied;
+- semantic overlay provenance.
 
-Every built-in transform returns:
+Higher-level generation execution should additionally record style/style-binding and renderer compatibility data from the resolved plan.
 
-- transform ID
-- target format
-- media type
-- fidelity declaration
-- explicit semantic losses
-- deterministic source hash
-- profile/overlay provenance when supplied
+## Version discipline
 
-Transforms must not silently discard semantics. JSON Schema export, for example, declares relationship loss and lists dropped relationship IDs in the generated schema.
+A transform implementation may support several registered format releases, but generation planning resolves an exact release before execution. Transform code must not silently emit syntax from a newer format version than the plan targets.
 
-## Routing
+## Routing and round trips
 
-The conversion graph is executable through the engine. Route selection prefers lower-loss paths and adds cost for non-reversible edges.
-
-## Round trips
-
-XML and the repository UML-class interchange model currently support tested canonical round trips. Mermaid and PlantUML imports are intentionally deferred until their parser/grammar boundaries are defined.
+The conversion graph uses `binding-dependent` for paths whose semantics depend on a representation binding. Projection and loss must remain explicit. Round-trip equivalence is established only by semantic comparison of the recovered canonical model.

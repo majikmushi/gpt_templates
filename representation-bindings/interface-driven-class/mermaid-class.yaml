@@ -1,12 +1,16 @@
 id: binding.interface-driven-class.mermaid-class
 kind: representation-binding
-version: 1.0.0
-status: active
+version: 2.0.0
+status: source-pinned
 title: Interface-Driven Class Model to Mermaid classDiagram
 model: model.interface-driven-class
 format: format.mermaid.class
 language_definition: language.mermaid.class-diagram
 fidelity: high
+compatibility:
+  status: source-pinned
+  format_versions: '==11.4.1'
+  required_capabilities: [class, attribute, operation, namespace, relationship, cardinality, annotation]
 mappings:
   - {abstract: interface, target: class, decoration: '<<interface>>'}
   - {abstract: implementation, target: class}

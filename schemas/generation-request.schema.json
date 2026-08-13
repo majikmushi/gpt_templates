@@ -11,9 +11,22 @@
       "required": ["format"],
       "properties": {
         "format": {"type": "string", "pattern": "^format\\."},
-        "binding": {"type": "string", "default": "auto"}
+        "binding": {"type": "string", "default": "auto"},
+        "version": {"type": "string"},
+        "version_constraint": {"type": "string"},
+        "renderer": {
+          "type": "object",
+          "required": ["id"],
+          "properties": {
+            "id": {"type": "string", "pattern": "^renderer\\."},
+            "version": {"type": "string"}
+          },
+          "additionalProperties": false
+        },
+        "compatibility_mode": {"enum": ["strict", "warn"], "default": "strict"}
       },
-      "additionalProperties": true
+      "allOf": [{"not": {"required": ["version", "version_constraint"]}}],
+      "additionalProperties": false
     },
     "style": {
       "type": "object",
@@ -21,10 +34,10 @@
         "profile": {"type": "string", "pattern": "^style\\."},
         "binding": {"type": "string", "default": "auto"}
       },
-      "additionalProperties": true
+      "additionalProperties": false
     },
     "overlays": {"type": "array", "items": {"type": "string", "pattern": "^overlay\\."}},
     "options": {"type": "object"}
   },
-  "additionalProperties": true
+  "additionalProperties": false
 }

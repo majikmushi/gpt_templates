@@ -7,6 +7,14 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from .compatibility import (
+    load_renderer,
+    missing_capabilities,
+    resolve_format_release,
+    resolve_renderer_compatibility,
+    resolve_renderer_release,
+    version_matches,
+)
 from .models import ValidationResult
 
 
@@ -32,6 +40,9 @@ def validate_framework_artifact(root: str | Path, value: dict[str, Any], artifac
         "style-profile": "style-profile.schema.json",
         "style-binding": "style-binding.schema.json",
         "generation-request": "generation-request.schema.json",
+        "format-version": "format-version.schema.json",
+        "renderer": "renderer.schema.json",
+        "renderer-compatibility": "renderer-compatibility.schema.json",
     }
     if artifact_kind not in schemas:
         raise KeyError(f"Unknown framework artifact kind {artifact_kind!r}")
@@ -42,7 +53,7 @@ def load_abstract_model(root: str | Path, model_id: str) -> dict[str, Any]:
     root = Path(root)
     registry = _load_yaml(root / "abstract-models/registry.yaml")
     for entry in registry.get("models", []):
-        if entry.get("id") == model_id or entry.get("legacy_alias") == model_id:
+        if entry.get("id") == model_id:
             if entry.get("detail"):
                 return _load_yaml(root / entry["detail"])
             return {**entry, "kind": "abstract-representation-model-summary"}
@@ -104,14 +115,40 @@ def plan_generation(root: str | Path, request: dict[str, Any]) -> dict[str, Any]
     if not validation.ok:
         return {"ok": False, "validation": validation.as_dict()}
 
+    representation = request["representation"]
     model_id = request["abstract_model"]
-    chosen_format = request["representation"]["format"]
-    model = load_abstract_model(root, model_id)
+    chosen_format = representation["format"]
+    mode = representation.get("compatibility_mode", "strict")
+    warnings: list[str] = []
+    errors: list[str] = []
 
-    requested_binding = request["representation"].get("binding", "auto")
+    def compatibility_issue(message: str) -> None:
+        (errors if mode == "strict" else warnings).append(message)
+
+    model = load_abstract_model(root, model_id)
+    requested_binding = representation.get("binding", "auto")
     binding = resolve_representation_binding(root, model_id, chosen_format) if requested_binding == "auto" else load_representation_binding(root, requested_binding)
     if binding.get("model") != model_id or binding.get("format") != chosen_format:
-        raise ValueError("Explicit representation binding does not match requested model and chosen format")
+        return {"ok": False, "errors": ["Explicit representation binding does not match requested model and chosen format"]}
+
+    format_release = resolve_format_release(
+        root,
+        chosen_format,
+        version=representation.get("version"),
+        version_constraint=representation.get("version_constraint"),
+    )
+    format_version = format_release.get("version")
+    format_capabilities: list[str] = []
+    if format_release["status"] == "resolved":
+        format_capabilities = list((format_release.get("artifact") or {}).get("capabilities") or [])
+        binding_compat = binding.get("compatibility") or {}
+        if binding_compat.get("format_versions") and not version_matches(format_version, binding_compat["format_versions"]):
+            compatibility_issue(f"Binding {binding['id']} does not declare compatibility with {chosen_format} {format_version}")
+        missing = missing_capabilities(binding_compat.get("required_capabilities") or [], format_capabilities)
+        if missing:
+            compatibility_issue(f"Format release {chosen_format} {format_version} lacks binding capabilities: {', '.join(missing)}")
+    else:
+        warnings.append(f"No pinned format release is registered for {chosen_format}; version compatibility is unverified")
 
     style = None
     style_binding = None
@@ -120,19 +157,91 @@ def plan_generation(root: str | Path, request: dict[str, Any]) -> dict[str, Any]
         requested_style_binding = request["style"].get("binding", "auto")
         style_binding = resolve_style_binding(root, chosen_format) if requested_style_binding == "auto" else load_style_binding(root, requested_style_binding)
         if style_binding.get("format") != chosen_format:
-            raise ValueError("Explicit style binding does not match chosen format")
+            return {"ok": False, "errors": ["Explicit style binding does not match chosen format"]}
+        if format_version:
+            style_compat = style_binding.get("compatibility") or {}
+            if style_compat.get("format_versions") and not version_matches(format_version, style_compat["format_versions"]):
+                compatibility_issue(f"Style binding {style_binding['id']} does not declare compatibility with {chosen_format} {format_version}")
+            missing = missing_capabilities(style_compat.get("required_capabilities") or [], format_capabilities)
+            if missing:
+                compatibility_issue(f"Format release {chosen_format} {format_version} lacks style capabilities: {', '.join(missing)}")
+
+    renderer_resolution = None
+    renderer_contract = None
+    renderer_request = representation.get("renderer")
+    if renderer_request:
+        renderer_resolution = resolve_renderer_release(root, renderer_request["id"], version=renderer_request.get("version"))
+        if not format_version:
+            compatibility_issue("A renderer was selected but the chosen format has no pinned version to compare against")
+        elif renderer_resolution["status"] != "resolved":
+            compatibility_issue(f"Renderer {renderer_request['id']} has no pinned release")
+        else:
+            renderer_contract = resolve_renderer_compatibility(
+                root,
+                renderer_id=renderer_request["id"],
+                renderer_version=renderer_resolution["version"],
+                format_id=chosen_format,
+                format_version=format_version,
+            )
+            if renderer_contract is None:
+                compatibility_issue(
+                    f"No renderer compatibility contract covers {renderer_request['id']} {renderer_resolution['version']} with {chosen_format} {format_version}"
+                )
+            elif renderer_contract.get("support") == "unsupported":
+                compatibility_issue(f"Renderer compatibility contract {renderer_contract['id']} marks this combination unsupported")
+            elif renderer_contract.get("support") in {"partial", "unverified"}:
+                warnings.append(f"Renderer compatibility is {renderer_contract.get('support')} under {renderer_contract['id']}")
+            if renderer_contract:
+                supported = (renderer_contract.get("capabilities") or {}).get("supported") or []
+                required = list((binding.get("compatibility") or {}).get("required_capabilities") or [])
+                if style_binding:
+                    required.extend((style_binding.get("compatibility") or {}).get("required_capabilities") or [])
+                missing = missing_capabilities(required, supported)
+                if missing:
+                    compatibility_issue(f"Selected renderer release lacks required effective capabilities: {', '.join(missing)}")
+
+    selection = {
+        "abstract_model": model["id"],
+        "chosen_format": chosen_format,
+        "format_selection": "chosen-not-auto-selected",
+        "format_version": format_version,
+        "format_version_status": format_release["status"],
+        "representation_binding": binding["id"],
+        "style_profile": style["id"] if style else None,
+        "style_binding": style_binding["id"] if style_binding else None,
+        "overlays": list(request.get("overlays") or []),
+        "renderer": renderer_resolution.get("renderer") if renderer_resolution else None,
+        "renderer_version": renderer_resolution.get("version") if renderer_resolution else None,
+        "renderer_compatibility": renderer_contract.get("id") if renderer_contract else None,
+    }
+    if errors:
+        return {"ok": False, "selection": selection, "errors": errors, "warnings": warnings}
 
     return {
         "ok": True,
-        "selection": {
-            "abstract_model": model["id"],
-            "chosen_format": chosen_format,
-            "format_selection": "chosen-not-auto-selected",
-            "representation_binding": binding["id"],
-            "style_profile": style["id"] if style else None,
-            "style_binding": style_binding["id"] if style_binding else None,
-            "overlays": list(request.get("overlays") or []),
+        "selection": selection,
+        "warnings": warnings,
+        "contracts": {
+            "model": model,
+            "format_release": format_release.get("artifact"),
+            "representation_binding": binding,
+            "style": style,
+            "style_binding": style_binding,
+            "renderer": renderer_resolution.get("artifact") if renderer_resolution else None,
+            "renderer_compatibility": renderer_contract,
         },
-        "contracts": {"model": model, "representation_binding": binding, "style": style, "style_binding": style_binding},
-        "execution_order": ["canonical-semantics", "abstract-model", "chosen-format", "representation-binding", "semantic-overlays", "style-profile", "format-style-binding", "transform", "validate", "provenance-and-equivalence"],
+        "execution_order": [
+            "canonical-semantics",
+            "abstract-model",
+            "chosen-format",
+            "resolve-format-version",
+            "representation-binding",
+            "semantic-overlays",
+            "style-profile",
+            "format-style-binding",
+            "optional-renderer-compatibility",
+            "transform",
+            "validate",
+            "provenance-and-equivalence",
+        ],
     }

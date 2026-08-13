@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Renderer Compatibility Contract",
+  "type": "object",
+  "required": ["id", "kind", "version", "status", "renderer", "renderer_versions", "format", "format_versions", "support"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^compatibility\\.renderer\\."},
+    "kind": {"const": "renderer-compatibility"},
+    "version": {"type": "string"},
+    "status": {"type": "string"},
+    "renderer": {"type": "string", "pattern": "^renderer\\."},
+    "renderer_versions": {"type": "string"},
+    "format": {"type": "string", "pattern": "^format\\."},
+    "format_versions": {"type": "string"},
+    "support": {"enum": ["native", "partial", "unsupported", "unverified"]},
+    "validated_by": {"type": "array", "items": {"type": "string"}},
+    "capabilities": {"type": "object"},
+    "known_issues": {"type": "array"},
+    "authority": {"type": "object"}
+  },
+  "additionalProperties": true
+}

@@ -1,6 +1,6 @@
 id: format.uml.class
 kind: format
-version: 0.1.0
+version: 0.2.0
 status: experimental
 title: UML Class Diagram
 family: format.uml
@@ -10,6 +10,8 @@ capabilities:
   members: [attribute, operation, visibility, static, abstract, generic-type]
   relationships: [association, dependency, generalization, realization, aggregation, composition, multiplicity]
   extension: [stereotype, tagged-value, constraint, note]
-profile_catalog: profiles/domain/class-like-models.yaml
+representation_bindings: representation-bindings/registry.yaml
+format_versions: format-versions/registry.yaml
 validator: validator.uml
 serialization: tool-dependent
+renderer_compatibility: renderer-compatibility/registry.yaml

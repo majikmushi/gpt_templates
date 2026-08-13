@@ -1,10 +1,10 @@
 id: registry.style-bindings
 kind: registry
-version: 1.0.0
+version: 2.0.0
 status: active
 title: Format-Specific Style Binding Registry
 description: Maps abstract style intent to capabilities of a chosen representation format.
 bindings:
-  - {id: style-binding.mermaid.class, format: format.mermaid.class, path: style-bindings/mermaid-class.yaml, status: source-aware}
-  - {id: style-binding.plantuml, format: format.plantuml, path: style-bindings/plantuml.yaml, status: scaffold}
+  - {id: style-binding.mermaid.class, format: format.mermaid.class, path: style-bindings/mermaid-class.yaml, status: source-pinned}
+  - {id: style-binding.plantuml, format: format.plantuml, path: style-bindings/plantuml.yaml, status: unpinned}
   - {id: style-binding.uml.class, format: format.uml.class, path: style-bindings/uml-class.yaml, status: renderer-dependent}

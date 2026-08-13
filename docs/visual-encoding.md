@@ -1,68 +1,70 @@
-# Semantic Overlays, Visual Encoding and Style
+# Visual Encoding, Semantic Overlays and Style
 
-The framework separates **semantic visual encoding** from **presentation style**.
+Visual channels are shared resources that may carry either semantic information or presentation choices. The framework keeps those uses separate.
 
 ## Semantic overlays
 
-Overlays add meaning to the underlying model. Typical dimensions include:
+Overlays add meaning orthogonal to the abstract model, for example trust zone, lifecycle, voltage domain, ownership, criticality or deployment zone.
 
-- security/trust zone;
-- lifecycle state;
-- ownership;
-- voltage domain;
-- safety criticality;
-- deployment zone;
-- protocol or communication class.
+Typical semantic channels include:
 
-They may request visual channels such as shape, fill colour, stroke colour, border pattern, edge style, arrow type, icon, label, annotation or grouping.
+- shape;
+- fill/stroke colour;
+- border pattern;
+- connector pattern;
+- arrow type/direction;
+- icon;
+- label/annotation;
+- grouping/container;
+- ordering.
 
-If an overlay encodes critical meaning with colour, it must also provide a textual, structural or other non-colour fallback.
+Critical semantics must not depend on colour alone.
 
 ## Style profiles
 
-Styles alter presentation without altering the semantic model. Typical style intent includes:
+Style profiles are format-neutral presentation intent, such as:
 
-- theme and palette;
+- palette/theme;
 - typography;
-- node borders/corners;
+- node borders/fills/corners;
 - connector weight/pattern preferences;
-- grouping presentation;
 - spacing/density;
+- grouping appearance;
 - layout intent.
 
-Abstract style profiles live under `styles/`. Format-specific translations live under `style-bindings/`.
+Style must not redefine semantic meaning.
 
-## Why the separation matters
+## Style bindings
 
-The same abstract model and representation binding can be rendered with different styles without becoming a different model:
+A `style-binding.*` artifact translates presentation intent into mechanisms available in a chosen format. It also declares:
 
-```text
-model.interface-driven-class
-+ binding.interface-driven-class.mermaid-class
-+ style.neutral-technical
-```
+- supported format-version range;
+- required format capabilities;
+- fallbacks;
+- accessibility behaviour.
 
-or:
-
-```text
-model.interface-driven-class
-+ binding.interface-driven-class.mermaid-class
-+ style.technical-dark
-```
-
-The semantics stay the same.
+Renderer compatibility is evaluated after format/style binding compatibility. A renderer may support fewer effective visual channels than the format release.
 
 ## Collision priority
 
-When style intent and semantic encoding compete for the same target feature, preserve information in this order:
+1. preserve abstract-model semantics;
+2. preserve semantic-overlay semantics;
+3. preserve target-format validity;
+4. apply style intent;
+5. remap style channels where possible;
+6. fall back to textual/structural semantic encoding;
+7. report presentation loss rather than corrupt meaning.
 
-1. abstract-model semantics;
-2. semantic-overlay semantics;
-3. target-format validity;
-4. style intent.
+## Example
 
-A renderer may remap a style feature or report presentation loss, but must not silently change semantic meaning to satisfy styling.
+```text
+model.electronics-system
+  + representation binding
+  + voltage-domain overlay
+  + safety-criticality overlay
+  + style.technical-dark
+  + format style binding
+  -> concrete target styling
+```
 
-## Existing channel policy
-
-`overlays/visual-channels/base.yaml` defines reusable channel allocation and fallback rules. `overlays/registry.yaml` marks it as semantic/channel policy rather than a presentation theme.
+The first two overlays carry meaning. `style.technical-dark` changes presentation only.

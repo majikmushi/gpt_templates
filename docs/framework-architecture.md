@@ -2,13 +2,11 @@
 
 ## Purpose
 
-The repository is a format-neutral representation framework. Its core job is to describe meaning once, select an abstract model for that meaning, and express that model through a **chosen** representation format using explicit bindings, overlays and styles.
+This repository is a format-neutral representation framework. It describes meaning independently from a representation system, then converts that meaning into a **chosen** format through explicit, version-aware bindings and optional renderer contracts.
 
-Mermaid, UML and PlantUML are representation systems. They are not abstract model types. An Interface-Driven Class Model, Electronics System Model, Service Model or Security Model is an abstract model and may have bindings to several representation systems.
+Mermaid, UML and PlantUML are representation systems. Interface-Driven Class, Electronics System, Service and Security are abstract representation models.
 
-## Core invariant
-
-The framework does **not** automatically choose a representation format unless a future caller explicitly asks for format recommendation/selection. A normal generation request contains a chosen format.
+## Authoritative execution stack
 
 ```text
 Canonical / source semantics
@@ -20,14 +18,25 @@ Abstract representation model
 Chosen representation format
         |
         v
+Resolve exact format release
+        |
+        v
 Representation binding
         |
         +---- Semantic overlays
         |
         +---- Style profile
-                  |
-                  v
-           Format style binding
+        |        |
+        |        v
+        |   Format style binding
+        |
+        +---- Optional chosen renderer
+                 |
+                 v
+          Renderer release
+                 |
+                 v
+      Renderer-format compatibility
         |
         v
 Transform / adapter
@@ -36,292 +45,233 @@ Transform / adapter
 Concrete artifact
         |
         v
-Validation + provenance + equivalence
+Validation + provenance + semantic equivalence
 ```
 
-`binding: auto` means "resolve a compatible binding for the already chosen format". It must never mean "choose a format".
+The framework does not auto-select a format in normal generation. `binding: auto` means resolve a binding **inside the chosen format**. Renderer selection follows the same rule: renderer compatibility may be checked, but a renderer is not silently substituted.
 
-## The five architectural layers
+## Layer 1: semantic/canonical model
 
-### 1. Semantic and canonical layer
+Answers **what exists and what does it mean?**
 
-Answers: **what exists and what does it mean?**
+This layer contains canonical entities, relationships, properties, containers, domain/source facts and equivalence semantics. It contains no target syntax or renderer styling assumptions.
 
-Primary artifacts:
+## Layer 2: abstract representation models
 
-- canonical semantic model;
-- domain/source data;
-- semantic vocabulary;
-- blueprints and templates where they describe domain intent;
-- equivalence rules.
+Answers **what kind of model are we building?**
 
-This layer is independent of concrete diagram syntax, styling and renderer behaviour.
+`abstract-models/registry.yaml` contains reusable model types such as:
 
-### 2. Abstract representation model layer
+- `model.interface-driven-class`
+- `model.component`
+- `model.service`
+- `model.electronics-system`
+- `model.security`
+- `model.permission-rbac`
+- `model.metamodel`
 
-Answers: **what kind of model are we making?**
+An abstract model defines concepts, relationships, features and constraints. It does not choose Mermaid, UML, PlantUML, or another representation.
 
-Examples:
+## Layer 3: representation systems and versions
 
-- `model.interface-driven-class`;
-- `model.component`;
-- `model.service`;
-- `model.electronics-system`;
-- `model.security`;
-- `model.permission-rbac`;
-- `model.metamodel`.
+Answers **what format was chosen, and which exact release defines its capabilities?**
 
-An abstract model defines concepts, relationships, features and constraints without deciding whether they will become Mermaid classes, UML elements, PlantUML constructs, Graphviz nodes or another representation.
+### Language definitions
 
-The registry is `abstract-models/registry.yaml`.
+`language-definitions/` normalizes grammar, metamodel, constraints, serialization, runtime and conformance evidence from external sources.
 
-### 3. Representation layer
+### Format identity
 
-Answers: **which chosen format will carry the model, and how?**
+A format ID such as `format.mermaid.class` is stable across releases.
 
-A representation binding joins exactly one abstract model to exactly one target format:
+### Format release
+
+`format-versions/` records exact releases. Each release may carry source commit/specification version, capabilities and validation evidence.
+
+No backward/forward compatibility is assumed merely from version ordering.
+
+## Layer 4: representation bindings
+
+Answers **how does this abstract model map into this chosen format?**
+
+A binding joins exactly one abstract model to one target format:
 
 ```text
 model.interface-driven-class
-        +
-format.mermaid.class
-        =
-binding.interface-driven-class.mermaid-class
+  + format.mermaid.class
+  = binding.interface-driven-class.mermaid-class
 ```
 
-The same model can have another binding:
+Bindings define primitive mappings, feature mappings, required target capabilities, supported format-version constraints, fidelity and loss.
 
-```text
-model.interface-driven-class
-        +
-format.uml.class
-        =
-binding.interface-driven-class.uml-class
-```
+They never own the model and never choose the format.
 
-Bindings declare primitive mappings, feature mappings, fidelity and known losses. They do not own the abstract model and do not choose the target format.
+## Layer 5: overlays and style
 
-The registry is `representation-bindings/registry.yaml`.
+### Semantic overlays
 
-### 4. Semantic overlay and presentation style layer
+Overlays add semantic dimensions such as lifecycle, trust zone, voltage domain, ownership or criticality. They may request visual channels but remain semantic information.
 
-This layer intentionally has two independent mechanisms.
+### Style profiles
 
-#### Semantic overlays
+Styles alter presentation only: palette, typography, connector appearance, node formatting, density, spacing and layout intent.
 
-Overlays add meaning that is orthogonal to the base model, for example:
+### Style bindings
 
-- trust zone;
-- lifecycle;
-- voltage domain;
-- ownership;
-- criticality;
-- deployment zone.
+`style-bindings/` maps abstract style intent into the mechanisms exposed by the chosen format release. A style binding declares required capabilities and version compatibility separately from the representation binding.
 
-An overlay may request visual channels but the information remains semantic. If colour is used for a critical semantic distinction, a non-colour fallback is required.
+Semantic meaning always has priority over style preference.
 
-#### Style profiles
+## Layer 6: renderer compatibility
 
-Styles change presentation, not meaning. Examples include:
+Answers **can this renderer release realize this format release with the capabilities required by the selected bindings?**
 
-- colour palette;
-- light/dark theme;
-- typography;
-- connector weight/pattern preferences;
-- node border/corner treatment;
-- grouping presentation;
-- spacing/density;
-- layout intent.
+The framework deliberately separates:
 
-`styles/` stores abstract style intent. `style-bindings/` translates that intent into capabilities of the chosen format. A style profile therefore stays portable while its concrete realization is format-specific.
+- renderer identity (`renderer.*`)
+- renderer release
+- format identity (`format.*`)
+- format release (`format-version.*`)
+- renderer-format compatibility (`compatibility.renderer.*`)
 
-A style rule must not silently redefine a semantic relationship. For example, a style may prefer dotted dependency connectors only when doing so does not conflict with the chosen representation binding's semantic use of connector patterns.
+A renderer compatibility contract is not inferred from syntax validity. It is evidence-backed and may report `native`, `partial`, `unsupported`, or `unverified` support.
 
-### 5. Execution and assurance layer
+Renderer limitations remain renderer limitations; they are not copied into the format definition.
 
-Answers: **how is the selected plan executed and verified?**
+See `docs/version-and-renderer-compatibility.md`.
 
-Includes:
+## Layer 7: execution and assurance
 
-- capability matrix;
-- conversion graph;
-- transform/adapters;
-- validators;
-- runtime parsers;
-- semantic comparison;
-- round-trip tests;
-- source provenance;
-- language-definition provenance;
-- CLI/tool contracts.
+Transforms/adapters execute resolved plans. Validators check canonical structure, target syntax, semantic constraints and runtime behaviour. Provenance records exactly which contracts were used. Semantic comparison determines whether a conversion is exact, equivalent, a projection, or non-equivalent.
 
-Validation is layered. Syntax validity does not imply semantic equivalence, and successful rendering does not imply that an abstract model survived a lossy mapping.
+Syntax validity, successful rendering and semantic equivalence are three separate claims.
 
-## Language definitions are separate from abstract models
-
-`language-definitions/` describes representation systems themselves: syntax, metamodel, constraints, serializations, runtime behaviour and conformance evidence.
-
-Examples:
-
-- Mermaid is grammar/runtime/DB/test driven;
-- UML is metamodel/constraint/serialization driven;
-- a schema language may be metaschema driven.
-
-These definitions inform format capabilities, validators and representation bindings. They do not define the domain model being represented.
-
-```text
-External specification evidence
-        |
-Specification source adapters
-        |
-Normalized Language Definition
-        |
-   +----+------------------+
-   |                       |
-Format capabilities      Validators
-   |                       |
-   +--------> Representation binding
-```
-
-## Generation request contract
-
-A request should look conceptually like:
+## Generation request
 
 ```yaml
 abstract_model: model.interface-driven-class
 representation:
   format: format.mermaid.class
+  version: "11.4.1"
   binding: auto
+  renderer:
+    id: renderer.mermaid-js
+    version: "11.4.1"
+  compatibility_mode: strict
 style:
   profile: style.technical-dark
   binding: auto
 overlays:
   - overlay.visual-channels.base
-options:
-  layout: left-to-right
 ```
 
-The important part is that `representation.format` is supplied. The resolver may select a binding only inside that chosen format.
+A request may use `version_constraint` instead of exact `version`. Constraints resolve only against releases registered in `format-versions/registry.yaml`; the resolved execution plan always pins one exact release.
 
-The machine-readable contract is `schemas/generation-request.schema.json`.
+## Resolution order
 
-## Binding resolution
-
-Given `(abstract_model, chosen_format)`:
-
-1. resolve the abstract model;
-2. search `representation-bindings/registry.yaml` for that exact model/format pair;
-3. if one binding exists, use it when `binding: auto`;
-4. if none exist, fail with an unsupported-pair error;
-5. if several exist, require an explicit binding;
-6. never change the chosen format to make a binding available.
-
-Style binding resolution follows the same principle but is keyed by the already chosen format.
+1. validate canonical/source semantics;
+2. resolve abstract model;
+3. accept the caller-chosen format;
+4. resolve an exact registered format release;
+5. resolve/validate the representation binding against that release;
+6. compose semantic overlays;
+7. resolve style profile/style binding and check format capabilities;
+8. if a renderer was chosen, resolve its exact release;
+9. require a matching renderer-format compatibility contract in strict mode;
+10. evaluate effective renderer capabilities;
+11. execute transform/adapter;
+12. validate artifact;
+13. record provenance;
+14. run semantic equivalence/round-trip checks where supported.
 
 ## Fidelity and loss
 
-Bindings and transforms must declare fidelity independently.
+Representation bindings use:
 
-Suggested levels:
+- `exact`
+- `high`
+- `binding-dependent`
+- `projection`
+- `approximate`
+- `lossy`
 
-- `exact` - semantics and structure preserved;
-- `high` - intended model semantics preserved with representation differences;
-- `profile-dependent` - equivalence depends on an explicit profile/binding;
-- `projection` - a deliberate subset/view;
-- `approximate` - some concepts represented by convention;
-- `lossy` - known semantic information is omitted.
+Transform-level fidelity may be more specific, such as `lossless-for-structural-subset`.
 
-A visually similar artifact is not automatically equivalent.
+A binding or transform must report omitted/approximated meaning. Visual similarity is not semantic equivalence.
 
-## Style versus semantic collision policy
+## Version and compatibility states
 
-The resolver/renderer should use this priority:
+`source-pinned` / `verified` means evidence exists for the declared scope.
 
-1. preserve abstract-model semantics;
-2. preserve semantic-overlay semantics;
-3. preserve target-format validity;
-4. apply style intent where compatible;
-5. remap style channels if possible;
-6. fall back to textual/structural encoding for semantic information;
-7. report style losses rather than corrupt semantics.
+`unpinned` / `unverified` is an intentional state for formats or renderers whose source/specification evidence has not yet been incorporated. The framework must not fabricate a version range to make planning succeed.
 
-Style is always lower priority than semantic meaning.
-
-## Current first-class registries
+## Current registries
 
 - `registry.abstract-models`
 - `registry.representation-bindings`
 - `registry.semantic-overlays`
 - `registry.styles`
 - `registry.style-bindings`
+- `registry.format-versions`
+- `registry.renderers`
+- `registry.renderer-compatibility`
 - `registry.language-definitions`
 - `registry.specification-source-adapters`
 - `matrix.format-capabilities`
 - `graph.conversions`
 
-## Legacy profile migration
+## Adding an abstract model
 
-Earlier repository versions stored the 44 abstract model types under `profile.domain.*` and separately seeded `profile.mermaid.class.*`. That mixed two different concepts.
+1. add a stable `model.*` ID;
+2. define concepts/relationships/features/constraints;
+3. validate the model schema;
+4. add bindings only for intentionally supported formats;
+5. declare fidelity/loss and required format capabilities;
+6. add fixtures and semantic tests.
 
-New code should use:
+## Adding or updating a format
 
-```text
-OLD
-profile.domain.interface-driven-model
-profile.mermaid.class.interface-driven-model
+1. pin specification/source evidence;
+2. update/create its normalized language definition;
+3. create a `format-version` artifact for each evidence-backed release;
+4. enumerate capabilities per release;
+5. add/update representation and style bindings with explicit version constraints;
+6. implement validation/import/export adapters;
+7. add fixtures and round-trip tests;
+8. only then change the registry default release.
 
-NEW
-model.interface-driven-class
-binding.interface-driven-class.mermaid-class
-```
+## Adding or updating a renderer
 
-`abstract-models/registry.yaml` retains legacy aliases for discovery/backward compatibility. New functionality must not create additional domain model types under format-specific profile namespaces.
+1. register renderer identity;
+2. register exact renderer releases;
+3. test against exact format releases;
+4. create compatibility contracts containing supported/degraded/unsupported capabilities and known issues;
+5. test semantic structures and style realization;
+6. only then make a renderer release a default.
 
-The term **representation profile** may still be used for complex mapping policies, but a reusable model type belongs in `abstract-models/` and a model-to-format mapping belongs in `representation-bindings/`.
+## Adding a style
 
-## Extension workflow for a new abstract model
+1. add format-neutral presentation intent under `styles/`;
+2. avoid embedding target syntax in the style profile;
+3. map it through style bindings;
+4. declare required capabilities/version ranges;
+5. provide graceful presentation fallbacks;
+6. never use style to redefine semantics.
 
-1. add the model to `abstract-models/registry.yaml`;
-2. create a detailed `abstract-representation-model` manifest when semantics are known;
-3. validate against `schemas/abstract-model.schema.json`;
-4. add bindings only for formats intentionally supported;
-5. declare binding fidelity and losses;
-6. add fixtures for each binding;
-7. add semantic round-trip/equivalence tests where import exists;
-8. document non-obvious conventions.
+## Development invariants
 
-## Extension workflow for a new format
-
-1. ingest/pin its specification evidence into a Normalized Language Definition;
-2. register capabilities;
-3. implement syntax/runtime validation with explicit authority;
-4. add representation bindings for selected abstract models;
-5. add a format-specific style binding;
-6. add transforms/import adapters;
-7. add fixtures and conformance tests;
-8. add conversion-graph edges;
-9. declare fidelity and degradation behaviour.
-
-## Extension workflow for a style
-
-1. add a format-neutral style profile under `styles/`;
-2. use semantic names/intent rather than raw target syntax where possible;
-3. reuse an existing style binding for each chosen format;
-4. add a new style binding only when the format needs a different translation mechanism;
-5. test accessibility and semantic-channel collisions;
-6. record unsupported style features as presentation loss, not semantic loss.
-
-## Development rules
-
-Future implementations should preserve these boundaries:
+Future changes must preserve these boundaries:
 
 - models do not choose formats;
-- formats do not own model semantics;
+- format identity is not format release identity;
 - bindings map models to chosen formats;
-- overlays add semantic dimensions;
-- styles modify presentation only;
-- style bindings translate style intent only;
-- language definitions describe representation systems, not domain models;
+- bindings declare release compatibility and required capabilities;
+- overlays add semantics;
+- style alters presentation only;
+- renderer identity/version is independent from format identity/version;
+- renderer support is claimed only through explicit compatibility evidence;
+- unknown compatibility remains explicit;
 - transforms report loss;
 - validators declare authority;
-- provenance records source/version evidence;
-- round-trip claims are tested, never inferred from syntax validity.
+- resolved plans/provenance pin exact versions;
+- round-trip/equivalence claims are tested.

@@ -4,12 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "blueprint-representation-engine"
-version = "0.3.0"
-description = "Abstract-model, representation-binding, style, transform, validator and semantic comparison engine for gpt_templates."
+version = "0.4.0"
+description = "Version-aware abstract-model, representation-binding, style, renderer compatibility, transform and validation engine for gpt_templates."
 requires-python = ">=3.11"
 dependencies = [
   "PyYAML>=6.0",
-  "jsonschema>=4.20"
+  "jsonschema>=4.20",
+  "packaging>=24.0"
 ]
 
 [project.scripts]

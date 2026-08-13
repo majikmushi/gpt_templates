@@ -1,10 +1,12 @@
 id: registry.renderers
 kind: registry
-version: 0.1.0
-status: experimental
+version: 1.0.0
+status: active
 title: Renderer Registry
+description: Renderer implementations are versioned independently from representation formats.
 renderers:
-  - {id: renderer.mermaid, target: format.mermaid, output: [svg, png, html], implementation: planned}
-  - {id: renderer.plantuml, target: format.plantuml, output: [svg, png], implementation: planned}
-  - {id: renderer.markdown, target: format.markdown, output: [html, document], implementation: planned}
-  - {id: renderer.uml, target: format.uml, output: [tool-specific], implementation: adapter-dependent}
+  - {id: renderer.mermaid-js, path: renderers/mermaid-js.yaml, default_release: '11.4.1', status: source-pinned}
+policy:
+  renderer_is_optional_for_generation_plan: true
+  renderer_compatibility_must_be_explicit_when_renderer_is_selected: true
+  no_renderer_means_no_rendering_compatibility_claim: true

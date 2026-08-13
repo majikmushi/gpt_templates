@@ -1,65 +1,63 @@
-# Mermaid as a Representation Target
+# Mermaid as a Representation System
 
-Mermaid is a representation system whose diagram families expose reusable primitives. Mermaid is not an abstract model type.
+Mermaid diagram families are collections of syntax, structural primitives, visual channels and runtime behaviour. They are not abstract model types.
 
-An abstract model such as `model.interface-driven-class`, `model.electronics-system` or `model.security` may be represented through Mermaid only when an explicit representation binding exists for the chosen Mermaid format.
+## Source authority and current version
 
-## Source authority
+The current classDiagram reference is pinned to `majikmushi/mermaid` commit `446f6a7701065eb12e024475243434eb727dc172`, package version `11.4.1`.
 
-The Mermaid integration is pinned to `majikmushi/mermaid` `develop` commit `446f6a7701065eb12e024475243434eb727dc172` (Mermaid package `11.4.1`).
+This source evidence contributes to:
 
-`validators/mermaid/source-provenance.yaml` records source-file SHAs used to derive class-diagram rules. `validators/mermaid/registry.yaml` records diagram families registered by Mermaid's orchestration source.
+- `language.mermaid.class-diagram`;
+- `format-version.mermaid.class.11.4.1`;
+- `validator.mermaid.class`;
+- `renderer.mermaid-js` release `11.4.1`;
+- `compatibility.renderer.mermaid-js.mermaid-class.11.4.1`.
 
-## Native parser and AST bridge
+The format release and renderer release remain separate framework concepts even though this reference implementation obtains both from the same Mermaid package.
+
+## Native parser and AST path
 
 ```text
-Mermaid source
+Mermaid source text
  -> mermaid.parse()
  -> mermaidAPI.getDiagramFromText()
  -> diagram-specific DB
  -> normalized repository AST
- -> representation binding / profile context
+ -> representation binding
  -> canonical semantic model
 ```
 
-For `classDiagram`, the adapter reads Mermaid `ClassDB` information including classes, members, methods, annotations, namespaces, relations, notes, direction, links, styles and accessibility metadata.
+For classDiagram, the adapter reads classes, members, methods, annotations, namespaces, relations, notes, direction, links, styles and accessibility metadata from Mermaid's parsed DB.
 
-Native runtime acceptance remains syntax authority when available.
+## Abstract-model bindings
 
-## Model-to-Mermaid bindings
-
-The preferred architecture is:
-
-```text
-abstract model
-   +
-chosen Mermaid diagram format
-   -> representation binding
-   -> Mermaid artifact
-```
+A Mermaid class primitive can represent many abstract concepts, but that semantic reuse must be explicit in a `binding.*` artifact.
 
 For example:
 
 ```text
 model.interface-driven-class
-   + format.mermaid.class
-   -> binding.interface-driven-class.mermaid-class
+  + format.mermaid.class
+  -> binding.interface-driven-class.mermaid-class
 ```
 
-A Mermaid primitive's conventional meaning is not an absolute semantic boundary. A binding may deliberately repurpose classes, relations, namespaces, annotations or labels, but that semantic overloading must be explicit and fidelity/loss must be declared.
+The binding, not Mermaid itself, defines that a class plus `<<interface>>` realizes the abstract `interface` concept for that model.
 
-## Semantic overlays versus styling
+## Version compatibility
 
-Semantic overlays can use Mermaid visual channels to encode additional meaning. Style profiles independently control presentation such as palette, typography, connector appearance and density.
+Bindings and style bindings declare the format-release ranges they support and the capabilities they require. Current source-backed class bindings target exact Mermaid `11.4.1`; no forward/backward compatibility is inferred.
 
-`style-binding.mermaid.class` translates abstract style intent into Mermaid-supported mechanisms. Style must not override the semantic meaning assigned by the representation binding or overlays.
+When a renderer is chosen, generation planning separately resolves renderer compatibility. Syntax acceptance by Mermaid does not automatically prove another renderer/integration will display the artifact equivalently.
 
-## Class source-derived constraints
+## Expansion to other Mermaid diagram families
 
-The current source-derived validator records accepted class headers, direction values, relation endpoint markers, line types, cardinality labels, namespaces, quoted notes, link targets, generic syntax, member visibility/static/abstract semantics, annotations/stereotypes and lollipop normalization.
+For each family:
 
-See `validators/mermaid/class/rules.yaml`.
-
-## Expansion
-
-The native runtime validation path works across Mermaid diagram families. Future deep support should add source-derived language-definition evidence, model-specific representation bindings, style-channel capabilities, fixtures and semantic import/round-trip tests for each selected family.
+1. pin grammar/runtime/DB/test evidence;
+2. create a versioned format release with evidence-backed capabilities;
+3. add representation bindings for selected abstract models;
+4. add style bindings where presentation can be realized;
+5. add validators and semantic AST adapters;
+6. register renderer compatibility only after testing exact release combinations;
+7. establish round-trip claims through semantic comparison.

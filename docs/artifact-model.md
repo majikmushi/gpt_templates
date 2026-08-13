@@ -1,42 +1,39 @@
 # Artifact Model
 
-All reusable repository objects should expose a common manifest vocabulary.
+All reusable framework objects expose stable identity, version/status and explicit compatibility/provenance where relevant.
 
 ## Common metadata
 
 - `id` - stable namespaced identifier.
 - `kind` - artifact kind.
-- `version` - artifact version.
-- `status` - experimental, stable, deprecated, superseded, or retired.
-- `title` - human-readable name.
-- `description` - concise purpose.
-- `tags` - discovery tags.
-- `extends` - inherited artifacts.
-- `depends_on` - required artifacts/tools.
-- `compatibility` - format/tool/version constraints.
-- `provenance` - origin and derivation metadata.
+- `version` - version of the framework artifact itself.
+- `status` - implementation/evidence status.
+- `title` / `description` - human-readable purpose.
+- `compatibility` - format/version/capability constraints when applicable.
+- `provenance` - origin and derivation evidence.
+
+Do not confuse an artifact's own `version` with a version of an external format or renderer. External releases have dedicated first-class artifacts.
+
+## Important artifact kinds
+
+- `abstract-representation-model` (`model.*`)
+- `representation-binding` (`binding.*`)
+- `style-profile` (`style.*`)
+- `style-binding` (`style-binding.*`)
+- `format-version` (`format-version.*`)
+- `renderer` (`renderer.*`)
+- `renderer-compatibility` (`compatibility.renderer.*`)
+- normalized language definitions
+- transforms/adapters
+- validators
+- fixtures/provenance records
 
 ## Composition
 
-Artifacts may be composed through:
+Composition may use inheritance, inclusion, overlays, parameterization and transform chains. Semantic overlays and presentation styles remain distinct composition mechanisms.
 
-- inheritance (`extends`)
-- inclusion
-- mixins/fragments
-- overlays
-- parameterization
-- transform chains
+## Loss and fidelity
 
-Avoid copying definitions solely to make a variation.
+Transforms/bindings must report semantic loss explicitly. Supported vocabulary includes exact/high/binding-dependent/projection/approximate/lossy at binding level and more specific transform claims where appropriate.
 
-## Lossiness
-
-Transforms and mappings should declare one of:
-
-- `lossless`
-- `lossy`
-- `presentation_only`
-- `reversible`
-- `round_trip_safe`
-
-A transform can be syntactically valid while still losing semantics; that is a separate concern and must be recorded.
+Syntactic validity, successful rendering and semantic equivalence are independent claims.

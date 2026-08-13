@@ -1,6 +1,6 @@
 id: fixture.roundtrip.embedded-controller
 kind: roundtrip-fixture
-version: 0.3.0
+version: 0.4.0
 status: active
 source: examples/cross-format/embedded-controller/model.yaml
 engine: tooling/blueprint_engine
@@ -8,5 +8,5 @@ cases:
   - {path: [canonical.core, format.xml, canonical.core], expected_equivalence: equivalent, status: implemented-tested}
   - {path: [canonical.core, format.uml.class, canonical.core], expected_equivalence: equivalent, status: implemented-tested}
   - {path: [canonical.core, format.json-schema], expected_equivalence: projection, status: implemented-tested, notes: relationship topology is explicitly declared lost}
-  - {path: [canonical.core, format.mermaid.class, canonical.core], expected_equivalence: profile-dependent, status: runtime-adapter-implemented, notes: Native Mermaid parsing and class AST import are implemented; equivalence depends on the representation profile and whether display-only details were projected.}
+  - {path: [canonical.core, format.mermaid.class, canonical.core], expected_equivalence: binding-dependent, status: runtime-adapter-implemented, notes: Native Mermaid parsing and class AST import are implemented; equivalence depends on the representation binding and whether display-only details were projected.}
   - {path: [canonical.core, format.plantuml], expected_equivalence: not-claimed, status: export-validation-only}

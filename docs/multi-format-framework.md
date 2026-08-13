@@ -1,20 +1,22 @@
 # Multi-Format Representation Framework
 
-The framework separates meaning from representation and now includes an executable engine.
+The framework separates semantic meaning, abstract model type and concrete representation.
 
 ```text
-Domain data
+Domain/source data
   -> Canonical semantic model
-  -> Capability matching
-  -> Representation profile
+  -> Abstract representation model
+  -> Chosen format
+  -> Exact format release
+  -> Representation binding
+  -> Semantic overlays + style
+  -> Optional renderer compatibility
   -> Transform
-  -> Target format
-  -> Validator
-  -> Provenance
-  -> Optional semantic equivalence / round trip
+  -> Target artifact
+  -> Validation / provenance / equivalence
 ```
 
-## Seeded formats
+## Seeded representation systems
 
 - Mermaid
 - UML
@@ -23,16 +25,18 @@ Domain data
 - XML / XSLT
 - Markdown
 
-The engine currently exports the canonical model to all six representative families. UML is represented by a machine-readable class interchange object; Mermaid and PlantUML are text encodings; JSON Schema is an explicitly lossy schema projection; XML is a loss-preserving repository profile for the supported structural model; Markdown is presentation-only.
+The same abstract model may have several format bindings. `model.interface-driven-class`, for example, may be represented through Mermaid classDiagram, UML class structures or PlantUML without changing the model's identity.
 
-## Why the canonical layer matters
+Capability matching describes fitness/support; it does not silently choose the format.
 
-A primitive's conventional meaning is not a hard semantic boundary. Profiles may map the same abstract concept to different target primitives, or use visual channels such as colour, grouping, borders and annotations as additional semantic dimensions.
+## Versions
 
-The canonical model therefore stores semantic relationships before representation choices are applied.
+A format ID is stable while format releases are registered separately under `format-versions/`. Generation planning resolves an exact release before compatibility-sensitive binding/style checks. Unknown versions remain unpinned rather than guessed.
+
+## Renderers
+
+A renderer is a separate implementation. Renderer releases are checked against format releases through explicit compatibility contracts. Successful syntax validation does not itself establish renderer compatibility.
 
 ## Operational status
 
-The framework is no longer contract-only. `tooling/blueprint_engine/` implements catalog discovery, capability matching, route selection, transformation, validation, provenance and semantic comparison.
-
-Normative language-specific validators remain separate work streams.
+`tooling/blueprint_engine/` implements catalog discovery, capability matching, route selection, version-aware generation planning, representation/style binding resolution, validation, provenance and semantic comparison.

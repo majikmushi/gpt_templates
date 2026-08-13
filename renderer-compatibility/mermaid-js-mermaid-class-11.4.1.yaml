@@ -1,0 +1,31 @@
+id: compatibility.renderer.mermaid-js.mermaid-class.11.4.1
+kind: renderer-compatibility
+version: 1.0.0
+status: source-pinned
+title: Mermaid JS 11.4.1 compatibility with Mermaid classDiagram 11.4.1
+renderer: renderer.mermaid-js
+renderer_versions: '==11.4.1'
+format: format.mermaid.class
+format_versions: '==11.4.1'
+support: native
+validated_by:
+  - validator.mermaid.runtime
+capabilities:
+  supported:
+    - class
+    - attribute
+    - operation
+    - namespace
+    - relationship
+    - cardinality
+    - annotation
+    - note
+    - direction
+    - class-style
+    - class-definition
+  degraded: []
+  unsupported: []
+known_issues: []
+authority:
+  basis: same pinned Mermaid package release used for parsing and rendering
+  source_commit: 446f6a7701065eb12e024475243434eb727dc172

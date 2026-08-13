@@ -6,7 +6,6 @@ from pathlib import Path
 
 from .engine import BlueprintEngine
 from .io import dump_data, load_data
-from .mermaid_provenance import check_mermaid_source
 from .validators import validate_target
 
 FORMAT_EXT = {
@@ -17,13 +16,15 @@ FORMAT_EXT = {
     "format.xml": "xml",
     "format.markdown": "md",
 }
-
 FRAMEWORK_KINDS = [
     "abstract-model",
     "representation-binding",
     "style-profile",
     "style-binding",
     "generation-request",
+    "format-version",
+    "renderer",
+    "renderer-compatibility",
 ]
 
 
@@ -41,59 +42,31 @@ def main(argv: list[str] | None = None) -> int:
     sub = p.add_subparsers(dest="command", required=True)
 
     sub.add_parser("catalog")
+    m = sub.add_parser("match"); m.add_argument("capabilities", nargs="+"); m.add_argument("--allow-partial", action="store_true")
+    r = sub.add_parser("route"); r.add_argument("source"); r.add_argument("target")
+    ld = sub.add_parser("language-definition"); ld.add_argument("definition_id")
+    ldv = sub.add_parser("language-definition-validate"); ldv.add_argument("path")
+    sav = sub.add_parser("source-adapter-validate"); sav.add_argument("path")
+    sc = sub.add_parser("source-check"); sc.add_argument("provenance"); sc.add_argument("source_root")
 
-    m = sub.add_parser("match")
-    m.add_argument("capabilities", nargs="+")
-    m.add_argument("--allow-partial", action="store_true")
-
-    r = sub.add_parser("route")
-    r.add_argument("source")
-    r.add_argument("target")
-
-    ld = sub.add_parser("language-definition")
-    ld.add_argument("definition_id")
-
-    ldv = sub.add_parser("language-definition-validate")
-    ldv.add_argument("path")
-
-    sav = sub.add_parser("source-adapter-validate")
-    sav.add_argument("path")
-
-    sc = sub.add_parser("source-check")
-    sc.add_argument("provenance", help="Repository-relative or absolute provenance manifest")
-    sc.add_argument("source_root", help="Local checkout/source root")
-
-    am = sub.add_parser("abstract-model")
-    am.add_argument("model_id")
-
-    rb = sub.add_parser("representation-binding")
-    rb.add_argument("binding_id")
-
-    rrb = sub.add_parser("resolve-binding")
-    rrb.add_argument("model_id")
-    rrb.add_argument("chosen_format")
-
-    st = sub.add_parser("style")
-    st.add_argument("style_id")
-
-    stb = sub.add_parser("style-binding")
-    stb.add_argument("binding_id")
-
-    rstb = sub.add_parser("resolve-style-binding")
-    rstb.add_argument("chosen_format")
-
-    fv = sub.add_parser("framework-validate")
-    fv.add_argument("artifact_kind", choices=FRAMEWORK_KINDS)
-    fv.add_argument("path")
-
-    gp = sub.add_parser("generation-plan")
-    gp.add_argument("path", help="YAML/JSON generation request")
+    am = sub.add_parser("abstract-model"); am.add_argument("model_id")
+    rb = sub.add_parser("representation-binding"); rb.add_argument("binding_id")
+    rrb = sub.add_parser("resolve-binding"); rrb.add_argument("model_id"); rrb.add_argument("chosen_format")
+    st = sub.add_parser("style"); st.add_argument("style_id")
+    stb = sub.add_parser("style-binding"); stb.add_argument("binding_id")
+    rstb = sub.add_parser("resolve-style-binding"); rstb.add_argument("chosen_format")
+    fr = sub.add_parser("format-release"); fr.add_argument("format_id"); fr.add_argument("--version"); fr.add_argument("--constraint")
+    rr = sub.add_parser("renderer-release"); rr.add_argument("renderer_id"); rr.add_argument("--version")
+    rc = sub.add_parser("renderer-compatibility"); rc.add_argument("renderer_id"); rc.add_argument("renderer_version"); rc.add_argument("format_id"); rc.add_argument("format_version")
+    fv = sub.add_parser("framework-validate"); fv.add_argument("artifact_kind", choices=FRAMEWORK_KINDS); fv.add_argument("path")
+    gp = sub.add_parser("generation-plan"); gp.add_argument("path")
 
     t = sub.add_parser("transform")
     t.add_argument("source")
     t.add_argument("target_format", choices=sorted(FORMAT_EXT))
     t.add_argument("-o", "--output")
-    t.add_argument("--profile")
+    t.add_argument("--binding")
+    t.add_argument("--format-version")
     t.add_argument("--overlay", action="append", default=[])
     t.add_argument("--no-validate", action="store_true")
     t.add_argument("--require-runtime", action="store_true")
@@ -103,152 +76,88 @@ def main(argv: list[str] | None = None) -> int:
     v.add_argument("path")
     v.add_argument("--require-runtime", action="store_true")
 
-    c = sub.add_parser("compare")
-    c.add_argument("left")
-    c.add_argument("right")
-
-    rt = sub.add_parser("roundtrip")
-    rt.add_argument("source")
-    rt.add_argument("target_format", choices=["format.xml", "format.uml.class"])
-
-    ma = sub.add_parser("mermaid-ast")
-    ma.add_argument("path")
-    ma.add_argument("-o", "--output")
-
-    mi = sub.add_parser("mermaid-import")
-    mi.add_argument("path")
-    mi.add_argument("-o", "--output")
-    mi.add_argument("--model-id", default="imported.mermaid.class")
-    mi.add_argument("--profile")
-
-    msc = sub.add_parser("mermaid-source-check")
-    msc.add_argument("mermaid_root", help="Local checkout of majikmushi/mermaid")
+    c = sub.add_parser("compare"); c.add_argument("left"); c.add_argument("right")
+    rt = sub.add_parser("roundtrip"); rt.add_argument("source"); rt.add_argument("target_format", choices=["format.xml", "format.uml.class"])
+    ma = sub.add_parser("mermaid-ast"); ma.add_argument("path"); ma.add_argument("-o", "--output")
+    mi = sub.add_parser("mermaid-import"); mi.add_argument("path"); mi.add_argument("-o", "--output"); mi.add_argument("--model-id", default="imported.mermaid.class"); mi.add_argument("--binding")
 
     args = p.parse_args(argv)
     engine = BlueprintEngine(_repo(args))
 
     if args.command == "catalog":
-        _print(engine.catalog())
-        return 0
+        _print(engine.catalog()); return 0
     if args.command == "match":
-        _print([match.__dict__ for match in engine.match(args.capabilities, allow_partial=args.allow_partial)])
-        return 0
+        _print([match.__dict__ for match in engine.match(args.capabilities, allow_partial=args.allow_partial)]); return 0
     if args.command == "route":
-        _print(engine.route(args.source, args.target))
-        return 0
+        _print(engine.route(args.source, args.target)); return 0
     if args.command == "language-definition":
-        _print(engine.language_definition(args.definition_id))
-        return 0
+        _print(engine.language_definition(args.definition_id)); return 0
     if args.command == "language-definition-validate":
-        result = engine.validate_language_definition(load_data(args.path))
-        _print(result.as_dict())
-        return 0 if result.ok else 2
+        result = engine.validate_language_definition(load_data(args.path)); _print(result.as_dict()); return 0 if result.ok else 2
     if args.command == "source-adapter-validate":
-        result = engine.validate_specification_source_adapter(load_data(args.path))
-        _print(result.as_dict())
-        return 0 if result.ok else 2
+        result = engine.validate_specification_source_adapter(load_data(args.path)); _print(result.as_dict()); return 0 if result.ok else 2
     if args.command == "source-check":
-        result = engine.check_source_provenance(args.source_root, args.provenance)
-        _print(result)
-        return 0 if result["ok"] else 4
+        result = engine.check_source_provenance(args.source_root, args.provenance); _print(result); return 0 if result["ok"] else 4
     if args.command == "abstract-model":
-        _print(engine.abstract_model(args.model_id))
-        return 0
+        _print(engine.abstract_model(args.model_id)); return 0
     if args.command == "representation-binding":
-        _print(engine.representation_binding(args.binding_id))
-        return 0
+        _print(engine.representation_binding(args.binding_id)); return 0
     if args.command == "resolve-binding":
-        _print(engine.resolve_representation_binding(args.model_id, args.chosen_format))
-        return 0
+        _print(engine.resolve_representation_binding(args.model_id, args.chosen_format)); return 0
     if args.command == "style":
-        _print(engine.style(args.style_id))
-        return 0
+        _print(engine.style(args.style_id)); return 0
     if args.command == "style-binding":
-        _print(engine.style_binding(args.binding_id))
-        return 0
+        _print(engine.style_binding(args.binding_id)); return 0
     if args.command == "resolve-style-binding":
-        _print(engine.resolve_style_binding(args.chosen_format))
-        return 0
+        _print(engine.resolve_style_binding(args.chosen_format)); return 0
+    if args.command == "format-release":
+        _print(engine.format_release(args.format_id, version=args.version, version_constraint=args.constraint)); return 0
+    if args.command == "renderer-release":
+        _print(engine.renderer_release(args.renderer_id, version=args.version)); return 0
+    if args.command == "renderer-compatibility":
+        result = engine.renderer_compatibility(args.renderer_id, args.renderer_version, args.format_id, args.format_version); _print(result); return 0 if result else 2
     if args.command == "framework-validate":
-        result = engine.validate_framework_artifact(load_data(args.path), args.artifact_kind)
-        _print(result.as_dict())
-        return 0 if result.ok else 2
+        result = engine.validate_framework_artifact(load_data(args.path), args.artifact_kind); _print(result.as_dict()); return 0 if result.ok else 2
     if args.command == "generation-plan":
-        plan = engine.plan_generation(load_data(args.path))
-        _print(plan)
-        return 0 if plan.get("ok") else 2
+        plan = engine.plan_generation(load_data(args.path)); _print(plan); return 0 if plan.get("ok") else 2
     if args.command == "transform":
         model = load_data(args.source)
         result, validation = engine.transform(
             model,
             args.target_format,
-            profile_id=args.profile,
+            binding_id=args.binding,
             overlays=args.overlay,
+            format_version=args.format_version,
             validate=not args.no_validate,
             require_runtime=args.require_runtime,
         )
-        content = result.content
-        fmt = "json" if isinstance(content, (dict, list)) else "text"
-        text = dump_data(content, fmt)
-        if args.output:
-            Path(args.output).write_text(text, encoding="utf-8")
-        else:
-            print(text, end="")
-        meta = {
-            "transform_id": result.transform_id,
-            "target_format": result.target_format,
-            "fidelity": result.fidelity,
-            "losses": result.losses,
-            "provenance": result.provenance,
-            "validation": validation.as_dict() if validation else None,
-        }
+        text = dump_data(result.content, "json" if isinstance(result.content, (dict, list)) else "text")
+        if args.output: Path(args.output).write_text(text, encoding="utf-8")
+        else: print(text, end="")
+        meta = {"transform_id": result.transform_id, "target_format": result.target_format, "fidelity": result.fidelity, "losses": result.losses, "provenance": result.provenance, "validation": validation.as_dict() if validation else None}
         print(json.dumps(meta, indent=2), file=__import__("sys").stderr)
         return 0 if validation is None or validation.ok else 2
     if args.command == "validate":
         value = load_data(args.path)
-        if args.target_format == "canonical.core":
-            result = engine.validate_canonical(value)
-        else:
-            result = validate_target(
-                args.target_format,
-                value,
-                repository_root=_repo(args),
-                require_runtime=args.require_runtime,
-            )
-        _print(result.as_dict())
-        return 0 if result.ok else 2
+        result = engine.validate_canonical(value) if args.target_format == "canonical.core" else validate_target(args.target_format, value, repository_root=_repo(args), require_runtime=args.require_runtime)
+        _print(result.as_dict()); return 0 if result.ok else 2
     if args.command == "mermaid-ast":
-        text = Path(args.path).read_text(encoding="utf-8")
-        ast = engine.mermaid_ast(text)
-        rendered = json.dumps(ast, indent=2, sort_keys=True) + "\n"
-        if args.output:
-            Path(args.output).write_text(rendered, encoding="utf-8")
-        else:
-            print(rendered, end="")
+        ast = engine.mermaid_ast(Path(args.path).read_text(encoding="utf-8")); rendered = json.dumps(ast, indent=2, sort_keys=True) + "\n"
+        if args.output: Path(args.output).write_text(rendered, encoding="utf-8")
+        else: print(rendered, end="")
         return 0
     if args.command == "mermaid-import":
-        text = Path(args.path).read_text(encoding="utf-8")
-        model = engine.mermaid_class_to_canonical(text, model_id=args.model_id, profile_id=args.profile)
+        model = engine.mermaid_class_to_canonical(Path(args.path).read_text(encoding="utf-8"), model_id=args.model_id, binding_id=args.binding)
         rendered = dump_data(model, "yaml")
-        if args.output:
-            Path(args.output).write_text(rendered, encoding="utf-8")
-        else:
-            print(rendered, end="")
+        if args.output: Path(args.output).write_text(rendered, encoding="utf-8")
+        else: print(rendered, end="")
         return 0
-    if args.command == "mermaid-source-check":
-        provenance_file = _repo(args) / "validators/mermaid/source-provenance.yaml"
-        result = check_mermaid_source(args.mermaid_root, provenance_file)
-        _print(result)
-        return 0 if result["ok"] else 4
     if args.command == "compare":
-        result = engine.compare(load_data(args.left), load_data(args.right))
-        _print(result.__dict__)
-        return 0 if result.equivalent else 3
+        result = engine.compare(load_data(args.left), load_data(args.right)); _print(result.__dict__); return 0 if result.equivalent else 3
     if args.command == "roundtrip":
         model = load_data(args.source)
         result = engine.roundtrip_xml(model) if args.target_format == "format.xml" else engine.roundtrip_uml_class(model)
-        _print(result.__dict__)
-        return 0 if result.equivalent else 3
+        _print(result.__dict__); return 0 if result.equivalent else 3
     return 1
 
 

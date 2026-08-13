@@ -1,13 +1,17 @@
 id: style-binding.uml.class
 kind: style-binding
-version: 1.0.0
+version: 2.0.0
 status: renderer-dependent
 title: Abstract Style to UML Class View Renderer
 format: format.uml.class
+compatibility:
+  status: renderer-dependent
+  format_versions: null
+  required_capabilities: []
 supported_channels: [renderer-dependent]
 mappings:
   style_intent: renderer-adapter
 fallbacks:
   no_renderer_style_api: preserve-style-profile-as-metadata
 notes:
-  - UML semantics do not define one universal visual styling serialization; concrete style realization belongs to the chosen UML renderer/tool adapter.
+  - UML semantics do not define one universal visual styling serialization; concrete style realization belongs to the chosen renderer/tool adapter.

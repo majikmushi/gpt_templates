@@ -1,12 +1,16 @@
 id: binding.interface-driven-class.uml-class
 kind: representation-binding
-version: 1.0.0
-status: scaffold
+version: 2.0.0
+status: unpinned
 title: Interface-Driven Class Model to UML Class View
 model: model.interface-driven-class
 format: format.uml.class
 language_definition: language.uml
 fidelity: high
+compatibility:
+  status: unpinned
+  format_versions: null
+  required_capabilities: [typed-entities, relationships, hierarchy]
 mappings:
   - {abstract: interface, target: UML-Interface}
   - {abstract: implementation, target: UML-Class}
@@ -20,4 +24,4 @@ mappings:
   - {abstract: aggregation, target: UML-SharedAggregation}
 losses: []
 notes:
-  - Normative primitive names remain provisional until an explicit UML specification version is pinned.
+  - No normative UML version is pinned; compatibility is intentionally unverified until specification ingestion is completed.

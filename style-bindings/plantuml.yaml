@@ -1,9 +1,13 @@
 id: style-binding.plantuml
 kind: style-binding
-version: 1.0.0
-status: scaffold
+version: 2.0.0
+status: unpinned
 title: Abstract Style to PlantUML
 format: format.plantuml
+compatibility:
+  status: unpinned
+  format_versions: null
+  required_capabilities: [style]
 supported_channels: [palette, typography, node-style, connector-style, grouping-style, layout-intent]
 mappings:
   palette: skinparam-or-style

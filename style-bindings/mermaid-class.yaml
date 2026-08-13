@@ -1,18 +1,14 @@
 id: style-binding.mermaid.class
 kind: style-binding
-version: 1.0.0
-status: source-aware
+version: 2.0.0
+status: source-pinned
 title: Abstract Style to Mermaid classDiagram
 format: format.mermaid.class
-supported_channels:
-  - fill
-  - stroke
-  - text-colour
-  - line-style
-  - class-style
-  - class-definition
-  - direction
-  - annotation
+compatibility:
+  status: source-pinned
+  format_versions: '==11.4.1'
+  required_capabilities: [class-style, class-definition, direction]
+supported_channels: [fill, stroke, text-colour, line-style, class-style, class-definition, direction, annotation]
 mappings:
   palette: classDef-or-style
   node_border: classDef-or-style

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Format-Specific Style Binding",
   "type": "object",
-  "required": ["id", "kind", "version", "status", "format", "mappings"],
+  "required": ["id", "kind", "version", "status", "format", "compatibility", "mappings"],
   "properties": {
     "id": {"type": "string", "pattern": "^style-binding\\."},
     "kind": {"const": "style-binding"},
@@ -10,6 +10,16 @@
     "status": {"type": "string"},
     "title": {"type": "string"},
     "format": {"type": "string", "pattern": "^format\\."},
+    "compatibility": {
+      "type": "object",
+      "required": ["status", "format_versions", "required_capabilities"],
+      "properties": {
+        "status": {"enum": ["source-pinned", "verified", "unverified", "unpinned", "renderer-dependent"]},
+        "format_versions": {"type": ["string", "null"]},
+        "required_capabilities": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
     "supported_channels": {"type": "array"},
     "mappings": {"type": "object"},
     "fallbacks": {"type": "object"},

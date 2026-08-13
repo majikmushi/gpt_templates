@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Renderer",
+  "type": "object",
+  "required": ["id", "kind", "version", "status", "releases"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^renderer\\."},
+    "kind": {"const": "renderer"},
+    "version": {"type": "string"},
+    "status": {"type": "string"},
+    "title": {"type": "string"},
+    "runtime": {"type": "string"},
+    "implementation": {"type": "object"},
+    "source": {"type": "object"},
+    "releases": {"type": "array", "items": {"type": "object", "required": ["version", "status"], "properties": {"version": {"type": "string"}, "status": {"type": "string"}, "version_scheme": {"enum": ["pep440", "opaque"]}}, "additionalProperties": true}},
+    "outputs": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

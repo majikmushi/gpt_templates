@@ -1,24 +1,24 @@
 # Validation Model
 
-Validation is a first-class artifact type and now covers both representation artifacts and the definitions used to understand representation languages.
+Validation is first-class and applies both to generated representations and to the framework contracts used to understand representation systems.
 
 ## Validation layers
 
-1. **Artifact/schema** - required fields, data types, enums and structural constraints.
-2. **Language-definition** - normalized syntax/metamodel/semantics/capability records conform to the NLD schema.
-3. **Source-adapter** - specification-source adapter manifests conform to their schema and status rules.
-4. **Source provenance** - pinned Git commits and evidence blob hashes still match the source checkout.
-5. **Semantic** - unique IDs, valid references, relationship endpoints and container membership.
-6. **Syntax/serialization** - target parser or structural checks.
-7. **Format constraints** - target-specific restrictions.
-8. **Compatibility** - feature/version/renderer support.
-9. **Lint** - valid but undesirable patterns.
+1. **Artifact/schema** - required fields, data types and structural constraints.
+2. **Language definition** - normalized syntax/metamodel/semantics/capability records.
+3. **Source adapter** - specification-source adapter status and schema.
+4. **Source provenance** - pinned source commits and evidence blob hashes.
+5. **Semantic** - IDs, references, relationship endpoints and containment.
+6. **Format release** - requested release exists and required capabilities are present.
+7. **Syntax/serialization** - target parser or structural validation.
+8. **Representation/style binding compatibility** - binding version ranges and capabilities.
+9. **Renderer compatibility** - explicit renderer-release <-> format-release contract plus effective capabilities.
 10. **Runtime/render** - parser or renderer behaviour.
-11. **Fixture/regression** - known-valid and known-invalid cases.
+11. **Fixture/regression** - known-valid, known-invalid and semantic round-trip cases.
 
 ## Authority model
 
-Validator authority comes from the source evidence recorded in a normalized language definition. Different sources may carry different authority:
+Authority is declared per evidence source, for example:
 
 ```text
 normative specification / schema
@@ -27,24 +27,20 @@ formal grammar
 semantic/metamodel implementation
 conformance tests
 supporting documentation
-repository-derived preflight rules
+repository-derived checks
 ```
 
-The exact order is language-specific and should be declared rather than assumed globally.
-
-## Implemented validation
-
-The Python engine implements canonical JSON Schema Draft 2020-12 validation, canonical semantic-reference validation, NLD schema validation, specification-source adapter validation, generic Git-backed source provenance verification, JSON Schema meta-schema validation, XML well-formedness validation, Mermaid runtime/source-derived validation, PlantUML structural validation, UML repository-interchange validation and Markdown structural validation.
+No universal ordering is assumed across all languages.
 
 ## Mermaid
 
-Mermaid's own runtime parser is syntax authority when installed. The class validator also uses conservative source-derived preflight rules. The source evidence is pinned in `validators/mermaid/source-provenance.yaml`, and `language-definitions/mermaid/class-diagram.yaml` records the normalized language definition consumed by the validator architecture.
+The currently pinned classDiagram reference is Mermaid `11.4.1` from `majikmushi/mermaid` commit `446f6a7701065eb12e024475243434eb727dc172`.
 
-If Mermaid runtime support is unavailable, default validation degrades with a warning. `--require-runtime` converts that condition to an error.
+Mermaid's runtime parser is syntax authority when installed. Static class checks are conservative source-derived preflight checks. Renderer compatibility is a separate claim governed by `renderer-compatibility/`.
 
 ## UML
 
-Current UML validation checks the repository's UML class-interchange representation, not the normative UML metamodel. `language-definitions/uml/manifest.yaml` is deliberately unpinned; normative UML claims remain blocked until an explicit specification version and evidence set are ingested.
+Current UML validation covers the repository interchange representation, not normative UML conformance. Until a UML specification release is explicitly ingested and registered, UML format-version support remains `unpinned`.
 
 ## Generic source checking
 
@@ -52,4 +48,4 @@ Current UML validation checks the repository's UML class-interchange representat
 blueprint-engine --repo . source-check <provenance.yaml> <source-root>
 ```
 
-The command checks both the pinned source commit and every evidence file's Git blob ID. This mechanism is format-independent; `mermaid-source-check` is retained as a compatibility alias.
+This is the sole source-provenance command. Format-specific compatibility aliases are intentionally not maintained.

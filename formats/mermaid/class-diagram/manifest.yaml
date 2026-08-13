@@ -1,50 +1,27 @@
 id: format.mermaid.class
 kind: format
-version: 1.0.0
-status: experimental
+version: 2.0.0
+status: source-derived-runtime-backed
 title: Mermaid classDiagram
 language: mermaid
 diagram_type: classDiagram
-native_domain:
-- uml
-- object-modeling
+native_domain: [uml, object-modeling]
 semantic_strictness: semi-formal
-abstraction_levels:
-- conceptual
-- logical
-- implementation
+abstraction_levels: [conceptual, logical, implementation]
 interpretation_policy:
   extensible: true
-  requires_profile_for_non_native_semantics: true
+  requires_binding_for_non_native_semantics: true
 capabilities:
-  nodes:
-  - class
-  - label
-  - attributes
-  - operations
-  - annotation
-  - note
-  structure:
-  - namespace
-  relationships:
-  - inheritance
-  - composition
-  - aggregation
-  - association
-  - solid-link
-  - dependency
-  - realization
-  - dashed-link
-  - two-way
-  - lollipop-interface
-  - multiplicity
-  presentation:
-  - direction
-  - style
-  - classDef
-  - cssClass
+  nodes: [class, label, attributes, operations, annotation, note]
+  structure: [namespace]
+  relationships: [inheritance, composition, aggregation, association, solid-link, dependency, realization, dashed-link, two-way, lollipop-interface, multiplicity]
+  presentation: [direction, style, classDef, cssClass]
+representation_bindings: representation-bindings/registry.yaml
+format_versions:
+  registry: format-versions/registry.yaml
+  pinned_reference_release: format-version.mermaid.class.11.4.1
+renderer_compatibility: renderer-compatibility/registry.yaml
 validation:
   validator: validator.mermaid.class
-  status: planned-source-derived
-documentation:
-- docs/mermaid-representation.md
+  status: source-derived-runtime-backed
+documentation: [docs/mermaid-representation.md, docs/version-and-renderer-compatibility.md]

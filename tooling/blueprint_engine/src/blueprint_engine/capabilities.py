@@ -3,7 +3,8 @@ from pathlib import Path
 from .io import load_data
 from .models import MatchResult
 
-LEVEL_SCORE = {"native": 1.0, "profiled": 0.8, "partial": 0.35, "none": 0.0}
+LEVEL_SCORE = {"native": 1.0, "bound": 0.8, "partial": 0.35, "none": 0.0, "native-runtime": 1.0}
+
 
 def match_formats(
     matrix_path: str | Path,

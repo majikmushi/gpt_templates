@@ -1,11 +1,15 @@
 id: binding.interface-driven-class.plantuml
 kind: representation-binding
-version: 1.0.0
-status: scaffold
+version: 2.0.0
+status: unpinned
 title: Interface-Driven Class Model to PlantUML
 model: model.interface-driven-class
 format: format.plantuml
 fidelity: high
+compatibility:
+  status: unpinned
+  format_versions: null
+  required_capabilities: [typed-entities, relationships]
 mappings:
   - {abstract: interface, target: interface}
   - {abstract: implementation, target: class}
@@ -18,3 +22,5 @@ mappings:
   - {abstract: composition, target: composition-arrow}
   - {abstract: aggregation, target: aggregation-arrow}
 losses: []
+notes:
+  - No PlantUML release is pinned yet; version compatibility is intentionally unverified.

@@ -17,13 +17,7 @@ relationships:
   - {id: association, semantics: typed-relationship}
   - {id: composition, semantics: strong-ownership}
   - {id: aggregation, semantics: weak-ownership}
-features:
-  - cardinality
-  - annotations
-  - generic-types
-  - visibility
-  - grouping
-  - notes
+features: [cardinality, annotations, generic-types, visibility, grouping, notes]
 constraints:
   - Interface semantics must survive representation independently of the primitive used by the chosen format.
   - A lossy binding must declare omitted or approximated concepts.
@@ -31,5 +25,3 @@ representation_policy:
   format_selection: chosen
   binding_selection: explicit-or-auto-within-chosen-format
   style_changes_semantics: false
-legacy_aliases:
-  - profile.domain.interface-driven-model

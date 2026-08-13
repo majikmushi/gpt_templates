@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Format Version",
+  "type": "object",
+  "required": ["id", "kind", "version", "status", "format", "version_scheme", "capabilities"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^format-version\\."},
+    "kind": {"const": "format-version"},
+    "version": {"type": "string"},
+    "status": {"type": "string"},
+    "title": {"type": "string"},
+    "format": {"type": "string", "pattern": "^format\\."},
+    "version_scheme": {"enum": ["pep440", "opaque"]},
+    "language_definition": {"type": "string"},
+    "source": {"type": "object"},
+    "capabilities": {"type": "array", "items": {"type": "string"}},
+    "compatibility_policy": {"type": "object"}
+  },
+  "additionalProperties": true
+}
