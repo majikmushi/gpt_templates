@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Abstract Representation Model",
+  "type": "object",
+  "required": ["id", "kind", "version", "status", "title", "family", "concepts", "relationships"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^model\\."},
+    "kind": {"const": "abstract-representation-model"},
+    "version": {"type": "string"},
+    "status": {"type": "string"},
+    "title": {"type": "string"},
+    "family": {"type": "string"},
+    "description": {"type": "string"},
+    "concepts": {"type": "array", "items": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string"}}, "additionalProperties": true}},
+    "relationships": {"type": "array", "items": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string"}}, "additionalProperties": true}},
+    "features": {"type": "array", "items": {"type": "string"}},
+    "constraints": {"type": "array", "items": {"type": "string"}},
+    "representation_policy": {"type": "object"},
+    "legacy_aliases": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

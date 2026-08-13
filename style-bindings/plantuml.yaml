@@ -1,0 +1,14 @@
+id: style-binding.plantuml
+kind: style-binding
+version: 1.0.0
+status: scaffold
+title: Abstract Style to PlantUML
+format: format.plantuml
+supported_channels: [palette, typography, node-style, connector-style, grouping-style, layout-intent]
+mappings:
+  palette: skinparam-or-style
+  typography: skinparam-or-style
+  node_style: stereotype-or-style
+  connector_style: arrow-style
+fallbacks:
+  unsupported: preserve-semantics-and-report-style-loss

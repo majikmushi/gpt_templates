@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "blueprint-representation-engine"
-version = "0.2.0"
-description = "Transformer, validator, capability matching and semantic comparison engine for gpt_templates."
+version = "0.3.0"
+description = "Abstract-model, representation-binding, style, transform, validator and semantic comparison engine for gpt_templates."
 requires-python = ">=3.11"
 dependencies = [
   "PyYAML>=6.0",

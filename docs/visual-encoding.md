@@ -1,58 +1,68 @@
-# Visual Encoding and Semantic Overlays
+# Semantic Overlays, Visual Encoding and Style
 
-A diagram can carry information through multiple independent visual channels.
+The framework separates **semantic visual encoding** from **presentation style**.
 
-## Typical channels
+## Semantic overlays
 
-- shape
-- fill colour
-- stroke colour
-- border pattern
-- line/edge style
-- arrow type
-- icon
-- label
-- annotation/stereotype
-- spatial grouping
-- subgraph/namespace/container
-- ordering/direction
+Overlays add meaning to the underlying model. Typical dimensions include:
 
-## Example dimensions
+- security/trust zone;
+- lifecycle state;
+- ownership;
+- voltage domain;
+- safety criticality;
+- deployment zone;
+- protocol or communication class.
 
-The same format may encode:
+They may request visual channels such as shape, fill colour, stroke colour, border pattern, edge style, arrow type, icon, label, annotation or grouping.
 
-- shape -> component type
-- colour -> trust zone
-- subgraph -> deployment zone
-- border -> lifecycle state
-- edge style -> communication/dependency type
-- arrow direction -> data flow
-- edge label -> protocol
-- icon -> implementation/vendor
+If an overlay encodes critical meaning with colour, it must also provide a textual, structural or other non-colour fallback.
 
-## Overlay composition
+## Style profiles
 
-Overlays add semantic dimensions without redefining the base profile.
+Styles alter presentation without altering the semantic model. Typical style intent includes:
 
-Example:
+- theme and palette;
+- typography;
+- node borders/corners;
+- connector weight/pattern preferences;
+- grouping presentation;
+- spacing/density;
+- layout intent.
+
+Abstract style profiles live under `styles/`. Format-specific translations live under `style-bindings/`.
+
+## Why the separation matters
+
+The same abstract model and representation binding can be rendered with different styles without becoming a different model:
 
 ```text
-Electronics System Profile
-  + Voltage Domain Overlay
-  + Safety Criticality Overlay
-  + Ownership Overlay
-  + Lifecycle Overlay
+model.interface-driven-class
++ binding.interface-driven-class.mermaid-class
++ style.neutral-technical
 ```
 
-## Collision handling
+or:
 
-Two overlays that request the same single-use channel may conflict. A transformer should:
+```text
+model.interface-driven-class
++ binding.interface-driven-class.mermaid-class
++ style.technical-dark
+```
 
-1. re-map one semantic dimension to another compatible channel;
-2. combine channels only where unambiguous;
-3. fall back to labels/annotations;
-4. fail validation if semantics would become ambiguous.
+The semantics stay the same.
 
-## Accessibility
+## Collision priority
 
-Critical meaning must not rely on colour alone. Profiles should provide textual or structural fallbacks and require a legend when the encoding is not self-evident.
+When style intent and semantic encoding compete for the same target feature, preserve information in this order:
+
+1. abstract-model semantics;
+2. semantic-overlay semantics;
+3. target-format validity;
+4. style intent.
+
+A renderer may remap a style feature or report presentation loss, but must not silently change semantic meaning to satisfy styling.
+
+## Existing channel policy
+
+`overlays/visual-channels/base.yaml` defines reusable channel allocation and fallback rules. `overlays/registry.yaml` marks it as semantic/channel policy rather than a presentation theme.

@@ -1,0 +1,28 @@
+id: style.neutral-technical
+kind: style-profile
+version: 1.0.0
+status: active
+title: Neutral Technical
+intent: clean technical documentation with restrained visual emphasis
+theme: neutral
+palette:
+  background: neutral
+  surface: neutral
+  accent: restrained
+  text: high-contrast
+typography:
+  title: {weight: bold, scale: large}
+  label: {weight: regular}
+  type: {treatment: monospace-preferred}
+connectors:
+  default: {weight: medium, pattern: solid}
+  dependency: {pattern: dotted}
+nodes:
+  corners: slight-rounding
+  border_weight: medium
+layout:
+  density: balanced
+  grouping_spacing: balanced
+accessibility:
+  require_contrast: true
+  prohibit_colour_only_semantics: true

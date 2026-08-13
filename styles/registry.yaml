@@ -1,0 +1,9 @@
+id: registry.styles
+kind: registry
+version: 1.0.0
+status: active
+title: Abstract Style Profile Registry
+description: Presentation intent independent of model semantics and target syntax.
+styles:
+  - {id: style.neutral-technical, path: styles/neutral-technical.yaml, status: active}
+  - {id: style.technical-dark, path: styles/technical-dark.yaml, status: active}

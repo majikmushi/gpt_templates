@@ -1,0 +1,35 @@
+id: model.interface-driven-class
+kind: abstract-representation-model
+version: 1.0.0
+status: active
+title: Interface-Driven Class Model
+family: software
+description: Format-independent structural model centred on interfaces, implementations, contracts and their relationships.
+concepts:
+  - {id: interface, role: contract}
+  - {id: implementation, role: concrete-type}
+  - {id: operation, role: callable-contract-member}
+  - {id: property, role: structural-member}
+  - {id: namespace, role: grouping-container}
+relationships:
+  - {id: realization, semantics: implementation-satisfies-interface}
+  - {id: dependency, semantics: source-depends-on-target}
+  - {id: association, semantics: typed-relationship}
+  - {id: composition, semantics: strong-ownership}
+  - {id: aggregation, semantics: weak-ownership}
+features:
+  - cardinality
+  - annotations
+  - generic-types
+  - visibility
+  - grouping
+  - notes
+constraints:
+  - Interface semantics must survive representation independently of the primitive used by the chosen format.
+  - A lossy binding must declare omitted or approximated concepts.
+representation_policy:
+  format_selection: chosen
+  binding_selection: explicit-or-auto-within-chosen-format
+  style_changes_semantics: false
+legacy_aliases:
+  - profile.domain.interface-driven-model

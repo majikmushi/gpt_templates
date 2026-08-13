@@ -1,0 +1,14 @@
+id: registry.representation-bindings
+kind: registry
+version: 1.0.0
+status: active
+title: Representation Binding Registry
+description: Binds one abstract model to one chosen representation format. A binding never chooses the format.
+selection_policy:
+  require_model: true
+  require_chosen_format: true
+  auto_resolution_scope: bindings-for-chosen-format-only
+bindings:
+  - {id: binding.interface-driven-class.mermaid-class, model: model.interface-driven-class, format: format.mermaid.class, path: representation-bindings/interface-driven-class/mermaid-class.yaml, fidelity: high}
+  - {id: binding.interface-driven-class.uml-class, model: model.interface-driven-class, format: format.uml.class, path: representation-bindings/interface-driven-class/uml-class.yaml, fidelity: high}
+  - {id: binding.interface-driven-class.plantuml, model: model.interface-driven-class, format: format.plantuml, path: representation-bindings/interface-driven-class/plantuml.yaml, fidelity: high}

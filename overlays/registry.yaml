@@ -1,0 +1,12 @@
+id: registry.semantic-overlays
+kind: registry
+version: 1.0.0
+status: active
+title: Semantic Overlay Registry
+description: Additional semantic dimensions that remain distinct from presentation-only style profiles.
+overlays:
+  - {id: overlay.visual-channels.base, path: overlays/visual-channels/base.yaml, role: channel-allocation-policy}
+policy:
+  overlays_change_semantic_annotation: true
+  style_profiles_change_semantics: false
+  critical_semantics_must_have_non_colour_fallback: true

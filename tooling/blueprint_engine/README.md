@@ -2,22 +2,11 @@
 
 Executable core for the `gpt_templates` representation framework.
 
-## Implemented
+## Version 0.3 framework layers
 
-- artifact catalog scanning
-- capability matching and conversion routing
-- canonical semantic model validation
-- normalized language-definition registry and schema validation
-- specification source-adapter validation
-- generic Git source-provenance checking
-- canonical exports to Mermaid, PlantUML, UML class interchange, JSON Schema, XML and Markdown
-- XML and UML class imports
-- declarative XSLT-like mapping rules
-- deterministic provenance hashes
-- semantic comparison and round-trip checks
-- Mermaid native runtime syntax validation
-- Mermaid classDiagram AST extraction and canonical import
-- Mermaid source-provenance verification through the generic source checker
+The engine now resolves abstract representation models, user-chosen formats, model-to-format representation bindings, semantic overlays, abstract style profiles, format-specific style bindings and machine-validated generation requests.
+
+It deliberately does not auto-select a format during normal planning.
 
 ## Install
 
@@ -25,21 +14,27 @@ Executable core for the `gpt_templates` representation framework.
 python -m pip install -e tooling/blueprint_engine
 ```
 
-For authoritative Mermaid validation/AST extraction:
+For authoritative Mermaid runtime validation/AST extraction:
 
 ```bash
 cd tooling/blueprint_engine/node
 npm install
 ```
 
-## CLI
+## Framework CLI
+
+```bash
+blueprint-engine --repo . abstract-model model.interface-driven-class
+blueprint-engine --repo . resolve-binding model.interface-driven-class format.mermaid.class
+blueprint-engine --repo . style style.technical-dark
+blueprint-engine --repo . resolve-style-binding format.mermaid.class
+blueprint-engine --repo . generation-plan examples/generation/interface-driven-mermaid.yaml
+```
+
+## Existing CLI
 
 ```bash
 blueprint-engine --repo . catalog
-blueprint-engine --repo . language-definition language.mermaid.class-diagram
-blueprint-engine --repo . language-definition-validate language-definitions/uml/manifest.yaml
-blueprint-engine --repo . source-adapter-validate adapters/specification/mermaid.yaml
-blueprint-engine --repo . source-check validators/mermaid/source-provenance.yaml /path/to/mermaid
 blueprint-engine --repo . match typed_entities cardinality
 blueprint-engine --repo . route canonical.core format.mermaid.class
 blueprint-engine --repo . transform examples/cross-format/embedded-controller/model.yaml format.mermaid.class
@@ -48,4 +43,4 @@ blueprint-engine --repo . mermaid-ast examples/cross-format/embedded-controller/
 blueprint-engine --repo . mermaid-import examples/cross-format/embedded-controller/model.mmd -o /tmp/model.yaml
 ```
 
-`mermaid-source-check` remains available as a compatibility alias. Mermaid static checks are source-derived preflight only; `--require-runtime` requires the native Mermaid parser and fails if it is unavailable.
+Architecture rules for future implementation live in `docs/framework-architecture.md`.

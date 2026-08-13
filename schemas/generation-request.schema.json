@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Representation Generation Request",
+  "type": "object",
+  "required": ["abstract_model", "representation"],
+  "properties": {
+    "source": {"type": ["string", "object"]},
+    "abstract_model": {"type": "string", "pattern": "^model\\."},
+    "representation": {
+      "type": "object",
+      "required": ["format"],
+      "properties": {
+        "format": {"type": "string", "pattern": "^format\\."},
+        "binding": {"type": "string", "default": "auto"}
+      },
+      "additionalProperties": true
+    },
+    "style": {
+      "type": "object",
+      "properties": {
+        "profile": {"type": "string", "pattern": "^style\\."},
+        "binding": {"type": "string", "default": "auto"}
+      },
+      "additionalProperties": true
+    },
+    "overlays": {"type": "array", "items": {"type": "string", "pattern": "^overlay\\."}},
+    "options": {"type": "object"}
+  },
+  "additionalProperties": true
+}

@@ -6,6 +6,16 @@ from typing import Any
 from .capabilities import match_formats
 from .catalog import scan_artifacts
 from .compare import compare_canonical
+from .framework_layers import (
+    load_abstract_model,
+    load_representation_binding,
+    load_style,
+    load_style_binding,
+    plan_generation,
+    resolve_representation_binding,
+    resolve_style_binding,
+    validate_framework_artifact,
+)
 from .imports import uml_class_to_canonical, xml_to_canonical
 from .language_definitions import (
     load_language_definition,
@@ -52,6 +62,30 @@ class BlueprintEngine:
             value,
             self.root / "schemas/specification-source-adapter.schema.json",
         )
+
+    def abstract_model(self, model_id: str) -> dict[str, Any]:
+        return load_abstract_model(self.root, model_id)
+
+    def representation_binding(self, binding_id: str) -> dict[str, Any]:
+        return load_representation_binding(self.root, binding_id)
+
+    def resolve_representation_binding(self, model_id: str, chosen_format: str) -> dict[str, Any]:
+        return resolve_representation_binding(self.root, model_id, chosen_format)
+
+    def style(self, style_id: str) -> dict[str, Any]:
+        return load_style(self.root, style_id)
+
+    def style_binding(self, binding_id: str) -> dict[str, Any]:
+        return load_style_binding(self.root, binding_id)
+
+    def resolve_style_binding(self, chosen_format: str) -> dict[str, Any]:
+        return resolve_style_binding(self.root, chosen_format)
+
+    def validate_framework_artifact(self, value: dict[str, Any], artifact_kind: str) -> ValidationResult:
+        return validate_framework_artifact(self.root, value, artifact_kind)
+
+    def plan_generation(self, request: dict[str, Any]) -> dict[str, Any]:
+        return plan_generation(self.root, request)
 
     def check_source_provenance(
         self,

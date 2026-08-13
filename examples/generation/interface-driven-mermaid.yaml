@@ -1,0 +1,12 @@
+source: examples/cross-format/embedded-controller/model.yaml
+abstract_model: model.interface-driven-class
+representation:
+  format: format.mermaid.class
+  binding: auto
+style:
+  profile: style.technical-dark
+  binding: auto
+overlays:
+  - overlay.visual-channels.base
+options:
+  layout: left-to-right

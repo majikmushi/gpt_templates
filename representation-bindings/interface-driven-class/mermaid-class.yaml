@@ -1,0 +1,26 @@
+id: binding.interface-driven-class.mermaid-class
+kind: representation-binding
+version: 1.0.0
+status: active
+title: Interface-Driven Class Model to Mermaid classDiagram
+model: model.interface-driven-class
+format: format.mermaid.class
+language_definition: language.mermaid.class-diagram
+fidelity: high
+mappings:
+  - {abstract: interface, target: class, decoration: '<<interface>>'}
+  - {abstract: implementation, target: class}
+  - {abstract: operation, target: operation}
+  - {abstract: property, target: attribute}
+  - {abstract: namespace, target: namespace}
+  - {abstract: realization, target: realization-relation}
+  - {abstract: dependency, target: dependency-relation}
+  - {abstract: association, target: association-relation}
+  - {abstract: composition, target: composition-relation}
+  - {abstract: aggregation, target: aggregation-relation}
+feature_bindings:
+  cardinality: relation-cardinality-label
+  annotations: stereotype-or-note
+  generic-types: generic-type-syntax
+  visibility: member-visibility
+losses: []

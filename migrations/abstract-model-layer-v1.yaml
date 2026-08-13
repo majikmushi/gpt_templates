@@ -1,0 +1,27 @@
+id: migration.abstract-model-layer.v1
+kind: migration-plan
+version: 1.0.0
+status: active
+title: Separate Abstract Models from Representation Profiles
+from:
+  domain_catalog: profiles/domain/class-like-models.yaml
+  format_profile_catalog: profiles/mermaid/class/registry.yaml
+to:
+  abstract_models: abstract-models/registry.yaml
+  representation_bindings: representation-bindings/registry.yaml
+  styles: styles/registry.yaml
+  style_bindings: style-bindings/registry.yaml
+strategy:
+  preserve_legacy_ids_as_aliases: true
+  new_model_ids_prefix: model.
+  new_binding_ids_prefix: binding.
+  do_not_auto_choose_format: true
+  expand_bindings_incrementally: true
+compatibility:
+  legacy_domain_profiles: readable
+  legacy_transform_profile_id: retained-until-generation-plan-execution-replaces-it
+  new_models_must_be_registered_under: abstract-models
+notes:
+  - The 44 legacy domain profiles are promoted to abstract-model identities in registry.abstract-models.
+  - Format-specific mappings belong in representation-bindings, not in the abstract model registry.
+  - Presentation-only settings belong in styles/style-bindings; semantic overlays remain separate.

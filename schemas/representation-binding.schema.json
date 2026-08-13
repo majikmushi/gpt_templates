@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Representation Binding",
+  "type": "object",
+  "required": ["id", "kind", "version", "status", "model", "format", "fidelity", "mappings"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^binding\\."},
+    "kind": {"const": "representation-binding"},
+    "version": {"type": "string"},
+    "status": {"type": "string"},
+    "title": {"type": "string"},
+    "model": {"type": "string", "pattern": "^model\\."},
+    "format": {"type": "string", "pattern": "^format\\."},
+    "language_definition": {"type": "string"},
+    "fidelity": {"enum": ["exact", "high", "profile-dependent", "projection", "approximate", "lossy"]},
+    "mappings": {"type": "array", "items": {"type": "object", "required": ["abstract", "target"], "properties": {"abstract": {"type": "string"}, "target": {"type": "string"}}, "additionalProperties": true}},
+    "feature_bindings": {"type": "object"},
+    "losses": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

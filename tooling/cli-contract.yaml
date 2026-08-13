@@ -1,24 +1,32 @@
 id: tooling.cli-contract
 kind: tool-contract
-version: 0.4.0
+version: 0.5.0
 status: core-implemented
 title: Blueprint Registry CLI
 implementation: tooling/blueprint_engine/src/blueprint_engine/cli.py
 commands:
-  catalog: {purpose: discover artifacts and capabilities, status: implemented}
-  match: {purpose: select target formats from required capabilities, status: implemented}
-  route: {purpose: select a conversion path, status: implemented}
+  catalog: {purpose: discover repository artifacts, status: implemented}
+  match: {purpose: score representation formats against capabilities, status: implemented}
+  route: {purpose: find conversion paths, status: implemented}
+  abstract-model: {purpose: resolve an abstract representation model by stable ID or supported legacy alias, status: implemented}
+  representation-binding: {purpose: resolve a representation binding by stable ID, status: implemented}
+  resolve-binding: {purpose: resolve a model-to-format binding within a caller-chosen format, status: implemented}
+  style: {purpose: resolve an abstract style profile, status: implemented}
+  style-binding: {purpose: resolve a format-specific style binding by ID, status: implemented}
+  resolve-style-binding: {purpose: resolve style translation for a caller-chosen format, status: implemented}
+  framework-validate: {purpose: validate abstract-model, binding, style and generation-request artifacts, status: implemented}
+  generation-plan: {purpose: validate and resolve model/format/binding/overlay/style selections without auto-selecting a format, status: implemented}
   language-definition: {purpose: resolve a normalized language definition by stable ID, status: implemented}
-  language-definition-validate: {purpose: validate a normalized language definition against the generic NLD schema, status: implemented}
-  source-adapter-validate: {purpose: validate a specification source adapter manifest, status: implemented}
-  source-check: {purpose: verify a Git-backed specification source against pinned commit and blob evidence, status: implemented}
-  transform: {purpose: execute a built-in canonical conversion, status: implemented}
+  language-definition-validate: {purpose: validate a normalized language definition, status: implemented}
+  source-adapter-validate: {purpose: validate a specification source adapter, status: implemented}
+  source-check: {purpose: verify Git-backed specification evidence against pinned provenance, status: implemented}
+  transform: {purpose: execute the legacy direct canonical conversion interface, status: implemented-compatibility-path}
   validate: {purpose: run canonical or target validators; Mermaid supports --require-runtime, status: implemented}
   mermaid-ast: {purpose: parse Mermaid through native runtime and emit normalized AST, status: implemented}
-  mermaid-import: {purpose: import a Mermaid classDiagram through native ClassDB into canonical form, status: implemented}
-  mermaid-source-check: {purpose: backward-compatible alias for Mermaid pinned-source verification, status: implemented}
+  mermaid-import: {purpose: import Mermaid classDiagram through native ClassDB into canonical form, status: implemented}
+  mermaid-source-check: {purpose: backward-compatible Mermaid source verification alias, status: implemented}
   compare: {purpose: evaluate canonical semantic equivalence, status: implemented}
   roundtrip: {purpose: execute and compare a supported transformation cycle, status: implemented}
   render: {purpose: invoke external/native renderer, status: planned}
-  migrate: {purpose: upgrade artifact and schema versions, status: planned}
-  lint: {purpose: apply repository and profile rules, status: planned}
+  migrate: {purpose: upgrade artifact/schema versions and legacy profile references, status: planned}
+  lint: {purpose: apply repository and architectural boundary rules, status: planned}

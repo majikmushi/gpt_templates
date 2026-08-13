@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Abstract Style Profile",
+  "type": "object",
+  "required": ["id", "kind", "version", "status", "title", "intent"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^style\\."},
+    "kind": {"const": "style-profile"},
+    "version": {"type": "string"},
+    "status": {"type": "string"},
+    "title": {"type": "string"},
+    "intent": {"type": "string"},
+    "theme": {"type": "string"},
+    "palette": {"type": "object"},
+    "typography": {"type": "object"},
+    "connectors": {"type": "object"},
+    "nodes": {"type": "object"},
+    "layout": {"type": "object"},
+    "accessibility": {"type": "object"}
+  },
+  "additionalProperties": true
+}

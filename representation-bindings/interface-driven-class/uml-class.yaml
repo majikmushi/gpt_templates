@@ -1,0 +1,23 @@
+id: binding.interface-driven-class.uml-class
+kind: representation-binding
+version: 1.0.0
+status: scaffold
+title: Interface-Driven Class Model to UML Class View
+model: model.interface-driven-class
+format: format.uml.class
+language_definition: language.uml
+fidelity: high
+mappings:
+  - {abstract: interface, target: UML-Interface}
+  - {abstract: implementation, target: UML-Class}
+  - {abstract: operation, target: UML-Operation}
+  - {abstract: property, target: UML-Property}
+  - {abstract: namespace, target: UML-Package}
+  - {abstract: realization, target: UML-InterfaceRealization}
+  - {abstract: dependency, target: UML-Dependency}
+  - {abstract: association, target: UML-Association}
+  - {abstract: composition, target: UML-CompositeAggregation}
+  - {abstract: aggregation, target: UML-SharedAggregation}
+losses: []
+notes:
+  - Normative primitive names remain provisional until an explicit UML specification version is pinned.

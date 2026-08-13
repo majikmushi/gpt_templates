@@ -18,6 +18,14 @@ FORMAT_EXT = {
     "format.markdown": "md",
 }
 
+FRAMEWORK_KINDS = [
+    "abstract-model",
+    "representation-binding",
+    "style-profile",
+    "style-binding",
+    "generation-request",
+]
+
 
 def _repo(args: argparse.Namespace) -> Path:
     return Path(args.repo).resolve()
@@ -54,6 +62,32 @@ def main(argv: list[str] | None = None) -> int:
     sc = sub.add_parser("source-check")
     sc.add_argument("provenance", help="Repository-relative or absolute provenance manifest")
     sc.add_argument("source_root", help="Local checkout/source root")
+
+    am = sub.add_parser("abstract-model")
+    am.add_argument("model_id")
+
+    rb = sub.add_parser("representation-binding")
+    rb.add_argument("binding_id")
+
+    rrb = sub.add_parser("resolve-binding")
+    rrb.add_argument("model_id")
+    rrb.add_argument("chosen_format")
+
+    st = sub.add_parser("style")
+    st.add_argument("style_id")
+
+    stb = sub.add_parser("style-binding")
+    stb.add_argument("binding_id")
+
+    rstb = sub.add_parser("resolve-style-binding")
+    rstb.add_argument("chosen_format")
+
+    fv = sub.add_parser("framework-validate")
+    fv.add_argument("artifact_kind", choices=FRAMEWORK_KINDS)
+    fv.add_argument("path")
+
+    gp = sub.add_parser("generation-plan")
+    gp.add_argument("path", help="YAML/JSON generation request")
 
     t = sub.add_parser("transform")
     t.add_argument("source")
@@ -117,6 +151,32 @@ def main(argv: list[str] | None = None) -> int:
         result = engine.check_source_provenance(args.source_root, args.provenance)
         _print(result)
         return 0 if result["ok"] else 4
+    if args.command == "abstract-model":
+        _print(engine.abstract_model(args.model_id))
+        return 0
+    if args.command == "representation-binding":
+        _print(engine.representation_binding(args.binding_id))
+        return 0
+    if args.command == "resolve-binding":
+        _print(engine.resolve_representation_binding(args.model_id, args.chosen_format))
+        return 0
+    if args.command == "style":
+        _print(engine.style(args.style_id))
+        return 0
+    if args.command == "style-binding":
+        _print(engine.style_binding(args.binding_id))
+        return 0
+    if args.command == "resolve-style-binding":
+        _print(engine.resolve_style_binding(args.chosen_format))
+        return 0
+    if args.command == "framework-validate":
+        result = engine.validate_framework_artifact(load_data(args.path), args.artifact_kind)
+        _print(result.as_dict())
+        return 0 if result.ok else 2
+    if args.command == "generation-plan":
+        plan = engine.plan_generation(load_data(args.path))
+        _print(plan)
+        return 0 if plan.get("ok") else 2
     if args.command == "transform":
         model = load_data(args.source)
         result, validation = engine.transform(

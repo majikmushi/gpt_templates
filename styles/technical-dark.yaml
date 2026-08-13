@@ -1,0 +1,30 @@
+id: style.technical-dark
+kind: style-profile
+version: 1.0.0
+status: active
+title: Technical Dark
+intent: compact dark technical presentation without changing model semantics
+theme: dark
+palette:
+  background: dark
+  surface: dark-raised
+  primary: cool-accent
+  secondary: muted
+  text: high-contrast-light
+typography:
+  title: {weight: bold, scale: large}
+  label: {weight: medium}
+  type: {treatment: monospace-preferred}
+connectors:
+  default: {weight: medium, pattern: solid}
+  dependency: {pattern: dotted}
+  emphasis: {weight: heavy}
+nodes:
+  corners: rounded
+  border_weight: medium
+layout:
+  density: compact
+  grouping_spacing: compact
+accessibility:
+  require_contrast: true
+  prohibit_colour_only_semantics: true

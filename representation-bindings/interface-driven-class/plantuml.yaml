@@ -1,0 +1,20 @@
+id: binding.interface-driven-class.plantuml
+kind: representation-binding
+version: 1.0.0
+status: scaffold
+title: Interface-Driven Class Model to PlantUML
+model: model.interface-driven-class
+format: format.plantuml
+fidelity: high
+mappings:
+  - {abstract: interface, target: interface}
+  - {abstract: implementation, target: class}
+  - {abstract: operation, target: member-operation}
+  - {abstract: property, target: member-attribute}
+  - {abstract: namespace, target: package-or-namespace}
+  - {abstract: realization, target: realization-arrow}
+  - {abstract: dependency, target: dependency-arrow}
+  - {abstract: association, target: association-arrow}
+  - {abstract: composition, target: composition-arrow}
+  - {abstract: aggregation, target: aggregation-arrow}
+losses: []
